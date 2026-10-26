@@ -1,0 +1,35 @@
+{
+  "name": "mathbook-3d",
+  "version": "1.0.0",
+  "description": "把 liuhaopeng543/MathBook 的全部 20 章高中数学笔记装进一本可翻页的 3D 书（单文件、零外部依赖）",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build/build.mjs",
+    "build:book": "node tools/md2book.mjs && node build/build-book.mjs",
+    "measure": "node tools/measure-pieces.mjs && node tools/md2book.mjs && node build/build-book.mjs",
+    "test:book": "node test/book.mjs",
+    "test:scenes": "node test/scenes.mjs",
+    "test:lab": "node test/lab.mjs",
+    "test:lab-model": "node test/lab-model.mjs",
+    "test:problems": "node test/problems.mjs",
+    "test:fill": "node tools/fill-report.mjs",
+    "test": "node test/scenes.mjs && node test/lab-model.mjs && node test/lab.mjs && node test/problems.mjs && node test/book.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hnsyliupeng/mathhighschool.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hnsyliupeng/mathhighschool/issues"
+  },
+  "homepage": "https://github.com/hnsyliupeng/mathhighschool#readme",
+  "dependencies": {
+    "@napi-rs/canvas": "^1.0.13",
+    "@sparticuz/chromium": "^129.0.0",
+    "jsdom": "^30.1.3",
+    "puppeteer-core": "^23.11.1"
+  }
+}
