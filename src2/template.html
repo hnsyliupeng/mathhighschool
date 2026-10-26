@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>高中数学笔记 · 3D 互动全书</title>
+<meta name="description" content="把 GitHub 上 liuhaopeng543/MathBook 的全部 20 章高中数学笔记装进一本可翻页的 3D 书：全书正文、公式排版、20 个三维演示场景，单文件离线运行。">
+<style>
+/*__CSS__*/
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <button class="icon-btn menu-toggle" id="btn-menu" title="目录 (M)" aria-label="目录">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="brand-txt">
+        <span class="brand-cn">高中数学笔记 <em>3D</em> 全书</span>
+        <span class="brand-sub" id="brand-sub">20 章 · liuhaopeng543</span>
+      </div>
+    </div>
+    <div class="tools">
+      <button class="tool" id="btn-toc" title="全书目录">目录</button>
+      <button class="tool" id="btn-search" title="全书检索 (/)">检索</button>
+      <span class="tools-sep"></span>
+      <button class="tool" id="btn-see" title="透视：看见内部结构与截面 (T)"><span class="dot-led"></span>透视</button>
+      <button class="tool on" id="btn-labels" title="标注：显示点、线、面名称 (L)"><span class="dot-led"></span>标注</button>
+      <div class="palette-wrap"><span>配色</span><div class="swatches" id="swatches"></div></div>
+      <div class="fontsize-wrap" title="正文字号">
+        <button class="mini-btn" data-font="-1">A−</button>
+        <span id="font-val">100%</span>
+        <button class="mini-btn" data-font="1">A+</button>
+      </div>
+      <button class="tool" id="btn-reset" title="重置视角与当前章演示">重置</button>
+    </div>
+  </header>
+
+  <div class="shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sb-head">
+        <b>全书目录</b>
+        <span id="sb-stats"></span>
+      </div>
+      <div class="sb-body" id="sb-body"></div>
+      <div class="sb-foot">
+        源：<a href="https://github.com/liuhaopeng543/MathBook" target="_blank" rel="noreferrer">liuhaopeng543/MathBook</a> · MIT
+      </div>
+    </aside>
+
+    <main class="stage">
+      <div class="book" id="book"></div>
+    </main>
+  </div>
+
+  <footer class="nav">
+    <button class="nav-btn" id="nav-prev">‹ 上一页</button>
+    <div class="progress-wrap">
+      <div class="progress"><i id="prog-fill"></i></div>
+      <span class="page-label" id="page-label"></span>
+      <div class="ch-jump">
+        <select id="ch-select" title="跳转章节"></select>
+      </div>
+    </div>
+    <button class="nav-btn" id="nav-next">下一页 ›</button>
+  </footer>
+</div>
+
+<div class="bigtable-layer" id="bigtable-layer">
+  <div class="bigtable-panel" id="bigtable-panel"></div>
+</div>
+
+<div class="search-layer" id="search-layer">
+  <div class="search-box">
+    <div class="search-row">
+      <input id="search-input" type="search" placeholder="检索全书：如“二面角”“裂项”“极值点偏移”" autocomplete="off">
+      <button class="mini-btn" id="search-close" title="关闭">✕</button>
+    </div>
+    <div class="search-meta" id="search-meta"></div>
+    <div class="search-list" id="search-list"></div>
+  </div>
+</div>
+
+<noscript><p style="padding:26px;font-family:serif">这是一本用 Canvas 绘制的三维书，需要启用 JavaScript 才能翻页与旋转。</p></noscript>
+
+<script id="book-data" type="application/json">/*__DATA__*/</script>
+<script>
+/*__JS__*/
+</script>
+</body>
+</html>
