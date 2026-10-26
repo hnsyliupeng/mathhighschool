@@ -72,19 +72,19 @@
       stream.forEach((it, i) => {
         const t = norm(it.b);
         if (!cue(t) || /^H[1-4]$/.test(it.b.tagName)) return;
-        const steps = [];
+        const steps = [], stepTexts = [];
         for (let j = i + 1; j < stream.length && steps.length < 12; j++) {
           const nb = stream[j].b;
           if (/^H[1-4]$/.test(nb.tagName)) break;
           const nt = norm(nb);
           if (cue(nt)) break;
-          if (nt) steps.push(nb.outerHTML);
+          if (nt) { steps.push(nb.outerHTML); stepTexts.push(nt); }
         }
-        if (!steps.length) steps.push('<p>（本题解析即紧随其后的推导，点播放逐步看完本节再回看题干。）</p>');
+        if (!steps.length) { steps.push('<p>（本题解析即紧随其后的推导，点播放逐步看完本节再回看题干。）</p>'); stepTexts.push('紧随其后的推导'); }
         const prob = {
           id: PROBLEMS.length, ch: it.p.ch, chNo: it.p.chNo || '', chTitle: it.p.chTitle || '',
           scene: (CH[it.p.ch] || {}).scene || 'fallback', src: it.src, page: FRONT + it.src,
-          stmt: it.b.outerHTML, steps, text: t,
+          stmt: it.b.outerHTML, steps, stepTexts, text: t,
         };
         PROBLEMS.push(prob);
         (PROB_BY_PAGE[it.src] = PROB_BY_PAGE[it.src] || []).push(prob);
@@ -107,6 +107,7 @@
     labels: store.labels !== false,
     fontScale: store.fontScale || 1,
     modes: store.modes || {},              // 每章的演示模式
+    autoDemo: store.autoDemo !== false,    // 自动演示默认开
     params: store.params || {},            // 每台机器的控件参数
     view: store.view || '3d',              // 3d / print / phone
     yaw: {},                              // 每章的视角
@@ -137,7 +138,7 @@
     try {
       localStorage.setItem('mb3d', JSON.stringify({
         palette: state.palette, seeThrough: state.seeThrough, labels: state.labels,
-        fontScale: state.fontScale, modes: state.modes, params: state.params, yaw: state.yaw, page: state.page,
+        fontScale: state.fontScale, modes: state.modes, params: state.params, yaw: state.yaw, page: state.page, autoDemo: state.autoDemo,
         view: state.view,
       }));
     } catch (e) {}
@@ -186,6 +187,7 @@
     const p = PAGES[state.page];
     app.page = p;
     const info = pageInfo(p);
+    if (app._autoTimer) { clearInterval(app._autoTimer); app._autoTimer = null; }
     if (app.studio) { app.studio.destroy(); app.studio = null; }
     const book = app.el.book;
     const cover = p.kind === 'cover';
@@ -384,7 +386,7 @@
             <p>三维部分是自己写的 Canvas 2D 引擎：透视投影、画家算法、手绘抖动墨线、
               球面大圆、拾取高亮。它不依赖 three.js，也不加载任何外部资源。全书共设置
               67 台可操作的参数机器，覆盖正文全部演示模式，且每台都带滑杆或触发控件；面板仪表不是装饰标签，
-              而是场景模型每次重算时直接回吐的结果。此外全书 150 道例题/习题都配了「逐题动画解析」：点顶栏按钮或每页的题目芯片，题干与原文解析会一步一步播放，左页 3D 展台随步骤同步切换模式。书页部分是 CSS 3D 的翻页动画，
+              而是场景模型每次重算时直接回吐的结果。此外全书 150 道例题/习题都配了「逐题 3D 动画解析」：点顶栏按钮或每页的题目芯片，每道题都会生成自己的几何模型——模型自动转动、随解析步骤逐层搭建，仪表实时验证结论（如椭圆焦点弦两切线交点必在准线上、FM·AB≈0）。书页部分是 CSS 3D 的翻页动画，
               配色有五套，可随时切换。</p>
           </div>
           <div class="intro-note">
@@ -473,6 +475,7 @@
     tools.addEventListener('click', e => {
       const b = e.target.closest('[data-mode]');
       if (!b) return;
+      userTouched();
       state.modes[key] = b.getAttribute('data-mode');
       tools.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === b));
       paintScene();
@@ -483,15 +486,20 @@
     const LABS = window.LABS || {};
     const labBox = document.getElementById('lab');
     let labSpec = null, labParams = null, labForce = true, labLast = 0;
+    /* 自动演示：默认自己跑；用户一动手就让位 12 秒 */
+    let autoOn = state.autoDemo !== false;
+    let autoIdleUntil = 0, autoT0 = performance.now(), autoModeAt = performance.now() + 14000, autoTrigAt = 0;
+    const userTouched = () => { autoIdleUntil = performance.now() + 12000; };
     function seedParams(mode) {
       const spec = (LABS[info.sceneKey] || {})[mode] || null;
       const key = info.sceneKey + ':' + mode;
-      if (!state.params[key]) {
-        const o = {};
-        (spec && spec.controls || []).forEach(ct => { o[ct.id] = ct.type === 'trigger' ? 1 : ct.val; });
-        state.params[key] = o;
-      }
-      return { spec, params: state.params[key] };
+      if (!state.params[key]) state.params[key] = {};
+      const o = state.params[key];
+      (spec && spec.controls || []).forEach(ct => {
+        const dflt = ct.type === 'trigger' ? 1 : ct.val;
+        if (typeof o[ct.id] !== 'number' || !Number.isFinite(o[ct.id])) o[ct.id] = dflt;
+      });
+      return { spec, params: o };
     }
     function captureLab(r) {
       if (!labBox || labBox.hidden || !r) return;
@@ -516,7 +524,8 @@
       document.getElementById('lab-idea').textContent = labSpec.idea || '';
       const box = document.getElementById('lab-controls');
       const fmtV = (ct, v) => (ct.step >= 1 ? String(Math.round(v)) : String(Math.round(v * 100) / 100)) + (ct.unit || '');
-      box.innerHTML = labSpec.controls.map(ct => ct.type === 'trigger'
+      box.innerHTML = `<button class="lab-btn auto${autoOn ? ' on' : ''}" data-auto>${autoOn ? '⏸ 自动演示' : '▶ 自动演示'}</button>`
+        + labSpec.controls.map(ct => ct.type === 'trigger'
         ? `<button class="lab-btn trig" data-trig="${ct.id}">▶ ${esc(ct.label)}<span class="trig-n" data-trig-n="${ct.id}"></span></button>`
         : `<label class="ctl"><span class="ctl-l">${esc(ct.label)}</span><input type="range" data-param="${ct.id}" min="${ct.min}" max="${ct.max}" step="${ct.step}" value="${labParams[ct.id]}"><span class="ctl-v" data-val="${ct.id}">${fmtV(ct, labParams[ct.id])}</span></label>`).join('')
         + (sc.anim ? `<button class="lab-btn" data-play>${studio._anim ? '⏸ 暂停' : '▶ 运行'}</button>` : '')
@@ -524,8 +533,17 @@
         + (labSpec.brk ? `<button class="lab-btn brk" data-brk>⚠ ${esc(labSpec.brk.label)}</button>` : '');
       const updTrig = () => box.querySelectorAll('[data-trig-n]').forEach(el => { el.textContent = ' · 已乘 ' + (labParams[el.getAttribute('data-trig-n')] || 0) + ' 次'; });
       updTrig();
+      const ab = box.querySelector('[data-auto]');
+      if (ab) ab.addEventListener('click', () => {
+        autoOn = !autoOn; state.autoDemo = autoOn;
+        ab.classList.toggle('on', autoOn);
+        ab.textContent = autoOn ? '⏸ 自动演示' : '▶ 自动演示';
+        autoT0 = performance.now(); autoModeAt = performance.now() + 14000;
+        save();
+      });
       box.querySelectorAll('[data-param]').forEach(inp => {
         inp.addEventListener('input', () => {
+          userTouched();
           const ct = labSpec.controls.find(x => x.id === inp.getAttribute('data-param'));
           labParams[ct.id] = parseFloat(inp.value);
           const v = box.querySelector(`[data-val="${ct.id}"]`);
@@ -534,6 +552,7 @@
         });
       });
       box.querySelectorAll('[data-trig]').forEach(b => b.addEventListener('click', () => {
+        userTouched();
         const id = b.getAttribute('data-trig');
         labParams[id] = ((labParams[id] || 0) + 1) % 5;
         updTrig(); labForce = true; paintScene(false); save();
@@ -543,7 +562,7 @@
       const xr = box.querySelector('[data-xray]');
       if (xr) xr.addEventListener('change', () => { studio.seeThrough = xr.checked; studio.dirty = true; });
       const bk = box.querySelector('[data-brk]');
-      if (bk) bk.addEventListener('click', () => { Object.assign(labParams, labSpec.brk.params); renderLab(); labForce = true; paintScene(false); save(); });
+      if (bk) bk.addEventListener('click', () => { userTouched(); Object.assign(labParams, labSpec.brk.params); renderLab(); labForce = true; paintScene(false); save(); });
     }
 
     function paintScene(withLab = true) {
@@ -561,6 +580,51 @@
       try { captureLab(sc.build(studio.time || 0, { st: studio, mode, params: sd.params })); } catch (e) {}
       studio.dirty = true;
     }
+
+    /* ---------- 自动演示引擎 ----------
+       无人操作时：前两个滑杆按正弦扫过量程（仪表同模型实时结算）、
+       触发控件定时推进、每 14 秒轮换到下一个演示模式。
+       用户拖杆/点芯片/转展台后暂停 12 秒再恢复。 */
+    if (app._autoTimer) { clearInterval(app._autoTimer); app._autoTimer = null; }
+    const fmtA = (ct, v) => (ct.step >= 1 ? String(Math.round(v)) : String(Math.round(v * 100) / 100)) + (ct.unit || '');
+    app.el.viz.addEventListener('pointerdown', userTouched);
+    app._autoTimer = setInterval(() => {
+      if (!autoOn || document.hidden || !labSpec || !labParams) return;
+      const now = performance.now();
+      if (now < autoIdleUntil) { autoModeAt = now + 14000; return; }
+      const ranges = labSpec.controls.filter(c => c.type !== 'trigger');
+      const trigs = labSpec.controls.filter(c => c.type === 'trigger');
+      const el = (now - autoT0) / 1000;
+      let changed = false;
+      ranges.slice(0, 2).forEach((ct, idx) => {
+        const mid = (ct.min + ct.max) / 2, amp = (ct.max - ct.min) / 2 * 0.92;
+        let v = mid + amp * Math.sin(el * 0.55 + idx * 1.7);
+        v = Math.round(v / ct.step) * ct.step;
+        v = Math.max(ct.min, Math.min(ct.max, Math.round(v * 1000) / 1000));
+        if (Math.abs((labParams[ct.id] || 0) - v) > 1e-9) {
+          labParams[ct.id] = v; changed = true;
+          const inp = document.querySelector(`#lab-controls [data-param="${ct.id}"]`);
+          if (inp) inp.value = v;
+          const lab = document.querySelector(`#lab-controls [data-val="${ct.id}"]`);
+          if (lab) lab.textContent = fmtA(ct, v);
+        }
+      });
+      if (trigs.length && now > autoTrigAt) {
+        autoTrigAt = now + 2200;
+        trigs.forEach(ct => { labParams[ct.id] = ((labParams[ct.id] || 0) + 1) % 5; });
+        document.querySelectorAll('[data-trig-n]').forEach(el2 => { el2.textContent = ' · 已乘 ' + (labParams[el2.getAttribute('data-trig-n')] || 0) + ' 次'; });
+        changed = true;
+      }
+      if (changed) { labForce = true; paintScene(false); }
+      if (modes.length > 1 && now > autoModeAt) {
+        autoModeAt = now + 14000; autoT0 = now;
+        const cur = currentMode(info);
+        const nxt = modes[(modes.findIndex(m => m.id === cur) + 1) % modes.length];
+        state.modes[key] = nxt.id;
+        tools.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c.getAttribute('data-mode') === nxt.id));
+        paintScene();
+      }
+    }, 90);
     paintScene();
 
     // 保存视角
@@ -909,6 +973,8 @@
         if (e.key === 'Escape') { closeBigTable(); e.preventDefault(); }
         return;
       }
+      const pl = document.getElementById('prob-layer');
+      if (pl && pl.classList.contains('open') && e.key === 'Escape') { closeProblems(); e.preventDefault(); return; }
       const t = e.target;
       if (t && t.matches && t.matches('input, textarea, select')) {
         if (e.key === 'Escape') { closeSearch(); t.blur(); }
@@ -946,6 +1012,7 @@
 
   /* ---------------- 逐题动画播放器 ---------------- */
   let probCur = null, probStep = 0, probTimer = null, probFilterSrc = null;
+  let probStudio = null, probModel = null, probGaugeLast = 0;
   function probPlaying() { return !!probTimer; }
   function stopProb() {
     if (probTimer) { clearInterval(probTimer); probTimer = null; }
@@ -972,12 +1039,52 @@
     });
     list.innerHTML = html || '<div class="prob-empty">没有匹配的题目</div>';
   }
+  function paintProbGauges(r) {
+    const now = performance.now();
+    if (!r || now - probGaugeLast < 160) return;
+    probGaugeLast = now;
+    const g = document.getElementById('prob-gauges');
+    if (g) g.innerHTML = (r.gauges || []).map(([k, v]) => `<span class="gauge"><i>${esc(k)}</i><b>${esc(v)}</b></span>`).join('');
+  }
+  function ensureProbStudio() {
+    const canvas = document.getElementById('prob-canvas');
+    if (!canvas || !window.PROBLEM_MODELS) return null;
+    if (!probStudio) {
+      probStudio = new E.Studio(canvas, { yaw: -0.24, pitch: 0.2, zoom: 1.04 });
+      probStudio.setPalette(enginePalette(PALETTES[state.palette]));
+      probStudio.showLabels = state.labels;
+      probStudio.seeThrough = state.seeThrough;
+      probStudio.autoSpin = 0.1;
+      probStudio._anim = true;
+      app.probStudio = probStudio;
+    }
+    probStudio.setActive(true);
+    return probStudio;
+  }
+  function setupProbModel() {
+    if (!probCur || !window.PROBLEM_MODELS) return;
+    probModel = window.PROBLEM_MODELS.describe(probCur);
+    const st = ensureProbStudio();
+    if (!st) return;
+    const cam = probModel.camera || {};
+    if (cam.yaw != null) st.yaw = cam.yaw;
+    if (cam.pitch != null) st.pitch = cam.pitch;
+    if (cam.zoom != null) st.zoom = cam.zoom;
+    if (cam.offset) st.offset = cam.offset.slice();
+    if (cam.dist) st.dist = cam.dist;
+    if (cam.fov) st.fov = cam.fov;
+    st.autoSpin = probModel.kind.indexOf('conic-') === 0 ? 0.07 : 0.11;
+    st._anim = true;
+    st.setScene(t => {
+      const r = window.PROBLEM_MODELS.build(t, { st, prob: probCur, model: probModel, step: probStep, total: probCur.steps.length });
+      paintProbGauges(r);
+      return r;
+    });
+    st.dirty = true;
+  }
   function syncExhibitStep() {
-    /* 步骤推进时，左页展台同步切换到该章的下一个演示模式 */
-    const chips = document.querySelectorAll('#viz-tools .chip');
-    if (!chips.length || !probCur) return;
-    const chip = chips[probStep % chips.length];
-    if (chip && !chip.classList.contains('on')) chip.click();
+    /* 模型就在播放器里：步进时只需重绘并更新动作说明 */
+    if (probStudio) probStudio.dirty = true;
   }
   function renderPlayer() {
     if (!probCur) return;
@@ -986,6 +1093,12 @@
       `${probCur.chNo} ${probCur.chTitle} · 第 ${probCur.page + 1} 页 · 本题 ${total} 步`;
     document.getElementById('prob-title').textContent = probCur.text.slice(0, 60);
     document.getElementById('prob-stmt').innerHTML = '<div class="prob-stmt-tag">题干</div>' + probCur.stmt;
+    if (probModel && window.PROBLEM_MODELS) {
+      const mn = document.getElementById('prob-model-name');
+      const ma = document.getElementById('prob-model-action');
+      if (mn) mn.textContent = '3D 模型 · ' + probModel.title;
+      if (ma) ma.textContent = window.PROBLEM_MODELS.action(probCur, probModel, probStep, total);
+    }
     const box = document.getElementById('prob-steps');
     box.innerHTML = probCur.steps.map((h, i) => {
       const st = probStep === 0 ? 'wait' : (i < probStep - 1 ? 'done' : (i === probStep - 1 ? 'cur' : 'wait'));
@@ -1021,6 +1134,7 @@
     probCur = pr; probStep = 0;
     if (state.page !== pr.page) go(pr.page);
     renderProbList();
+    setupProbModel();
     renderPlayer();
     if (autoplay) setTimeout(playProb, 350);
   }
@@ -1029,11 +1143,13 @@
     document.getElementById('prob-filter').value = '';
     renderProbList();
     document.getElementById('prob-layer').classList.add('open');
-    if (!probCur && PROBLEMS.length) selectProblem(PROBLEMS[0].id, false);
-    else if (probCur) renderPlayer();
+    const first = probFilterSrc != null ? PROBLEMS.find(pr => pr.src === probFilterSrc) : PROBLEMS[0];
+    if (first && (probFilterSrc != null || !probCur)) selectProblem(first.id, true);
+    else if (probCur) { setupProbModel(); renderPlayer(); setTimeout(() => { if (!probTimer) playProb(); }, 300); }
   }
   function closeProblems() {
     stopProb();
+    if (probStudio) probStudio.setActive(false);
     document.getElementById('prob-layer').classList.remove('open');
   }
 

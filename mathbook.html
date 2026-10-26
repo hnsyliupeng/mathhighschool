@@ -1013,6 +1013,18 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
   .prob-side { border-right: 0; border-bottom: 1px solid #e2d5b8; }
 }
 
+.lab-btn.auto.on { background: var(--accent); color: #fff; border-color: var(--accent); animation: stepPulse 1.6s ease infinite; }
+
+/* ---------- 逐题 3D 模型舞台 ---------- */
+.prob-stage { position: relative; flex: none; height: 318px; margin-top: 10px; border: 1.5px solid #d8c9a8; border-radius: 12px; background: linear-gradient(180deg, #fffdf6, #f7edd8); overflow: hidden; }
+.prob-stage canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+.prob-stage-top { position: absolute; left: 10px; top: 8px; right: 10px; display: flex; gap: 10px; align-items: baseline; pointer-events: none; }
+.prob-stage-top b { color: var(--accent); font-size: 13.5px; white-space: nowrap; }
+.prob-stage-top span { font-size: 12px; color: #6d5f45; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.prob-gauges { position: absolute; left: 10px; bottom: 9px; display: flex; flex-wrap: wrap; gap: 5px; max-width: calc(100% - 190px); pointer-events: none; }
+.prob-stage-hint { position: absolute; right: 10px; bottom: 10px; font-size: 11px; color: #9a8a68; background: rgba(251,246,233,.8); padding: 2px 7px; border-radius: 99px; pointer-events: none; }
+@media (max-width: 760px) { .prob-stage { height: 240px; } .prob-gauges { max-width: calc(100% - 20px); bottom: 30px; } }
+
 </style>
 </head>
 <body>
@@ -1102,9 +1114,15 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
       <div class="prob-main-head">
         <div>
           <div class="prob-kicker" id="prob-kicker">选择左侧任意一道题</div>
-          <div class="prob-title" id="prob-title">每道题都有动画：题干先行，解析一步一步长出来</div>
+          <div class="prob-title" id="prob-title">每道题都有自己的 3D 几何模型：边看模型搭建，边读解析</div>
         </div>
         <button class="mini-btn" id="prob-close" title="关闭 (Esc)">✕</button>
+      </div>
+      <div class="prob-stage" id="prob-stage">
+        <canvas id="prob-canvas"></canvas>
+        <div class="prob-stage-top"><b id="prob-model-name">题目 3D 模型</b><span id="prob-model-action"></span></div>
+        <div class="prob-gauges" id="prob-gauges"></div>
+        <div class="prob-stage-hint">模型自动演示 · 可拖动旋转 · 滚轮缩放</div>
       </div>
       <div class="prob-stmt" id="prob-stmt"></div>
       <div class="prob-progress"><i id="prob-fill"></i></div>
@@ -1119,7 +1137,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
         </label>
         <span class="prob-stepno" id="prob-stepno"></span>
       </div>
-      <div class="prob-foot">播放时左页 3D 展台会随步骤切换演示模式；也可以关掉浮层，回到原页继续拖实验室。</div>
+      <div class="prob-foot">上方模型会自动转动并随解析步骤逐层搭建；拖动模型可换角度，关掉浮层可回原页继续拖实验室。</div>
     </div>
   </div>
 </div>
@@ -3981,6 +3999,275 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
   };
 })();
 
+/* ---- problem-models.js ---- */
+/* =============================================================
+   problem-models.js · 逐题 3D 几何模型生成器
+   每道题不再只播放文字：根据题干关键词生成可旋转、可自动运动的
+   几何模型；解析步数决定模型搭到哪一层，时间 t 让关键点动起来。
+
+   API:
+     describe(prob) -> { sceneKey, mode, kind, title, camera }
+     build(t, { st, prob, step, total }) -> { items, fit, gauges }
+     action(prob, model, step, total) -> 当前步的模型动作说明
+   ============================================================= */
+(function () {
+  'use strict';
+  const E = window.Ink3D, G = window.Geo, S = window.SCENES, V = E.V;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const F2 = x => { if (!isFinite(x)) return '∞'; const v = Math.round(x * 100) / 100; return (Object.is(v, -0) ? 0 : v).toString(); };
+  const ink = st => G.ink(st), acc = st => G.accent(st);
+  const plain = prob => [prob.text || ''].concat(prob.stepTexts || []).join(' ');
+  const strip = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+
+  /* ---------- 模式选择：题干关键词命中哪个演示模式 ---------- */
+  const KEYWORDS = [
+    [/截面|截得|平面截/, 'cut'], [/二面角|平面角/, 'angle'], [/外接球|内切球/, 'ball'],
+    [/线面垂直|垂直于平面/, 'perp'], [/线面平行|平行于平面/, 'para'], [/正方体|长方体|棱长/, 'cube'],
+    [/法向量/, 'normal'], [/坐标系|建系/, 'sys'], [/椭圆/, 'ellipse'], [/双曲线/, 'hyperbola'],
+    [/抛物线/, 'parabola'], [/圆锥|截线/, 'cone'], [/切线|切点/, 'tan'], [/极值|最值/, 'ext'],
+    [/单调|增减/, 'mono'], [/曲面|偏导|二元/, 'surf'], [/列联|卡方|χ/, 'table'], [/回归/, 'reg'],
+    [/方差|标准差|离散/, 'spread'], [/条件概率/, 'cond'], [/正态/, 'normal'], [/随机游走/, 'walk'],
+    [/容斥|交集.*并集/, 'incl'], [/杨辉|二项式/, 'pascal'], [/路径|网格/, 'path'], [/整数.*最优|整点/, 'int'],
+    [/可行域|约束/, 'region'], [/目标函数/, 'obj'], [/素数/, 'prime'], [/辗转|最大公约/, 'gcd'], [/同余|模/, 'mod'],
+    [/单位圆/, 'unit'], [/特殊角|三角函数值/, 'tri'], [/等差/, 'arith'], [/等比/, 'geom'], [/求和|前 n 项|前n项/, 'sum'],
+    [/分段/, 'piece'], [/对勾|双勾/, 'tick'], [/指数|对数函数/, 'exp'], [/二次函数|抛物线.*函数/, 'quad'],
+    [/基本不等式|均值/, 'amgm'], [/柯西/, 'cauchy'], [/复数|辐角/, 'complex'], [/乘 i|乘i/, 'rot'], [/对数/, 'log'],
+    [/投影/, 'proj'], [/数量积|点积/, 'dot'], [/向量加法|平行四边形/, 'add'], [/并集/, 'union'], [/补集/, 'comp'],
+    [/集合|文氏|韦恩/, 'venn'], [/三次/, 'cubic'], [/分式|绝对值/, 'ratio'], [/积分|黎曼/, 'integral'],
+    [/级数|无穷.*和/, 'series'], [/四维|超立方|正八胞体/, 'tesseract'], [/分类讨论/, 'tree'], [/嵌套根式|根式/, 'radical'],
+    [/答题|规范|步骤分/, 'stack'],
+  ];
+  function chooseMode(prob, sceneKey) {
+    const sc = S[sceneKey];
+    if (!sc || !sc.modes || !sc.modes.length) return null;
+    const txt = plain(prob);
+    let best = sc.modes[0], score = -1;
+    sc.modes.forEach(m => {
+      let s = 0;
+      if (txt.indexOf(m.name) >= 0) s += 6;
+      KEYWORDS.forEach(([re, id]) => { if (id === m.id && re.test(txt)) s += 5; });
+      if (s > score) { score = s; best = m; }
+    });
+    return best.id;
+  }
+  function specOf(sceneKey, mode) {
+    return (((window.LABS || {})[sceneKey] || {})[mode]) || null;
+  }
+  function describe(prob) {
+    const sceneKey = prob.scene && S[prob.scene] ? prob.scene : 'fallback';
+    const sc = S[sceneKey] || S.fallback;
+    const mode = chooseMode(prob, sceneKey) || (sc.modes && sc.modes[0] && sc.modes[0].id) || null;
+    const txt = plain(prob);
+    let kind = 'scene';
+    if (sceneKey === 'conic') {
+      if (/抛物线/.test(txt)) kind = 'conic-parabola';
+      else if (/双曲线/.test(txt)) kind = 'scene';
+      else if (/圆/.test(txt) && /切线|切点/.test(txt) && !/椭圆/.test(txt)) kind = 'conic-circle';
+      else kind = 'conic-ellipse';
+    }
+    const titles = {
+      'conic-ellipse': /切线|切点/.test(txt) ? '椭圆 · 焦点弦与两切线交点模型' : '椭圆 · 动态弦模型',
+      'conic-parabola': /切线|切点/.test(txt) ? '抛物线 · 焦点弦与切线模型' : '抛物线 · 动态焦点弦模型',
+      'conic-circle': '圆 · 外点切线与切点弦模型',
+    };
+    const modeName = (sc.modes || []).filter(m => m.id === mode).map(m => m.name)[0] || '';
+    return {
+      sceneKey, mode, kind,
+      title: titles[kind] || ((sc.name || '题目模型') + (modeName ? ' · ' + modeName : '')),
+      camera: kind.indexOf('conic-') === 0
+        ? { yaw: -0.24, pitch: 0.2, zoom: 1.04, offset: [0, 0.02, 0], dist: 9.4, fov: 6.6 }
+        : (sc.camera || { yaw: -0.5, pitch: 0.24, zoom: 1 }),
+    };
+  }
+
+  /* ---------- 通用小件 ---------- */
+  function axes(items, st, xr, yr) {
+    items.push(E.line([-xr, 0, 0], [xr, 0, 0], { color: ink(st), sw: 1.1, arrow: true, alpha: .75 }));
+    items.push(E.line([0, -yr * .55, 0], [0, yr, 0], { color: ink(st), sw: 1.1, arrow: true, alpha: .75 }));
+    items.push(E.label([xr, 0, 0], 'x', { dx: 8, dy: 9, size: 12, align: 'left' }));
+    items.push(E.label([0, yr, 0], 'y', { dx: 9, dy: -4, size: 12, align: 'left' }));
+    items.push(E.label([0, 0, 0], 'O', { dx: -11, dy: 12, size: 11 }));
+  }
+  function mark(items, st, p, name, color, dx, dy) {
+    items.push(E.point([p[0], p[1], 0], { r: 4, color: color || acc(st), ring: true, key: 'pm:' + name }));
+    items.push(E.label([p[0], p[1], 0], name, { dx: dx == null ? 10 : dx, dy: dy == null ? -10 : dy, size: 12, color: color || acc(st), align: 'left' }));
+  }
+  function seg(items, a, b, o) { items.push(E.line([a[0], a[1], 0], [b[0], b[1], 0], o || {})); }
+  function reveal(step, total, layer) {
+    if (total <= 1) return true;
+    if (step <= 0) return layer === 0;
+    const cut1 = Math.max(1, Math.round(total * 0.34)), cut2 = Math.max(2, Math.round(total * 0.67));
+    return layer === 0 || (layer === 1 && step >= 1) || (layer === 2 && step >= cut1) || (layer === 3 && step >= cut2);
+  }
+
+  /* ---------- 解析几何专属：椭圆/抛物线焦点弦 + 切线 ---------- */
+  function conicFocal(t, ctx, isPara) {
+    const st = ctx.st, prob = ctx.prob, step = ctx.step, total = ctx.total;
+    const txt = plain(prob), items = [];
+    axes(items, st, 3.25, 2.35);
+    const withTan = /切线|切点|FM|F M/.test(txt);
+    const withMid = /中点|轨迹|定点|弦/.test(txt);
+    const phase = t * 0.45 + step * 0.1;
+    const ang = (isPara ? 0.95 : 1.02) + 0.34 * Math.sin(phase);
+    const u = [Math.cos(ang), Math.sin(ang)];
+    let A, B, F, gauges = [];
+    if (!isPara) {
+      const a = 2.35, b = 1.38, c = Math.sqrt(a * a - b * b);
+      F = /右焦点|F\(1|F（1/.test(txt) ? [c, 0] : [-c, 0];
+      const dx = F[0] < 0 ? -a * a / c : a * a / c;
+      const curve = [];
+      for (let i = 0; i <= 96; i++) { const q = i / 96 * Math.PI * 2; curve.push([a * Math.cos(q), b * Math.sin(q), 0]); }
+      items.push(E.face(curve.slice(0, 97).map(p => p), { color: acc(st), alpha0: .07, edgeColor: 'transparent', sw: 0 }));
+      items.push(E.poly(curve, { closed: true, color: ink(st), sw: 2.3, key: 'pm:ellipse' }));
+      seg(items, [dx, -2.05], [dx, 2.05], { color: acc(st), sw: 1.2, dash: [6, 5], alpha: .8 });
+      items.push(E.label([dx, 2.05, 0], F[0] < 0 ? '左准线 x=−a²/c' : '右准线 x=a²/c', { dx: F[0] < 0 ? -8 : 8, dy: -6, size: 10.5, color: acc(st), align: F[0] < 0 ? 'right' : 'left' }));
+      mark(items, st, F, 'F', acc(st));
+      mark(items, st, [-F[0], 0], F[0] < 0 ? 'F₂' : 'F₁', ink(st), -18, -8);
+      const Aq = (u[0] * u[0]) / (a * a) + (u[1] * u[1]) / (b * b);
+      const Bq = 2 * (F[0] * u[0] / (a * a) + F[1] * u[1] / (b * b));
+      const Cq = (F[0] * F[0]) / (a * a) - 1;
+      const disc = Math.sqrt(Math.max(0, Bq * Bq - 4 * Aq * Cq));
+      const s1 = (-Bq - disc) / (2 * Aq), s2 = (-Bq + disc) / (2 * Aq);
+      A = [F[0] + s1 * u[0], F[1] + s1 * u[1]]; B = [F[0] + s2 * u[0], F[1] + s2 * u[1]];
+      gauges = [['曲线', '椭圆 a=' + F2(a) + ', b=' + F2(b)], ['焦点 F', '(' + F2(F[0]) + ',0)'], ['AB 方向角', F2(ang * 180 / Math.PI) + '°']];
+      if (reveal(step, total, 1)) {
+        seg(items, A, B, { color: acc(st), sw: 2.6, layer: 'top', key: 'pm:AB' });
+        mark(items, st, A, 'A'); mark(items, st, B, 'B');
+        if (withMid) {
+          const M0 = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2];
+          mark(items, st, M0, 'M₀', ink(st), 8, 12);
+          gauges.push(['弦中点 M₀', '(' + F2(M0[0]) + ',' + F2(M0[1]) + ')']);
+        }
+      }
+      if (withTan && reveal(step, total, 2)) {
+        const tanSeg = P => {
+          const g = [P[0] / (a * a), P[1] / (b * b)], L = Math.hypot(g[0], g[1]) || 1;
+          const d = [-g[1] / L, g[0] / L];
+          return [[P[0] - d[0] * 1.65, P[1] - d[1] * 1.65], [P[0] + d[0] * 1.65, P[1] + d[1] * 1.65]];
+        };
+        const ta = tanSeg(A), tb = tanSeg(B);
+        seg(items, ta[0], ta[1], { color: ink(st), sw: 1.7, layer: 'top' });
+        seg(items, tb[0], tb[1], { color: ink(st), sw: 1.7, layer: 'top' });
+        if (reveal(step, total, 3)) {
+          const gA = [A[0] / (a * a), A[1] / (b * b)], gB = [B[0] / (a * a), B[1] / (b * b)];
+          const det = gA[0] * gB[1] - gA[1] * gB[0];
+          if (Math.abs(det) > 1e-6) {
+            const M = [(gB[1] - gA[1]) / det, (gA[0] - gB[0]) / det];
+            mark(items, st, M, 'M', acc(st), 10, -12);
+            seg(items, F, M, { color: acc(st), sw: 2.2, dash: [5, 4], layer: 'top' });
+            const dot = (M[0] - F[0]) * u[0] + (M[1] - F[1]) * u[1];
+            gauges.push(['M', '(' + F2(M[0]) + ',' + F2(M[1]) + ')'], ['准线 x', F2(dx)], ['FM·AB', F2(dot) + ' ≈ 0']);
+          }
+        }
+      }
+    } else {
+      F = [-0.1, 0];
+      const curve = [];
+      for (let i = 0; i <= 80; i++) { const y = -2.15 + 4.3 * i / 80; curve.push([y * y / 4 - 1.1, y, 0]); }
+      items.push(E.poly(curve, { color: ink(st), sw: 2.3, key: 'pm:parabola' }));
+      seg(items, [-2.1, -2.05], [-2.1, 2.05], { color: acc(st), sw: 1.2, dash: [6, 5], alpha: .8 });
+      items.push(E.label([-2.1, 2.05, 0], '准线 x=−2.1', { dx: -8, dy: -6, size: 10.5, color: acc(st), align: 'right' }));
+      mark(items, st, F, 'F', acc(st));
+      const Aq = u[1] * u[1] / 4, Bq = -u[0], Cq = F[0] + 1.1;
+      const disc = Math.sqrt(Math.max(0, Bq * Bq - 4 * Aq * Cq));
+      const s1 = (-Bq - disc) / (2 * Aq), s2 = (-Bq + disc) / (2 * Aq);
+      A = [F[0] + s1 * u[0], s1 * u[1]]; B = [F[0] + s2 * u[0], s2 * u[1]];
+      gauges = [['曲线', 'y²=4(x+1.1)'], ['焦点 F', '(-0.1,0)'], ['AB 方向角', F2(ang * 180 / Math.PI) + '°']];
+      if (reveal(step, total, 1)) {
+        seg(items, A, B, { color: acc(st), sw: 2.6, layer: 'top' });
+        mark(items, st, A, 'A'); mark(items, st, B, 'B');
+      }
+      if (withTan && reveal(step, total, 2)) {
+        const tanSeg = P => {
+          const d0 = [P[1] / 2, 1], L = Math.hypot(d0[0], d0[1]) || 1, d = [d0[0] / L, d0[1] / L];
+          return [[P[0] - d[0] * 1.5, P[1] - d[1] * 1.5], [P[0] + d[0] * 1.5, P[1] + d[1] * 1.5]];
+        };
+        const ta = tanSeg(A), tb = tanSeg(B);
+        seg(items, ta[0], ta[1], { color: ink(st), sw: 1.7, layer: 'top' });
+        seg(items, tb[0], tb[1], { color: ink(st), sw: 1.7, layer: 'top' });
+        if (reveal(step, total, 3)) {
+          const line = (P, Q) => [Q[1] - P[1], P[0] - Q[0], Q[0] * P[1] - P[0] * Q[1]];
+          const l1 = line(ta[0], ta[1]), l2 = line(tb[0], tb[1]), det = l1[0] * l2[1] - l1[1] * l2[0];
+          if (Math.abs(det) > 1e-6) {
+            const M = [(l1[1] * l2[2] - l1[2] * l2[1]) / det, (l1[2] * l2[0] - l1[0] * l2[2]) / det];
+            mark(items, st, M, 'M', acc(st), 10, -12);
+            seg(items, F, M, { color: acc(st), sw: 2.2, dash: [5, 4], layer: 'top' });
+            gauges.push(['M', '(' + F2(M[0]) + ',' + F2(M[1]) + ')'], ['FM·AB', F2((M[0] - F[0]) * u[0] + (M[1] - F[1]) * u[1]) + ' ≈ 0']);
+          }
+        }
+      }
+    }
+    items.push(E.label([0, -2.48, 0], withTan ? '焦点弦两端切线的交点始终落在准线上' : '动弦端点与中点随直线转动', { size: 11, dy: 12, color: acc(st) }));
+    return { items, fit: 1.0, gauges };
+  }
+
+  /* ---------- 圆的外点切线模型 ---------- */
+  function conicCircle(t, ctx) {
+    const st = ctx.st, step = ctx.step, total = ctx.total, items = [];
+    axes(items, st, 3.3, 2.3);
+    const r = 1.62, pts = [];
+    for (let i = 0; i <= 96; i++) { const q = i / 96 * Math.PI * 2; pts.push([r * Math.cos(q), r * Math.sin(q), 0]); }
+    items.push(E.poly(pts, { closed: true, color: ink(st), sw: 2.3 }));
+    mark(items, st, [0, 0], 'O', ink(st), -16, 14);
+    const P = [3.05, 0.62 + 0.34 * Math.sin(t * 0.5 + step * 0.12)];
+    mark(items, st, P, 'P', acc(st), 10, -10);
+    const d2 = P[0] * P[0] + P[1] * P[1], base = r * r / d2;
+    const h = r * Math.sqrt(Math.max(0, d2 - r * r)) / d2;
+    const perp = [-P[1], P[0]];
+    const A = [base * P[0] + h * perp[0], base * P[1] + h * perp[1]];
+    const B = [base * P[0] - h * perp[0], base * P[1] - h * perp[1]];
+    if (reveal(step, total, 1)) { mark(items, st, A, 'A'); mark(items, st, B, 'B'); seg(items, [0, 0], A, { color: ink(st), sw: 1.2, dash: [4, 4] }); seg(items, [0, 0], B, { color: ink(st), sw: 1.2, dash: [4, 4] }); }
+    if (reveal(step, total, 2)) { seg(items, P, A, { color: acc(st), sw: 2.4, layer: 'top' }); seg(items, P, B, { color: acc(st), sw: 2.4, layer: 'top' }); }
+    if (reveal(step, total, 3)) seg(items, A, B, { color: acc(st), sw: 1.8, dash: [5, 4], layer: 'top' });
+    const tl = Math.sqrt(Math.max(0, d2 - r * r));
+    return { items, fit: 1.0, gauges: [['半径 r', F2(r)], ['|OP|', F2(Math.sqrt(d2))], ['切线长', F2(tl)], ['切点弦 AB', reveal(step, total, 3) ? '已作出' : '待作']] };
+  }
+
+  /* ---------- 通用模型：调用本章场景，按解析进度插值参数 ---------- */
+  function paramsFor(model, step, total, t) {
+    const spec = specOf(model.sceneKey, model.mode);
+    const out = {};
+    if (!spec) return out;
+    const p = total > 0 ? clamp(step / total, 0, 1) : 1;
+    (spec.controls || []).forEach((ct, idx) => {
+      if (ct.type === 'trigger') { out[ct.id] = Math.max(0, Math.min(4, step)); return; }
+      let v = ct.val;
+      if (spec.brk && spec.brk.params && typeof spec.brk.params[ct.id] === 'number') v = ct.val + (spec.brk.params[ct.id] - ct.val) * p;
+      if (idx === 0) v += Math.sin(t * 0.65) * (ct.max - ct.min) * 0.035;
+      out[ct.id] = clamp(Math.round(v / ct.step) * ct.step, ct.min, ct.max);
+    });
+    return out;
+  }
+  function build(t, ctx) {
+    const model = ctx.model || describe(ctx.prob);
+    if (model.kind === 'conic-ellipse') return conicFocal(t, ctx, false);
+    if (model.kind === 'conic-parabola') return conicFocal(t, ctx, true);
+    if (model.kind === 'conic-circle') return conicCircle(t, ctx);
+    const sc = S[model.sceneKey] || S.fallback;
+    const r = sc.build(t, { st: ctx.st, mode: model.mode, params: paramsFor(model, ctx.step, ctx.total, t) });
+    return r || { items: [], gauges: [] };
+  }
+  function action(prob, model, step, total) {
+    if (!model) return '';
+    if (model.kind.indexOf('conic-') === 0) {
+      if (total <= 1) return '完整模型：动弦、切线、交点与验证仪表同时呈现，模型持续转动';
+      if (step <= 0) return '第 1 层：把题放进坐标系——画曲线、焦点与准线';
+      if (step >= total && total > 1) return '最后一层：连线验证——交点位置与点积由模型实时算出';
+      if (reveal(step, total, 3) && step > 1) return '第 4 层：作交点 M，连 FM，读仪表验证结论';
+      if (reveal(step, total, 2) && step > 1) return '第 3 层：在 A、B 两点作切线 / 切点弦';
+      return '第 2 层：过焦点的动直线交曲线于 A、B，直线持续转动';
+    }
+    const sc = S[model.sceneKey] || {};
+    const m = (sc.modes || []).find(x => x.id === model.mode);
+    const note = m ? strip(m.note) : '';
+    if (step <= 0) return '第 1 层：先摆出本题的几何模型' + (note ? '——' + note : '');
+    if (step >= total && total > 1) return '最后一层：参数推到目标/临界状态，对照仪表读结论';
+    return '模型随解析推进：关键参数从初始值连续变到目标状态，图形与仪表同步重算';
+  }
+
+  window.PROBLEM_MODELS = { describe, build, action, chooseMode };
+})();
+
 /* ---- stage.js ---- */
 /* =============================================================
    stage.js · 真三维书籍舞台
@@ -4359,19 +4646,19 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
       stream.forEach((it, i) => {
         const t = norm(it.b);
         if (!cue(t) || /^H[1-4]$/.test(it.b.tagName)) return;
-        const steps = [];
+        const steps = [], stepTexts = [];
         for (let j = i + 1; j < stream.length && steps.length < 12; j++) {
           const nb = stream[j].b;
           if (/^H[1-4]$/.test(nb.tagName)) break;
           const nt = norm(nb);
           if (cue(nt)) break;
-          if (nt) steps.push(nb.outerHTML);
+          if (nt) { steps.push(nb.outerHTML); stepTexts.push(nt); }
         }
-        if (!steps.length) steps.push('<p>（本题解析即紧随其后的推导，点播放逐步看完本节再回看题干。）</p>');
+        if (!steps.length) { steps.push('<p>（本题解析即紧随其后的推导，点播放逐步看完本节再回看题干。）</p>'); stepTexts.push('紧随其后的推导'); }
         const prob = {
           id: PROBLEMS.length, ch: it.p.ch, chNo: it.p.chNo || '', chTitle: it.p.chTitle || '',
           scene: (CH[it.p.ch] || {}).scene || 'fallback', src: it.src, page: FRONT + it.src,
-          stmt: it.b.outerHTML, steps, text: t,
+          stmt: it.b.outerHTML, steps, stepTexts, text: t,
         };
         PROBLEMS.push(prob);
         (PROB_BY_PAGE[it.src] = PROB_BY_PAGE[it.src] || []).push(prob);
@@ -4394,6 +4681,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     labels: store.labels !== false,
     fontScale: store.fontScale || 1,
     modes: store.modes || {},              // 每章的演示模式
+    autoDemo: store.autoDemo !== false,    // 自动演示默认开
     params: store.params || {},            // 每台机器的控件参数
     view: store.view || '3d',              // 3d / print / phone
     yaw: {},                              // 每章的视角
@@ -4424,7 +4712,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     try {
       localStorage.setItem('mb3d', JSON.stringify({
         palette: state.palette, seeThrough: state.seeThrough, labels: state.labels,
-        fontScale: state.fontScale, modes: state.modes, params: state.params, yaw: state.yaw, page: state.page,
+        fontScale: state.fontScale, modes: state.modes, params: state.params, yaw: state.yaw, page: state.page, autoDemo: state.autoDemo,
         view: state.view,
       }));
     } catch (e) {}
@@ -4473,6 +4761,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     const p = PAGES[state.page];
     app.page = p;
     const info = pageInfo(p);
+    if (app._autoTimer) { clearInterval(app._autoTimer); app._autoTimer = null; }
     if (app.studio) { app.studio.destroy(); app.studio = null; }
     const book = app.el.book;
     const cover = p.kind === 'cover';
@@ -4671,7 +4960,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
             <p>三维部分是自己写的 Canvas 2D 引擎：透视投影、画家算法、手绘抖动墨线、
               球面大圆、拾取高亮。它不依赖 three.js，也不加载任何外部资源。全书共设置
               67 台可操作的参数机器，覆盖正文全部演示模式，且每台都带滑杆或触发控件；面板仪表不是装饰标签，
-              而是场景模型每次重算时直接回吐的结果。此外全书 150 道例题/习题都配了「逐题动画解析」：点顶栏按钮或每页的题目芯片，题干与原文解析会一步一步播放，左页 3D 展台随步骤同步切换模式。书页部分是 CSS 3D 的翻页动画，
+              而是场景模型每次重算时直接回吐的结果。此外全书 150 道例题/习题都配了「逐题 3D 动画解析」：点顶栏按钮或每页的题目芯片，每道题都会生成自己的几何模型——模型自动转动、随解析步骤逐层搭建，仪表实时验证结论（如椭圆焦点弦两切线交点必在准线上、FM·AB≈0）。书页部分是 CSS 3D 的翻页动画，
               配色有五套，可随时切换。</p>
           </div>
           <div class="intro-note">
@@ -4760,6 +5049,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     tools.addEventListener('click', e => {
       const b = e.target.closest('[data-mode]');
       if (!b) return;
+      userTouched();
       state.modes[key] = b.getAttribute('data-mode');
       tools.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === b));
       paintScene();
@@ -4770,15 +5060,20 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     const LABS = window.LABS || {};
     const labBox = document.getElementById('lab');
     let labSpec = null, labParams = null, labForce = true, labLast = 0;
+    /* 自动演示：默认自己跑；用户一动手就让位 12 秒 */
+    let autoOn = state.autoDemo !== false;
+    let autoIdleUntil = 0, autoT0 = performance.now(), autoModeAt = performance.now() + 14000, autoTrigAt = 0;
+    const userTouched = () => { autoIdleUntil = performance.now() + 12000; };
     function seedParams(mode) {
       const spec = (LABS[info.sceneKey] || {})[mode] || null;
       const key = info.sceneKey + ':' + mode;
-      if (!state.params[key]) {
-        const o = {};
-        (spec && spec.controls || []).forEach(ct => { o[ct.id] = ct.type === 'trigger' ? 1 : ct.val; });
-        state.params[key] = o;
-      }
-      return { spec, params: state.params[key] };
+      if (!state.params[key]) state.params[key] = {};
+      const o = state.params[key];
+      (spec && spec.controls || []).forEach(ct => {
+        const dflt = ct.type === 'trigger' ? 1 : ct.val;
+        if (typeof o[ct.id] !== 'number' || !Number.isFinite(o[ct.id])) o[ct.id] = dflt;
+      });
+      return { spec, params: o };
     }
     function captureLab(r) {
       if (!labBox || labBox.hidden || !r) return;
@@ -4803,7 +5098,8 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
       document.getElementById('lab-idea').textContent = labSpec.idea || '';
       const box = document.getElementById('lab-controls');
       const fmtV = (ct, v) => (ct.step >= 1 ? String(Math.round(v)) : String(Math.round(v * 100) / 100)) + (ct.unit || '');
-      box.innerHTML = labSpec.controls.map(ct => ct.type === 'trigger'
+      box.innerHTML = `<button class="lab-btn auto${autoOn ? ' on' : ''}" data-auto>${autoOn ? '⏸ 自动演示' : '▶ 自动演示'}</button>`
+        + labSpec.controls.map(ct => ct.type === 'trigger'
         ? `<button class="lab-btn trig" data-trig="${ct.id}">▶ ${esc(ct.label)}<span class="trig-n" data-trig-n="${ct.id}"></span></button>`
         : `<label class="ctl"><span class="ctl-l">${esc(ct.label)}</span><input type="range" data-param="${ct.id}" min="${ct.min}" max="${ct.max}" step="${ct.step}" value="${labParams[ct.id]}"><span class="ctl-v" data-val="${ct.id}">${fmtV(ct, labParams[ct.id])}</span></label>`).join('')
         + (sc.anim ? `<button class="lab-btn" data-play>${studio._anim ? '⏸ 暂停' : '▶ 运行'}</button>` : '')
@@ -4811,8 +5107,17 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
         + (labSpec.brk ? `<button class="lab-btn brk" data-brk>⚠ ${esc(labSpec.brk.label)}</button>` : '');
       const updTrig = () => box.querySelectorAll('[data-trig-n]').forEach(el => { el.textContent = ' · 已乘 ' + (labParams[el.getAttribute('data-trig-n')] || 0) + ' 次'; });
       updTrig();
+      const ab = box.querySelector('[data-auto]');
+      if (ab) ab.addEventListener('click', () => {
+        autoOn = !autoOn; state.autoDemo = autoOn;
+        ab.classList.toggle('on', autoOn);
+        ab.textContent = autoOn ? '⏸ 自动演示' : '▶ 自动演示';
+        autoT0 = performance.now(); autoModeAt = performance.now() + 14000;
+        save();
+      });
       box.querySelectorAll('[data-param]').forEach(inp => {
         inp.addEventListener('input', () => {
+          userTouched();
           const ct = labSpec.controls.find(x => x.id === inp.getAttribute('data-param'));
           labParams[ct.id] = parseFloat(inp.value);
           const v = box.querySelector(`[data-val="${ct.id}"]`);
@@ -4821,6 +5126,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
         });
       });
       box.querySelectorAll('[data-trig]').forEach(b => b.addEventListener('click', () => {
+        userTouched();
         const id = b.getAttribute('data-trig');
         labParams[id] = ((labParams[id] || 0) + 1) % 5;
         updTrig(); labForce = true; paintScene(false); save();
@@ -4830,7 +5136,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
       const xr = box.querySelector('[data-xray]');
       if (xr) xr.addEventListener('change', () => { studio.seeThrough = xr.checked; studio.dirty = true; });
       const bk = box.querySelector('[data-brk]');
-      if (bk) bk.addEventListener('click', () => { Object.assign(labParams, labSpec.brk.params); renderLab(); labForce = true; paintScene(false); save(); });
+      if (bk) bk.addEventListener('click', () => { userTouched(); Object.assign(labParams, labSpec.brk.params); renderLab(); labForce = true; paintScene(false); save(); });
     }
 
     function paintScene(withLab = true) {
@@ -4848,6 +5154,51 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
       try { captureLab(sc.build(studio.time || 0, { st: studio, mode, params: sd.params })); } catch (e) {}
       studio.dirty = true;
     }
+
+    /* ---------- 自动演示引擎 ----------
+       无人操作时：前两个滑杆按正弦扫过量程（仪表同模型实时结算）、
+       触发控件定时推进、每 14 秒轮换到下一个演示模式。
+       用户拖杆/点芯片/转展台后暂停 12 秒再恢复。 */
+    if (app._autoTimer) { clearInterval(app._autoTimer); app._autoTimer = null; }
+    const fmtA = (ct, v) => (ct.step >= 1 ? String(Math.round(v)) : String(Math.round(v * 100) / 100)) + (ct.unit || '');
+    app.el.viz.addEventListener('pointerdown', userTouched);
+    app._autoTimer = setInterval(() => {
+      if (!autoOn || document.hidden || !labSpec || !labParams) return;
+      const now = performance.now();
+      if (now < autoIdleUntil) { autoModeAt = now + 14000; return; }
+      const ranges = labSpec.controls.filter(c => c.type !== 'trigger');
+      const trigs = labSpec.controls.filter(c => c.type === 'trigger');
+      const el = (now - autoT0) / 1000;
+      let changed = false;
+      ranges.slice(0, 2).forEach((ct, idx) => {
+        const mid = (ct.min + ct.max) / 2, amp = (ct.max - ct.min) / 2 * 0.92;
+        let v = mid + amp * Math.sin(el * 0.55 + idx * 1.7);
+        v = Math.round(v / ct.step) * ct.step;
+        v = Math.max(ct.min, Math.min(ct.max, Math.round(v * 1000) / 1000));
+        if (Math.abs((labParams[ct.id] || 0) - v) > 1e-9) {
+          labParams[ct.id] = v; changed = true;
+          const inp = document.querySelector(`#lab-controls [data-param="${ct.id}"]`);
+          if (inp) inp.value = v;
+          const lab = document.querySelector(`#lab-controls [data-val="${ct.id}"]`);
+          if (lab) lab.textContent = fmtA(ct, v);
+        }
+      });
+      if (trigs.length && now > autoTrigAt) {
+        autoTrigAt = now + 2200;
+        trigs.forEach(ct => { labParams[ct.id] = ((labParams[ct.id] || 0) + 1) % 5; });
+        document.querySelectorAll('[data-trig-n]').forEach(el2 => { el2.textContent = ' · 已乘 ' + (labParams[el2.getAttribute('data-trig-n')] || 0) + ' 次'; });
+        changed = true;
+      }
+      if (changed) { labForce = true; paintScene(false); }
+      if (modes.length > 1 && now > autoModeAt) {
+        autoModeAt = now + 14000; autoT0 = now;
+        const cur = currentMode(info);
+        const nxt = modes[(modes.findIndex(m => m.id === cur) + 1) % modes.length];
+        state.modes[key] = nxt.id;
+        tools.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c.getAttribute('data-mode') === nxt.id));
+        paintScene();
+      }
+    }, 90);
     paintScene();
 
     // 保存视角
@@ -5196,6 +5547,8 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
         if (e.key === 'Escape') { closeBigTable(); e.preventDefault(); }
         return;
       }
+      const pl = document.getElementById('prob-layer');
+      if (pl && pl.classList.contains('open') && e.key === 'Escape') { closeProblems(); e.preventDefault(); return; }
       const t = e.target;
       if (t && t.matches && t.matches('input, textarea, select')) {
         if (e.key === 'Escape') { closeSearch(); t.blur(); }
@@ -5233,6 +5586,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
 
   /* ---------------- 逐题动画播放器 ---------------- */
   let probCur = null, probStep = 0, probTimer = null, probFilterSrc = null;
+  let probStudio = null, probModel = null, probGaugeLast = 0;
   function probPlaying() { return !!probTimer; }
   function stopProb() {
     if (probTimer) { clearInterval(probTimer); probTimer = null; }
@@ -5259,12 +5613,52 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     });
     list.innerHTML = html || '<div class="prob-empty">没有匹配的题目</div>';
   }
+  function paintProbGauges(r) {
+    const now = performance.now();
+    if (!r || now - probGaugeLast < 160) return;
+    probGaugeLast = now;
+    const g = document.getElementById('prob-gauges');
+    if (g) g.innerHTML = (r.gauges || []).map(([k, v]) => `<span class="gauge"><i>${esc(k)}</i><b>${esc(v)}</b></span>`).join('');
+  }
+  function ensureProbStudio() {
+    const canvas = document.getElementById('prob-canvas');
+    if (!canvas || !window.PROBLEM_MODELS) return null;
+    if (!probStudio) {
+      probStudio = new E.Studio(canvas, { yaw: -0.24, pitch: 0.2, zoom: 1.04 });
+      probStudio.setPalette(enginePalette(PALETTES[state.palette]));
+      probStudio.showLabels = state.labels;
+      probStudio.seeThrough = state.seeThrough;
+      probStudio.autoSpin = 0.1;
+      probStudio._anim = true;
+      app.probStudio = probStudio;
+    }
+    probStudio.setActive(true);
+    return probStudio;
+  }
+  function setupProbModel() {
+    if (!probCur || !window.PROBLEM_MODELS) return;
+    probModel = window.PROBLEM_MODELS.describe(probCur);
+    const st = ensureProbStudio();
+    if (!st) return;
+    const cam = probModel.camera || {};
+    if (cam.yaw != null) st.yaw = cam.yaw;
+    if (cam.pitch != null) st.pitch = cam.pitch;
+    if (cam.zoom != null) st.zoom = cam.zoom;
+    if (cam.offset) st.offset = cam.offset.slice();
+    if (cam.dist) st.dist = cam.dist;
+    if (cam.fov) st.fov = cam.fov;
+    st.autoSpin = probModel.kind.indexOf('conic-') === 0 ? 0.07 : 0.11;
+    st._anim = true;
+    st.setScene(t => {
+      const r = window.PROBLEM_MODELS.build(t, { st, prob: probCur, model: probModel, step: probStep, total: probCur.steps.length });
+      paintProbGauges(r);
+      return r;
+    });
+    st.dirty = true;
+  }
   function syncExhibitStep() {
-    /* 步骤推进时，左页展台同步切换到该章的下一个演示模式 */
-    const chips = document.querySelectorAll('#viz-tools .chip');
-    if (!chips.length || !probCur) return;
-    const chip = chips[probStep % chips.length];
-    if (chip && !chip.classList.contains('on')) chip.click();
+    /* 模型就在播放器里：步进时只需重绘并更新动作说明 */
+    if (probStudio) probStudio.dirty = true;
   }
   function renderPlayer() {
     if (!probCur) return;
@@ -5273,6 +5667,12 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
       `${probCur.chNo} ${probCur.chTitle} · 第 ${probCur.page + 1} 页 · 本题 ${total} 步`;
     document.getElementById('prob-title').textContent = probCur.text.slice(0, 60);
     document.getElementById('prob-stmt').innerHTML = '<div class="prob-stmt-tag">题干</div>' + probCur.stmt;
+    if (probModel && window.PROBLEM_MODELS) {
+      const mn = document.getElementById('prob-model-name');
+      const ma = document.getElementById('prob-model-action');
+      if (mn) mn.textContent = '3D 模型 · ' + probModel.title;
+      if (ma) ma.textContent = window.PROBLEM_MODELS.action(probCur, probModel, probStep, total);
+    }
     const box = document.getElementById('prob-steps');
     box.innerHTML = probCur.steps.map((h, i) => {
       const st = probStep === 0 ? 'wait' : (i < probStep - 1 ? 'done' : (i === probStep - 1 ? 'cur' : 'wait'));
@@ -5308,6 +5708,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     probCur = pr; probStep = 0;
     if (state.page !== pr.page) go(pr.page);
     renderProbList();
+    setupProbModel();
     renderPlayer();
     if (autoplay) setTimeout(playProb, 350);
   }
@@ -5316,11 +5717,13 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     document.getElementById('prob-filter').value = '';
     renderProbList();
     document.getElementById('prob-layer').classList.add('open');
-    if (!probCur && PROBLEMS.length) selectProblem(PROBLEMS[0].id, false);
-    else if (probCur) renderPlayer();
+    const first = probFilterSrc != null ? PROBLEMS.find(pr => pr.src === probFilterSrc) : PROBLEMS[0];
+    if (first && (probFilterSrc != null || !probCur)) selectProblem(first.id, true);
+    else if (probCur) { setupProbModel(); renderPlayer(); setTimeout(() => { if (!probTimer) playProb(); }, 300); }
   }
   function closeProblems() {
     stopProb();
+    if (probStudio) probStudio.setActive(false);
     document.getElementById('prob-layer').classList.remove('open');
   }
 

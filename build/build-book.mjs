@@ -20,6 +20,8 @@ const js = [
   read('src2/scenes.js'),
   '/* ---- labs.js ---- */',
   read('src2/labs.js'),
+  '/* ---- problem-models.js ---- */',
+  read('src2/problem-models.js'),
   '/* ---- stage.js ---- */',
   read('src2/stage.js'),
   '/* ---- book.js ---- */',

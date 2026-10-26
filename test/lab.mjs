@@ -57,6 +57,8 @@ if (cover.modes !== 67 || cover.withControls !== 67) fail(`机器应为 67/67 �
 /* 2. 方程：改 c，Δ 与根同步变；推过头 Δ<0 */
 await page.evaluate(() => window.BOOK_GO(5)); // 第 1 章首页
 await wait(900);
+await page.evaluate(() => { const b = document.querySelector('[data-auto]'); if (b && b.classList.contains('on')) b.click(); }); // 测试期间关自动演示，避免抢参数
+await setRange('a', 1); await setRange('b', 0); await setRange('c', -4); // 自动演示扫过的参数复位到教材默认
 let a = await gauges();
 if (a.labHidden) fail('方程页实验室未显示'); else ok('方程实验室已挂载');
 const d0 = a.g['Δ=b²−4ac'];
@@ -120,7 +122,7 @@ const sweep = await page.evaluate(async () => {
     if (!chips.length) { bad.push(ch.scene + ':无模式芯片'); continue; }
     for (const chip of chips) {
       chip.click();
-      await wait(110);
+      await wait(230);
       visited++;
       const lab = document.getElementById('lab');
       if (!lab || lab.hidden) { bad.push(ch.scene + ':' + chip.textContent + ':实验室隐藏'); continue; }
@@ -130,7 +132,7 @@ const sweep = await page.evaluate(async () => {
       if (inp) {
         const mid = (parseFloat(inp.min) + parseFloat(inp.max)) / 2;
         inp.value = mid; inp.dispatchEvent(new Event('input', { bubbles: true }));
-        await wait(90);
+        await wait(160);
         const after = document.getElementById('lab-gauges').textContent;
         if (!after || after === before && parseFloat(inp.value) === parseFloat(inp.min)) bad.push(ch.scene + ':' + chip.textContent + ':拖杆后无仪表');
       }

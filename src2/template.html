@@ -96,9 +96,15 @@
       <div class="prob-main-head">
         <div>
           <div class="prob-kicker" id="prob-kicker">选择左侧任意一道题</div>
-          <div class="prob-title" id="prob-title">每道题都有动画：题干先行，解析一步一步长出来</div>
+          <div class="prob-title" id="prob-title">每道题都有自己的 3D 几何模型：边看模型搭建，边读解析</div>
         </div>
         <button class="mini-btn" id="prob-close" title="关闭 (Esc)">✕</button>
+      </div>
+      <div class="prob-stage" id="prob-stage">
+        <canvas id="prob-canvas"></canvas>
+        <div class="prob-stage-top"><b id="prob-model-name">题目 3D 模型</b><span id="prob-model-action"></span></div>
+        <div class="prob-gauges" id="prob-gauges"></div>
+        <div class="prob-stage-hint">模型自动演示 · 可拖动旋转 · 滚轮缩放</div>
       </div>
       <div class="prob-stmt" id="prob-stmt"></div>
       <div class="prob-progress"><i id="prob-fill"></i></div>
@@ -113,7 +119,7 @@
         </label>
         <span class="prob-stepno" id="prob-stepno"></span>
       </div>
-      <div class="prob-foot">播放时左页 3D 展台会随步骤切换演示模式；也可以关掉浮层，回到原页继续拖实验室。</div>
+      <div class="prob-foot">上方模型会自动转动并随解析步骤逐层搭建；拖动模型可换角度，关掉浮层可回原页继续拖实验室。</div>
     </div>
   </div>
 </div>
