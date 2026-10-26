@@ -178,7 +178,7 @@
     return {
       chId: p.ch, chNo: p.chNo, chTitle: p.chTitle, chShort: p.chShort,
       title: p.chTitle, sec: p.sec || '', sceneKey: ch.scene || 'fallback',
-      cont: p.cont, idxInCh: p.src - ch.first + 1, totalInCh: ch.count,
+      cont: p.cont, src: p.src, idxInCh: p.src - ch.first + 1, totalInCh: ch.count,
     };
   }
 
@@ -471,11 +471,21 @@
 
     const modes = modeList(info);
     const tools = document.getElementById('viz-tools');
+    /* 与本页同步：展台模式按本页第一道题的题型自动对齐（手动点过的模式不覆盖） */
+    if (info.src != null && window.PROBLEM_MODELS) {
+      const pageProbs = PROB_BY_PAGE[info.src] || [];
+      if (pageProbs.length) {
+        const want = window.PROBLEM_MODELS.chooseMode(pageProbs[0], info.sceneKey);
+        const mk = key + ':' + info.src;
+        if (want && modes.some(m => m.id === want) && !(app._manualModes && app._manualModes.has(mk))) state.modes[key] = want;
+      }
+    }
     tools.innerHTML = modes.map(m => `<button class="chip${m.id === currentMode(info) ? ' on' : ''}" data-mode="${m.id}">${esc(m.name)}</button>`).join('');
     tools.addEventListener('click', e => {
       const b = e.target.closest('[data-mode]');
       if (!b) return;
       userTouched();
+      if (info.src != null) { (app._manualModes = app._manualModes || new Set()).add(key + ':' + info.src); }
       state.modes[key] = b.getAttribute('data-mode');
       tools.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === b));
       paintScene();
@@ -597,7 +607,7 @@
       const el = (now - autoT0) / 1000;
       let changed = false;
       ranges.slice(0, 2).forEach((ct, idx) => {
-        const mid = (ct.min + ct.max) / 2, amp = (ct.max - ct.min) / 2 * 0.92;
+        const mid = ct.val, amp = (ct.max - ct.min) * 0.16;
         let v = mid + amp * Math.sin(el * 0.55 + idx * 1.7);
         v = Math.round(v / ct.step) * ct.step;
         v = Math.max(ct.min, Math.min(ct.max, Math.round(v * 1000) / 1000));
@@ -1012,7 +1022,7 @@
 
   /* ---------------- 逐题动画播放器 ---------------- */
   let probCur = null, probStep = 0, probTimer = null, probFilterSrc = null;
-  let probStudio = null, probModel = null, probGaugeLast = 0;
+  let probStudio = null, probModel = null, probGaugeLast = 0, probPhase = 0;
   function probPlaying() { return !!probTimer; }
   function stopProb() {
     if (probTimer) { clearInterval(probTimer); probTimer = null; }
@@ -1034,7 +1044,7 @@
     items.forEach(pr => {
       if (pr.ch !== lastCh) { lastCh = pr.ch; html += `<div class="prob-ch">${esc(pr.chNo)} ${esc(pr.chTitle)}</div>`; }
       html += `<button class="prob-item${probCur && probCur.id === pr.id ? ' on' : ''}" data-prob="${pr.id}">
-        <span class="prob-item-t">${esc(pr.text.slice(0, 46))}</span>
+        <span class="prob-item-t">${pr.stmt}</span>
         <span class="prob-item-m">第 ${pr.page + 1} 页 · ${pr.steps.length} 步解析</span></button>`;
     });
     list.innerHTML = html || '<div class="prob-empty">没有匹配的题目</div>';
@@ -1076,7 +1086,7 @@
     st.autoSpin = probModel.kind.indexOf('conic-') === 0 ? 0.07 : 0.11;
     st._anim = true;
     st.setScene(t => {
-      const r = window.PROBLEM_MODELS.build(t, { st, prob: probCur, model: probModel, step: probStep, total: probCur.steps.length });
+      const r = window.PROBLEM_MODELS.build(t, { st, prob: probCur, model: probModel, step: probStep, phase: probPhase, total: probCur.steps.length });
       paintProbGauges(r);
       return r;
     });
@@ -1091,7 +1101,7 @@
     const total = probCur.steps.length;
     document.getElementById('prob-kicker').textContent =
       `${probCur.chNo} ${probCur.chTitle} · 第 ${probCur.page + 1} 页 · 本题 ${total} 步`;
-    document.getElementById('prob-title').textContent = probCur.text.slice(0, 60);
+    document.getElementById('prob-title').textContent = probCur.text.slice(0, 90);
     document.getElementById('prob-stmt').innerHTML = '<div class="prob-stmt-tag">题干</div>' + probCur.stmt;
     if (probModel && window.PROBLEM_MODELS) {
       const mn = document.getElementById('prob-model-name');
@@ -1109,29 +1119,52 @@
       probStep === 0 ? '题干就绪 · 点播放' : `第 ${probStep} / ${total} 步`;
     const cur = box.querySelector('.pstep.cur');
     if (cur) cur.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    /* 同步字幕：模型舞台底部与当前公式共用同一个步号 */
+    const syncText = document.getElementById('prob-sync-text');
+    if (syncText) {
+      syncText.textContent = probStep === 0
+        ? '同步推导 · 题干已就位，模型停在初始构型，点播放开始'
+        : `同步推导 ${probStep}/${total} · ${(probCur.stepTexts[probStep - 1] || '').slice(0, 40)}`;
+    }
+    const sf = document.getElementById('prob-sync-fill');
+    if (sf) sf.style.width = ((probPhase % 1) * 100) + '%';
+    if (probStudio) probStudio.dirty = true;
   }
   function setProbStep(n) {
     if (!probCur) return;
     probStep = Math.max(0, Math.min(probCur.steps.length, n));
+    probPhase = probStep;
     renderPlayer();
     syncExhibitStep();
     if (probStep >= probCur.steps.length) stopProb();
   }
+  /* 同步播放：一个节拍器同时推进公式步与模型 phase——
+     步内 phase 连续增长，模型参数/转角随之连续变化；跨步时公式点亮。 */
   function playProb() {
     if (!probCur) return;
     if (probTimer) { stopProb(); return; }
-    if (probStep >= probCur.steps.length) probStep = 0;
+    if (probStep >= probCur.steps.length) { probStep = 0; probPhase = 0; }
     const b = document.getElementById('prob-play');
     b.textContent = '⏸ 暂停';
-    const tick = () => setProbStep(probStep + 1);
-    probTimer = setInterval(tick, parseInt(document.getElementById('prob-speed').value, 10) || 2600);
-    tick();
+    probTimer = setInterval(() => {
+      const dur = parseInt(document.getElementById('prob-speed').value, 10) || 2600;
+      probPhase += 90 / dur;
+      const total = probCur.steps.length;
+      if (probPhase >= total) { probPhase = total; probStep = total; renderPlayer(); stopProb(); return; }
+      const ns = Math.floor(probPhase);
+      if (ns !== probStep) { probStep = ns; renderPlayer(); }
+      else {
+        const sf = document.getElementById('prob-sync-fill');
+        if (sf) sf.style.width = ((probPhase % 1) * 100) + '%';
+        if (probStudio) probStudio.dirty = true;
+      }
+    }, 90);
   }
   function selectProblem(id, autoplay) {
     const pr = PROBLEMS[id];
     if (!pr) return;
     stopProb();
-    probCur = pr; probStep = 0;
+    probCur = pr; probStep = 0; probPhase = 0;
     if (state.page !== pr.page) go(pr.page);
     renderProbList();
     setupProbModel();
@@ -1200,6 +1233,12 @@
     document.getElementById('prob-next').addEventListener('click', () => { stopProb(); setProbStep(probStep + 1); });
     document.getElementById('prob-replay').addEventListener('click', () => { stopProb(); probStep = 0; renderPlayer(); setTimeout(playProb, 200); });
     document.getElementById('prob-play').addEventListener('click', playProb);
+    document.getElementById('prob-steps').addEventListener('click', e => {
+      const el = e.target.closest('.pstep');
+      if (!el || !probCur) return;
+      const idx = Array.from(el.parentElement.children).indexOf(el);
+      stopProb(); setProbStep(idx + 1); // 点哪一步公式，模型立刻跳到哪一步
+    });
     document.getElementById('prob-speed').addEventListener('change', () => { if (probTimer) { stopProb(); playProb(); } });
     document.addEventListener('click', e => {
       const b = e.target.closest && e.target.closest('[data-probs]');

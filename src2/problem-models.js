@@ -105,8 +105,10 @@
     axes(items, st, 3.25, 2.35);
     const withTan = /切线|切点|FM|F M/.test(txt);
     const withMid = /中点|轨迹|定点|弦/.test(txt);
-    const phase = t * 0.45 + step * 0.1;
-    const ang = (isPara ? 0.95 : 1.02) + 0.34 * Math.sin(phase);
+    /* 同步推导：动弦转角由“推导进度”决定——公式走到哪，模型转到哪；
+       t 只贡献一点呼吸感，保证暂停时模型严格停在当前步。 */
+    const ph = clamp((ctx.phase == null ? step : ctx.phase) / Math.max(1, total), 0, 1);
+    const ang = (isPara ? 0.95 : 1.02) + (ph - 0.5) * 1.05 + 0.035 * Math.sin(t * 1.4);
     const u = [Math.cos(ang), Math.sin(ang)];
     let A, B, F, gauges = [];
     if (!isPara) {
@@ -222,16 +224,17 @@
   }
 
   /* ---------- 通用模型：调用本章场景，按解析进度插值参数 ---------- */
-  function paramsFor(model, step, total, t) {
+  function paramsFor(model, step, total, t, phase) {
     const spec = specOf(model.sceneKey, model.mode);
     const out = {};
     if (!spec) return out;
-    const p = total > 0 ? clamp(step / total, 0, 1) : 1;
+    /* 参数 = 推导进度的函数：公式每前进一步，参数同步前进一步（步内也连续） */
+    const p = total > 0 ? clamp((phase == null ? step : phase) / total, 0, 1) : 1;
     (spec.controls || []).forEach((ct, idx) => {
       if (ct.type === 'trigger') { out[ct.id] = Math.max(0, Math.min(4, step)); return; }
       let v = ct.val;
       if (spec.brk && spec.brk.params && typeof spec.brk.params[ct.id] === 'number') v = ct.val + (spec.brk.params[ct.id] - ct.val) * p;
-      if (idx === 0) v += Math.sin(t * 0.65) * (ct.max - ct.min) * 0.035;
+      if (idx === 0) v += Math.sin(p * Math.PI * 2) * (ct.max - ct.min) * 0.02;
       out[ct.id] = clamp(Math.round(v / ct.step) * ct.step, ct.min, ct.max);
     });
     return out;
@@ -242,18 +245,24 @@
     if (model.kind === 'conic-parabola') return conicFocal(t, ctx, true);
     if (model.kind === 'conic-circle') return conicCircle(t, ctx);
     const sc = S[model.sceneKey] || S.fallback;
-    const r = sc.build(t, { st: ctx.st, mode: model.mode, params: paramsFor(model, ctx.step, ctx.total, t) });
+    const r = sc.build(t, { st: ctx.st, mode: model.mode, params: paramsFor(model, ctx.step, ctx.total, t, ctx.phase) });
     return r || { items: [], gauges: [] };
   }
   function action(prob, model, step, total) {
     if (!model) return '';
     if (model.kind.indexOf('conic-') === 0) {
-      if (total <= 1) return '完整模型：动弦、切线、交点与验证仪表同时呈现，模型持续转动';
+      const hasTan = /切线|切点/.test(plain(prob));
+      if (total <= 1) return hasTan ? '完整模型：动弦、切线、交点与验证仪表同时呈现，模型持续转动' : '完整模型：动弦与弦中点同时呈现，模型随推导转动';
       if (step <= 0) return '第 1 层：把题放进坐标系——画曲线、焦点与准线';
+      if (!hasTan) {
+        if (step >= total && total > 1) return '最后一层：读弦中点坐标与方向角，验证中点弦结论';
+        if (reveal(step, total, 2) && step > 1) return '第 3 层：标出弦中点 M₀，观察它随弦转动的位置';
+        return '第 2 层：过焦点的动直线交曲线于 A、B，随推导进度转动';
+      }
       if (step >= total && total > 1) return '最后一层：连线验证——交点位置与点积由模型实时算出';
       if (reveal(step, total, 3) && step > 1) return '第 4 层：作交点 M，连 FM，读仪表验证结论';
       if (reveal(step, total, 2) && step > 1) return '第 3 层：在 A、B 两点作切线 / 切点弦';
-      return '第 2 层：过焦点的动直线交曲线于 A、B，直线持续转动';
+      return '第 2 层：过焦点的动直线交曲线于 A、B，随推导进度转动';
     }
     const sc = S[model.sceneKey] || {};
     const m = (sc.modes || []).find(x => x.id === model.mode);

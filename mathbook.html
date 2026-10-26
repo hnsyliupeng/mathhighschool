@@ -1025,6 +1025,37 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
 .prob-stage-hint { position: absolute; right: 10px; bottom: 10px; font-size: 11px; color: #9a8a68; background: rgba(251,246,233,.8); padding: 2px 7px; border-radius: 99px; pointer-events: none; }
 @media (max-width: 760px) { .prob-stage { height: 240px; } .prob-gauges { max-width: calc(100% - 20px); bottom: 30px; } }
 
+/* ---------- 同步推导字幕条 ---------- */
+.prob-sync { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 10px; padding: 5px 12px; background: rgba(251,246,233,.92); border-top: 1px dashed #d8c9a8; pointer-events: none; }
+.prob-sync span { font-size: 12px; color: #6d5f45; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.prob-sync-bar { flex: 1; height: 4px; border-radius: 99px; background: #eadfc6; overflow: hidden; }
+.prob-sync-bar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 99px; }
+.prob-gauges { bottom: 34px; }
+.prob-stage-hint { bottom: 36px; }
+.pstep { cursor: pointer; }
+
+/* ---------- 逐题面板公式排版（与正文同规则，修分式重叠） ---------- */
+.prob-stmt .math, .pstep-body .math, .prob-item-t .math, .prob-title .math { display: inline-block; vertical-align: baseline; max-width: 100%; }
+.prob-stmt, .pstep-body { line-height: 1.92; }
+.prob-stmt .math-block, .pstep-body .math-block { overflow-x: auto; overflow-y: hidden; text-align: left; margin: .45em 0; }
+.prob-stmt > li, .pstep-body > li { list-style: none; margin: 0; }
+.prob-stmt p, .pstep-body p { margin: .25em 0; }
+.prob-stmt { max-height: 21%; flex: none; }
+.prob-title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 15px; line-height: 1.65; }
+.prob-title p, .prob-title li { margin: 0; list-style: none; }
+.prob-item-t { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.7; }
+.prob-item-t p, .prob-item-t li { margin: 0; list-style: none; }
+.prob-item-t .math-block, .prob-title .math-block { display: inline; background: none; border: 0; padding: 0; margin: 0; }
+.prob-stage { height: 272px; }
+.prob-panel { height: min(92vh, 880px); }
+.prob-steps { min-height: 110px; }
+@media (max-width: 760px) { .prob-stage { height: 220px; } }
+.prob-stmt .frac, .pstep-body .frac { line-height: 1.32; margin: 0 .22em; }
+.prob-stmt .frac > .num, .pstep-body .frac > .num { padding: 0 .26em .1em; }
+.prob-stmt .frac > .den, .pstep-body .frac > .den { padding: .1em .26em 0; }
+.prob-item-t { max-height: 46px; }
+.prob-item-t .math { font-size: .94em; }
+
 </style>
 </head>
 <body>
@@ -1123,6 +1154,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
         <div class="prob-stage-top"><b id="prob-model-name">题目 3D 模型</b><span id="prob-model-action"></span></div>
         <div class="prob-gauges" id="prob-gauges"></div>
         <div class="prob-stage-hint">模型自动演示 · 可拖动旋转 · 滚轮缩放</div>
+        <div class="prob-sync"><span id="prob-sync-text">同步推导</span><div class="prob-sync-bar"><i id="prob-sync-fill"></i></div></div>
       </div>
       <div class="prob-stmt" id="prob-stmt"></div>
       <div class="prob-progress"><i id="prob-fill"></i></div>
@@ -4107,8 +4139,10 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     axes(items, st, 3.25, 2.35);
     const withTan = /切线|切点|FM|F M/.test(txt);
     const withMid = /中点|轨迹|定点|弦/.test(txt);
-    const phase = t * 0.45 + step * 0.1;
-    const ang = (isPara ? 0.95 : 1.02) + 0.34 * Math.sin(phase);
+    /* 同步推导：动弦转角由“推导进度”决定——公式走到哪，模型转到哪；
+       t 只贡献一点呼吸感，保证暂停时模型严格停在当前步。 */
+    const ph = clamp((ctx.phase == null ? step : ctx.phase) / Math.max(1, total), 0, 1);
+    const ang = (isPara ? 0.95 : 1.02) + (ph - 0.5) * 1.05 + 0.035 * Math.sin(t * 1.4);
     const u = [Math.cos(ang), Math.sin(ang)];
     let A, B, F, gauges = [];
     if (!isPara) {
@@ -4224,16 +4258,17 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
   }
 
   /* ---------- 通用模型：调用本章场景，按解析进度插值参数 ---------- */
-  function paramsFor(model, step, total, t) {
+  function paramsFor(model, step, total, t, phase) {
     const spec = specOf(model.sceneKey, model.mode);
     const out = {};
     if (!spec) return out;
-    const p = total > 0 ? clamp(step / total, 0, 1) : 1;
+    /* 参数 = 推导进度的函数：公式每前进一步，参数同步前进一步（步内也连续） */
+    const p = total > 0 ? clamp((phase == null ? step : phase) / total, 0, 1) : 1;
     (spec.controls || []).forEach((ct, idx) => {
       if (ct.type === 'trigger') { out[ct.id] = Math.max(0, Math.min(4, step)); return; }
       let v = ct.val;
       if (spec.brk && spec.brk.params && typeof spec.brk.params[ct.id] === 'number') v = ct.val + (spec.brk.params[ct.id] - ct.val) * p;
-      if (idx === 0) v += Math.sin(t * 0.65) * (ct.max - ct.min) * 0.035;
+      if (idx === 0) v += Math.sin(p * Math.PI * 2) * (ct.max - ct.min) * 0.02;
       out[ct.id] = clamp(Math.round(v / ct.step) * ct.step, ct.min, ct.max);
     });
     return out;
@@ -4244,18 +4279,24 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     if (model.kind === 'conic-parabola') return conicFocal(t, ctx, true);
     if (model.kind === 'conic-circle') return conicCircle(t, ctx);
     const sc = S[model.sceneKey] || S.fallback;
-    const r = sc.build(t, { st: ctx.st, mode: model.mode, params: paramsFor(model, ctx.step, ctx.total, t) });
+    const r = sc.build(t, { st: ctx.st, mode: model.mode, params: paramsFor(model, ctx.step, ctx.total, t, ctx.phase) });
     return r || { items: [], gauges: [] };
   }
   function action(prob, model, step, total) {
     if (!model) return '';
     if (model.kind.indexOf('conic-') === 0) {
-      if (total <= 1) return '完整模型：动弦、切线、交点与验证仪表同时呈现，模型持续转动';
+      const hasTan = /切线|切点/.test(plain(prob));
+      if (total <= 1) return hasTan ? '完整模型：动弦、切线、交点与验证仪表同时呈现，模型持续转动' : '完整模型：动弦与弦中点同时呈现，模型随推导转动';
       if (step <= 0) return '第 1 层：把题放进坐标系——画曲线、焦点与准线';
+      if (!hasTan) {
+        if (step >= total && total > 1) return '最后一层：读弦中点坐标与方向角，验证中点弦结论';
+        if (reveal(step, total, 2) && step > 1) return '第 3 层：标出弦中点 M₀，观察它随弦转动的位置';
+        return '第 2 层：过焦点的动直线交曲线于 A、B，随推导进度转动';
+      }
       if (step >= total && total > 1) return '最后一层：连线验证——交点位置与点积由模型实时算出';
       if (reveal(step, total, 3) && step > 1) return '第 4 层：作交点 M，连 FM，读仪表验证结论';
       if (reveal(step, total, 2) && step > 1) return '第 3 层：在 A、B 两点作切线 / 切点弦';
-      return '第 2 层：过焦点的动直线交曲线于 A、B，直线持续转动';
+      return '第 2 层：过焦点的动直线交曲线于 A、B，随推导进度转动';
     }
     const sc = S[model.sceneKey] || {};
     const m = (sc.modes || []).find(x => x.id === model.mode);
@@ -4752,7 +4793,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     return {
       chId: p.ch, chNo: p.chNo, chTitle: p.chTitle, chShort: p.chShort,
       title: p.chTitle, sec: p.sec || '', sceneKey: ch.scene || 'fallback',
-      cont: p.cont, idxInCh: p.src - ch.first + 1, totalInCh: ch.count,
+      cont: p.cont, src: p.src, idxInCh: p.src - ch.first + 1, totalInCh: ch.count,
     };
   }
 
@@ -5045,11 +5086,21 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
 
     const modes = modeList(info);
     const tools = document.getElementById('viz-tools');
+    /* 与本页同步：展台模式按本页第一道题的题型自动对齐（手动点过的模式不覆盖） */
+    if (info.src != null && window.PROBLEM_MODELS) {
+      const pageProbs = PROB_BY_PAGE[info.src] || [];
+      if (pageProbs.length) {
+        const want = window.PROBLEM_MODELS.chooseMode(pageProbs[0], info.sceneKey);
+        const mk = key + ':' + info.src;
+        if (want && modes.some(m => m.id === want) && !(app._manualModes && app._manualModes.has(mk))) state.modes[key] = want;
+      }
+    }
     tools.innerHTML = modes.map(m => `<button class="chip${m.id === currentMode(info) ? ' on' : ''}" data-mode="${m.id}">${esc(m.name)}</button>`).join('');
     tools.addEventListener('click', e => {
       const b = e.target.closest('[data-mode]');
       if (!b) return;
       userTouched();
+      if (info.src != null) { (app._manualModes = app._manualModes || new Set()).add(key + ':' + info.src); }
       state.modes[key] = b.getAttribute('data-mode');
       tools.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === b));
       paintScene();
@@ -5171,7 +5222,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
       const el = (now - autoT0) / 1000;
       let changed = false;
       ranges.slice(0, 2).forEach((ct, idx) => {
-        const mid = (ct.min + ct.max) / 2, amp = (ct.max - ct.min) / 2 * 0.92;
+        const mid = ct.val, amp = (ct.max - ct.min) * 0.16;
         let v = mid + amp * Math.sin(el * 0.55 + idx * 1.7);
         v = Math.round(v / ct.step) * ct.step;
         v = Math.max(ct.min, Math.min(ct.max, Math.round(v * 1000) / 1000));
@@ -5586,7 +5637,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
 
   /* ---------------- 逐题动画播放器 ---------------- */
   let probCur = null, probStep = 0, probTimer = null, probFilterSrc = null;
-  let probStudio = null, probModel = null, probGaugeLast = 0;
+  let probStudio = null, probModel = null, probGaugeLast = 0, probPhase = 0;
   function probPlaying() { return !!probTimer; }
   function stopProb() {
     if (probTimer) { clearInterval(probTimer); probTimer = null; }
@@ -5608,7 +5659,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     items.forEach(pr => {
       if (pr.ch !== lastCh) { lastCh = pr.ch; html += `<div class="prob-ch">${esc(pr.chNo)} ${esc(pr.chTitle)}</div>`; }
       html += `<button class="prob-item${probCur && probCur.id === pr.id ? ' on' : ''}" data-prob="${pr.id}">
-        <span class="prob-item-t">${esc(pr.text.slice(0, 46))}</span>
+        <span class="prob-item-t">${pr.stmt}</span>
         <span class="prob-item-m">第 ${pr.page + 1} 页 · ${pr.steps.length} 步解析</span></button>`;
     });
     list.innerHTML = html || '<div class="prob-empty">没有匹配的题目</div>';
@@ -5650,7 +5701,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     st.autoSpin = probModel.kind.indexOf('conic-') === 0 ? 0.07 : 0.11;
     st._anim = true;
     st.setScene(t => {
-      const r = window.PROBLEM_MODELS.build(t, { st, prob: probCur, model: probModel, step: probStep, total: probCur.steps.length });
+      const r = window.PROBLEM_MODELS.build(t, { st, prob: probCur, model: probModel, step: probStep, phase: probPhase, total: probCur.steps.length });
       paintProbGauges(r);
       return r;
     });
@@ -5665,7 +5716,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     const total = probCur.steps.length;
     document.getElementById('prob-kicker').textContent =
       `${probCur.chNo} ${probCur.chTitle} · 第 ${probCur.page + 1} 页 · 本题 ${total} 步`;
-    document.getElementById('prob-title').textContent = probCur.text.slice(0, 60);
+    document.getElementById('prob-title').textContent = probCur.text.slice(0, 90);
     document.getElementById('prob-stmt').innerHTML = '<div class="prob-stmt-tag">题干</div>' + probCur.stmt;
     if (probModel && window.PROBLEM_MODELS) {
       const mn = document.getElementById('prob-model-name');
@@ -5683,29 +5734,52 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
       probStep === 0 ? '题干就绪 · 点播放' : `第 ${probStep} / ${total} 步`;
     const cur = box.querySelector('.pstep.cur');
     if (cur) cur.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    /* 同步字幕：模型舞台底部与当前公式共用同一个步号 */
+    const syncText = document.getElementById('prob-sync-text');
+    if (syncText) {
+      syncText.textContent = probStep === 0
+        ? '同步推导 · 题干已就位，模型停在初始构型，点播放开始'
+        : `同步推导 ${probStep}/${total} · ${(probCur.stepTexts[probStep - 1] || '').slice(0, 40)}`;
+    }
+    const sf = document.getElementById('prob-sync-fill');
+    if (sf) sf.style.width = ((probPhase % 1) * 100) + '%';
+    if (probStudio) probStudio.dirty = true;
   }
   function setProbStep(n) {
     if (!probCur) return;
     probStep = Math.max(0, Math.min(probCur.steps.length, n));
+    probPhase = probStep;
     renderPlayer();
     syncExhibitStep();
     if (probStep >= probCur.steps.length) stopProb();
   }
+  /* 同步播放：一个节拍器同时推进公式步与模型 phase——
+     步内 phase 连续增长，模型参数/转角随之连续变化；跨步时公式点亮。 */
   function playProb() {
     if (!probCur) return;
     if (probTimer) { stopProb(); return; }
-    if (probStep >= probCur.steps.length) probStep = 0;
+    if (probStep >= probCur.steps.length) { probStep = 0; probPhase = 0; }
     const b = document.getElementById('prob-play');
     b.textContent = '⏸ 暂停';
-    const tick = () => setProbStep(probStep + 1);
-    probTimer = setInterval(tick, parseInt(document.getElementById('prob-speed').value, 10) || 2600);
-    tick();
+    probTimer = setInterval(() => {
+      const dur = parseInt(document.getElementById('prob-speed').value, 10) || 2600;
+      probPhase += 90 / dur;
+      const total = probCur.steps.length;
+      if (probPhase >= total) { probPhase = total; probStep = total; renderPlayer(); stopProb(); return; }
+      const ns = Math.floor(probPhase);
+      if (ns !== probStep) { probStep = ns; renderPlayer(); }
+      else {
+        const sf = document.getElementById('prob-sync-fill');
+        if (sf) sf.style.width = ((probPhase % 1) * 100) + '%';
+        if (probStudio) probStudio.dirty = true;
+      }
+    }, 90);
   }
   function selectProblem(id, autoplay) {
     const pr = PROBLEMS[id];
     if (!pr) return;
     stopProb();
-    probCur = pr; probStep = 0;
+    probCur = pr; probStep = 0; probPhase = 0;
     if (state.page !== pr.page) go(pr.page);
     renderProbList();
     setupProbModel();
@@ -5774,6 +5848,12 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     document.getElementById('prob-next').addEventListener('click', () => { stopProb(); setProbStep(probStep + 1); });
     document.getElementById('prob-replay').addEventListener('click', () => { stopProb(); probStep = 0; renderPlayer(); setTimeout(playProb, 200); });
     document.getElementById('prob-play').addEventListener('click', playProb);
+    document.getElementById('prob-steps').addEventListener('click', e => {
+      const el = e.target.closest('.pstep');
+      if (!el || !probCur) return;
+      const idx = Array.from(el.parentElement.children).indexOf(el);
+      stopProb(); setProbStep(idx + 1); // 点哪一步公式，模型立刻跳到哪一步
+    });
     document.getElementById('prob-speed').addEventListener('change', () => { if (probTimer) { stopProb(); playProb(); } });
     document.addEventListener('click', e => {
       const b = e.target.closest && e.target.closest('[data-probs]');

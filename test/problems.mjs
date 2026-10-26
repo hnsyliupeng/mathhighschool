@@ -139,6 +139,22 @@ const s2 = await page.evaluate(() => document.getElementById('prob-stepno').text
 if (!/第 [2-9]/.test(s2)) fail('自动播放未推进到第 2 步以后：' + s2); else ok('自动播放推进到 ' + s2);
 await page.evaluate(() => document.getElementById('prob-play').click()); // 暂停
 
+/* 同步推导：模型字幕步号与公式步号锁死；点哪一步公式，模型跳哪一步 */
+const syncA = await page.evaluate(() => ({
+  no: document.getElementById('prob-stepno').textContent,
+  sync: document.getElementById('prob-sync-text').textContent,
+}));
+const mNo = /第 (\d+) \//.exec(syncA.no), mSync = /同步推导 (\d+)\//.exec(syncA.sync);
+if (!mNo || !mSync || mNo[1] !== mSync[1]) fail(`同步字幕与公式步号不一致：${syncA.no} vs ${syncA.sync}`); else ok(`同步推导锁定：公式第 ${mNo[1]} 步 = 模型字幕第 ${mSync[1]} 步`);
+await page.evaluate(() => { const els = document.querySelectorAll('.pstep'); if (els[0]) els[0].click(); });
+await wait(450);
+const syncB = await page.evaluate(() => ({
+  no: document.getElementById('prob-stepno').textContent,
+  sync: document.getElementById('prob-sync-text').textContent,
+  action: document.getElementById('prob-model-action').textContent,
+}));
+if (!/第 1 \//.test(syncB.no) || !/同步推导 1\//.test(syncB.sync)) fail('点公式步未同步跳步：' + syncB.no + ' / ' + syncB.sync); else ok('点公式即跳模型：' + syncB.action.slice(0, 26));
+
 /* 选一道靠后的题：应跳到其原页 */
 const jump = await page.evaluate(() => {
   const items = document.querySelectorAll('.prob-item');

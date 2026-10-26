@@ -1016,3 +1016,34 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
 .prob-gauges { position: absolute; left: 10px; bottom: 9px; display: flex; flex-wrap: wrap; gap: 5px; max-width: calc(100% - 190px); pointer-events: none; }
 .prob-stage-hint { position: absolute; right: 10px; bottom: 10px; font-size: 11px; color: #9a8a68; background: rgba(251,246,233,.8); padding: 2px 7px; border-radius: 99px; pointer-events: none; }
 @media (max-width: 760px) { .prob-stage { height: 240px; } .prob-gauges { max-width: calc(100% - 20px); bottom: 30px; } }
+
+/* ---------- 同步推导字幕条 ---------- */
+.prob-sync { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 10px; padding: 5px 12px; background: rgba(251,246,233,.92); border-top: 1px dashed #d8c9a8; pointer-events: none; }
+.prob-sync span { font-size: 12px; color: #6d5f45; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.prob-sync-bar { flex: 1; height: 4px; border-radius: 99px; background: #eadfc6; overflow: hidden; }
+.prob-sync-bar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 99px; }
+.prob-gauges { bottom: 34px; }
+.prob-stage-hint { bottom: 36px; }
+.pstep { cursor: pointer; }
+
+/* ---------- 逐题面板公式排版（与正文同规则，修分式重叠） ---------- */
+.prob-stmt .math, .pstep-body .math, .prob-item-t .math, .prob-title .math { display: inline-block; vertical-align: baseline; max-width: 100%; }
+.prob-stmt, .pstep-body { line-height: 1.92; }
+.prob-stmt .math-block, .pstep-body .math-block { overflow-x: auto; overflow-y: hidden; text-align: left; margin: .45em 0; }
+.prob-stmt > li, .pstep-body > li { list-style: none; margin: 0; }
+.prob-stmt p, .pstep-body p { margin: .25em 0; }
+.prob-stmt { max-height: 21%; flex: none; }
+.prob-title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 15px; line-height: 1.65; }
+.prob-title p, .prob-title li { margin: 0; list-style: none; }
+.prob-item-t { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.7; }
+.prob-item-t p, .prob-item-t li { margin: 0; list-style: none; }
+.prob-item-t .math-block, .prob-title .math-block { display: inline; background: none; border: 0; padding: 0; margin: 0; }
+.prob-stage { height: 272px; }
+.prob-panel { height: min(92vh, 880px); }
+.prob-steps { min-height: 110px; }
+@media (max-width: 760px) { .prob-stage { height: 220px; } }
+.prob-stmt .frac, .pstep-body .frac { line-height: 1.32; margin: 0 .22em; }
+.prob-stmt .frac > .num, .pstep-body .frac > .num { padding: 0 .26em .1em; }
+.prob-stmt .frac > .den, .pstep-body .frac > .den { padding: .1em .26em 0; }
+.prob-item-t { max-height: 46px; }
+.prob-item-t .math { font-size: .94em; }
