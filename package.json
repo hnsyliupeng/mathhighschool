@@ -11,8 +11,9 @@
     "test:scenes": "node test/scenes.mjs",
     "test:lab": "node test/lab.mjs",
     "test:lab-model": "node test/lab-model.mjs",
+    "test:problems": "node test/problems.mjs",
     "test:fill": "node tools/fill-report.mjs",
-    "test": "node test/scenes.mjs && node test/lab-model.mjs && node test/lab.mjs && node test/book.mjs"
+    "test": "node test/scenes.mjs && node test/lab-model.mjs && node test/lab.mjs && node test/problems.mjs && node test/book.mjs"
   },
   "repository": {
     "type": "git",

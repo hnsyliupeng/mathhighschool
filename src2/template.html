@@ -24,6 +24,7 @@
     <div class="tools">
       <button class="tool" id="btn-toc" title="全书目录">目录</button>
       <button class="tool" id="btn-search" title="全书检索 (/)">检索</button>
+      <button class="tool" id="btn-problems" title="逐题动画解析：每道题分步播放">逐题动画 <span class="prob-n" id="prob-n"></span></button>
       <span class="tools-sep"></span>
       <div class="view-wrap">
         <button class="tool on" id="btn-3d" title="立体视角：拖动旋转整本书 (V)">立体</button>
@@ -79,6 +80,42 @@
 
 <div class="bigtable-layer" id="bigtable-layer">
   <div class="bigtable-panel" id="bigtable-panel"></div>
+</div>
+
+<div class="prob-layer" id="prob-layer">
+  <div class="prob-panel">
+    <div class="prob-side">
+      <div class="prob-side-head">
+        <b>逐题动画解析</b>
+        <span id="prob-meta"></span>
+      </div>
+      <input id="prob-filter" type="search" placeholder="筛选题目：如“定点”“最小值”“证明”" autocomplete="off">
+      <div class="prob-list" id="prob-list"></div>
+    </div>
+    <div class="prob-main">
+      <div class="prob-main-head">
+        <div>
+          <div class="prob-kicker" id="prob-kicker">选择左侧任意一道题</div>
+          <div class="prob-title" id="prob-title">每道题都有动画：题干先行，解析一步一步长出来</div>
+        </div>
+        <button class="mini-btn" id="prob-close" title="关闭 (Esc)">✕</button>
+      </div>
+      <div class="prob-stmt" id="prob-stmt"></div>
+      <div class="prob-progress"><i id="prob-fill"></i></div>
+      <div class="prob-steps" id="prob-steps"></div>
+      <div class="prob-ctrls">
+        <button class="lab-btn" id="prob-prev">‹ 上一步</button>
+        <button class="lab-btn trig" id="prob-play">▶ 播放解析</button>
+        <button class="lab-btn" id="prob-next">下一步 ›</button>
+        <button class="lab-btn" id="prob-replay">⟲ 重播</button>
+        <label class="ctl prob-speed"><span class="ctl-l">速度</span>
+          <select id="prob-speed"><option value="4200">慢</option><option value="2600" selected>常</option><option value="1500">快</option></select>
+        </label>
+        <span class="prob-stepno" id="prob-stepno"></span>
+      </div>
+      <div class="prob-foot">播放时左页 3D 展台会随步骤切换演示模式；也可以关掉浮层，回到原页继续拖实验室。</div>
+    </div>
+  </div>
 </div>
 
 <div class="search-layer" id="search-layer">

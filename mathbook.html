@@ -964,6 +964,55 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
 .stage.phone .lab { margin: 8px 10px 12px; }
 .stage.phone .ctl input[type="range"] { width: 104px; }
 
+/* ---------- 逐题动画解析 ---------- */
+.prob-n { color: var(--accent); font-weight: 700; }
+.prob-chip { margin-top: 8px; align-self: flex-start; border: 1.5px dashed var(--accent); color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 5px 12px; font: 600 12.5px/1.2 var(--kai, serif); cursor: pointer; }
+.prob-chip:hover { background: var(--accent); color: #fff; }
+.prob-layer { position: fixed; inset: 0; z-index: 320; display: none; align-items: center; justify-content: center; background: rgba(38,30,20,.45); backdrop-filter: blur(2px); }
+.prob-layer.open { display: flex; }
+.prob-panel { display: grid; grid-template-columns: 300px 1fr; width: min(1080px, 96vw); height: min(86vh, 860px); background: #fbf6e9; border-radius: 14px; box-shadow: 0 24px 70px rgba(30,20,10,.4); overflow: hidden; border: 1px solid #d8c9a8; }
+.prob-side { border-right: 1px solid #e2d5b8; display: flex; flex-direction: column; background: #f5ecd7; min-height: 0; }
+.prob-side-head { padding: 14px 14px 8px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.prob-side-head b { font-size: 16px; }
+.prob-side-head span { font-size: 11.5px; color: #8a7a5c; text-align: right; }
+#prob-filter { margin: 0 12px 10px; padding: 8px 10px; border: 1.5px solid #d8c9a8; border-radius: 8px; background: #fffdf6; font-size: 13px; }
+.prob-list { overflow-y: auto; padding: 0 8px 12px; min-height: 0; }
+.prob-ch { font: 700 12px/1 var(--kai, serif); color: #8a7a5c; margin: 12px 6px 6px; letter-spacing: .08em; }
+.prob-item { display: block; width: 100%; text-align: left; border: 1px solid transparent; background: transparent; border-radius: 9px; padding: 7px 9px; cursor: pointer; margin-bottom: 2px; }
+.prob-item:hover { background: #fff8ea; }
+.prob-item.on { background: #fff; border-color: var(--accent); box-shadow: 0 2px 8px rgba(60,40,20,.12); }
+.prob-item-t { display: block; font-size: 12.8px; line-height: 1.45; color: #33302a; }
+.prob-item-m { display: block; font-size: 11px; color: #9a8a68; margin-top: 2px; }
+.prob-empty { padding: 18px; color: #8a7a5c; font-size: 13px; }
+.prob-main { display: flex; flex-direction: column; padding: 16px 20px 12px; min-width: 0; min-height: 0; }
+.prob-main-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.prob-kicker { font-size: 12px; color: var(--accent); font-weight: 700; letter-spacing: .06em; }
+.prob-title { font-size: 16.5px; font-weight: 700; line-height: 1.5; margin-top: 3px; }
+.prob-stmt { margin-top: 10px; border: 1.5px solid #d8c9a8; background: #fffdf6; border-radius: 10px; padding: 10px 14px; font-size: 14px; line-height: 1.75; max-height: 24%; overflow-y: auto; }
+.prob-stmt-tag { display: inline-block; font-size: 11px; font-weight: 700; color: #fff; background: var(--accent); border-radius: 4px; padding: 1px 7px; margin-bottom: 4px; }
+.prob-progress { height: 6px; border-radius: 99px; background: #eadfc6; margin: 12px 0 8px; overflow: hidden; flex: none; }
+.prob-progress i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 99px; transition: width .5s ease; }
+.prob-steps { flex: 1; overflow-y: auto; min-height: 0; padding-right: 4px; }
+.pstep { display: flex; gap: 10px; padding: 9px 12px; border-radius: 10px; border: 1.5px solid transparent; margin-bottom: 6px; font-size: 13.8px; line-height: 1.75; transition: all .35s; }
+.pstep-n { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #cbbd97; color: #8a7a5c; font-size: 12px; display: flex; align-items: center; justify-content: center; margin-top: 3px; background: #fffdf6; }
+.pstep.wait { opacity: .38; }
+.pstep.done { opacity: .75; }
+.pstep.done .pstep-n { background: #7d9b76; border-color: #7d9b76; color: #fff; }
+.pstep.cur { opacity: 1; background: #fff; border-color: var(--accent); box-shadow: 0 4px 16px rgba(80,50,20,.13); animation: stepIn .45s ease both; }
+.pstep.cur .pstep-n { background: var(--accent); border-color: var(--accent); color: #fff; animation: stepPulse 1.2s ease infinite; }
+.pstep-body { min-width: 0; }
+.pstep-body p, .pstep-body li { margin: 0; }
+@keyframes stepIn { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes stepPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+.prob-ctrls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding-top: 10px; border-top: 1px dashed #d8c9a8; flex: none; }
+.prob-stepno { font-size: 12.5px; color: #8a7a5c; margin-left: auto; }
+.prob-speed select { border: 1.5px solid #d8c9a8; border-radius: 7px; background: #fffdf6; padding: 4px 6px; }
+.prob-foot { font-size: 11.5px; color: #9a8a68; padding-top: 8px; flex: none; }
+@media (max-width: 760px) {
+  .prob-panel { grid-template-columns: 1fr; grid-template-rows: 180px 1fr; height: 92vh; }
+  .prob-side { border-right: 0; border-bottom: 1px solid #e2d5b8; }
+}
+
 </style>
 </head>
 <body>
@@ -981,6 +1030,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     <div class="tools">
       <button class="tool" id="btn-toc" title="全书目录">目录</button>
       <button class="tool" id="btn-search" title="全书检索 (/)">检索</button>
+      <button class="tool" id="btn-problems" title="逐题动画解析：每道题分步播放">逐题动画 <span class="prob-n" id="prob-n"></span></button>
       <span class="tools-sep"></span>
       <div class="view-wrap">
         <button class="tool on" id="btn-3d" title="立体视角：拖动旋转整本书 (V)">立体</button>
@@ -1036,6 +1086,42 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
 
 <div class="bigtable-layer" id="bigtable-layer">
   <div class="bigtable-panel" id="bigtable-panel"></div>
+</div>
+
+<div class="prob-layer" id="prob-layer">
+  <div class="prob-panel">
+    <div class="prob-side">
+      <div class="prob-side-head">
+        <b>逐题动画解析</b>
+        <span id="prob-meta"></span>
+      </div>
+      <input id="prob-filter" type="search" placeholder="筛选题目：如“定点”“最小值”“证明”" autocomplete="off">
+      <div class="prob-list" id="prob-list"></div>
+    </div>
+    <div class="prob-main">
+      <div class="prob-main-head">
+        <div>
+          <div class="prob-kicker" id="prob-kicker">选择左侧任意一道题</div>
+          <div class="prob-title" id="prob-title">每道题都有动画：题干先行，解析一步一步长出来</div>
+        </div>
+        <button class="mini-btn" id="prob-close" title="关闭 (Esc)">✕</button>
+      </div>
+      <div class="prob-stmt" id="prob-stmt"></div>
+      <div class="prob-progress"><i id="prob-fill"></i></div>
+      <div class="prob-steps" id="prob-steps"></div>
+      <div class="prob-ctrls">
+        <button class="lab-btn" id="prob-prev">‹ 上一步</button>
+        <button class="lab-btn trig" id="prob-play">▶ 播放解析</button>
+        <button class="lab-btn" id="prob-next">下一步 ›</button>
+        <button class="lab-btn" id="prob-replay">⟲ 重播</button>
+        <label class="ctl prob-speed"><span class="ctl-l">速度</span>
+          <select id="prob-speed"><option value="4200">慢</option><option value="2600" selected>常</option><option value="1500">快</option></select>
+        </label>
+        <span class="prob-stepno" id="prob-stepno"></span>
+      </div>
+      <div class="prob-foot">播放时左页 3D 展台会随步骤切换演示模式；也可以关掉浮层，回到原页继续拖实验室。</div>
+    </div>
+  </div>
 </div>
 
 <div class="search-layer" id="search-layer">
@@ -4243,6 +4329,57 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
   PAGES.push({ kind: 'colophon' });
   PAGES.forEach((p, i) => { p.abs = i; });
 
+  /* ---------------- 逐题动画解析：从正文块中提取每一道题 ----------------
+     题 = 含“例题：”的块 / 编号题 / “已知·设”开头且含求证的块 / 带问号的设问块。
+     解析 = 同章后续原文块（跨页收集，公式已是排版好的 HTML），播放时逐步点亮。 */
+  const PROBLEMS = [];
+  const PROB_BY_PAGE = {};
+  (function extractProblems() {
+    const holder = document.createElement('div');
+    const norm = b => (b.textContent || '').replace(/\s+/g, ' ').trim();
+    const cue = t => {
+      if (!t || t.length < 10 || /^(解|答|证明)\s*[:：]/.test(t)) return false;
+      if (/例题[:：]/.test(t) && t.length > 10) return true;
+      const u = t.replace(/^（[^）]*）\s*/, '');
+      if (/^\d+[.、]/.test(u) && /(求|证明|已知|设|试|是否存在|判断|讨论)/.test(u) && u.length >= 16) return true;
+      if (/^(已知|设|若|过|在)/.test(u) && /(求|证明|试|是否存在|判断)/.test(u) && u.length >= 22) return true;
+      if (/[？?]/.test(u) && /(求|证明|是否|判断|轨迹|最值|最小|最大|范围|单调|极值)/.test(u) && u.length >= 18 && !/^(由|则|所以|故|得)/.test(u)) return true;
+      if (/^(求|试|判断|讨论)/.test(u) && u.length >= 14) return true;
+      if (/(设|已知|若)/.test(u) && /证明/.test(u) && u.length >= 25 && !/^证明/.test(u)) return true;
+      return false;
+    };
+    const streams = {};
+    RAW.pages.forEach((p, srcIdx) => {
+      holder.innerHTML = p.html;
+      Array.from(holder.querySelectorAll('p, li, h3, h4'))
+        .filter(b => !b.closest('.tb-wrap') && norm(b))
+        .forEach(b => { (streams[p.ch] = streams[p.ch] || []).push({ b, p, src: srcIdx }); });
+    });
+    Object.values(streams).forEach(stream => {
+      stream.forEach((it, i) => {
+        const t = norm(it.b);
+        if (!cue(t) || /^H[1-4]$/.test(it.b.tagName)) return;
+        const steps = [];
+        for (let j = i + 1; j < stream.length && steps.length < 12; j++) {
+          const nb = stream[j].b;
+          if (/^H[1-4]$/.test(nb.tagName)) break;
+          const nt = norm(nb);
+          if (cue(nt)) break;
+          if (nt) steps.push(nb.outerHTML);
+        }
+        if (!steps.length) steps.push('<p>（本题解析即紧随其后的推导，点播放逐步看完本节再回看题干。）</p>');
+        const prob = {
+          id: PROBLEMS.length, ch: it.p.ch, chNo: it.p.chNo || '', chTitle: it.p.chTitle || '',
+          scene: (CH[it.p.ch] || {}).scene || 'fallback', src: it.src, page: FRONT + it.src,
+          stmt: it.b.outerHTML, steps, text: t,
+        };
+        PROBLEMS.push(prob);
+        (PROB_BY_PAGE[it.src] = PROB_BY_PAGE[it.src] || []).push(prob);
+      });
+    });
+  })();
+  window.PROBLEMS = PROBLEMS;
+
   const FIRST_TEXT = FRONT;
   const LAST_TEXT = FIRST_TEXT + RAW.pages.length - 1;
 
@@ -4433,6 +4570,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
           <div class="viz-hint">拖动旋转 · 滚轮缩放 · 双击复位</div>
         </div>
         <div class="scene-note"><span class="lbl">读图</span><span id="scene-note"></span></div>
+        ${(PROB_BY_PAGE[p.src] || []).length ? `<button class="prob-chip" data-probs="${p.src}">🎬 本页 ${(PROB_BY_PAGE[p.src]).length} 道题 · 逐题动画解析</button>` : ''}
         <div class="lab" id="lab" hidden>
           <div class="lab-head"><span class="lab-title">实验室 · 动手跑</span><span class="lab-idea" id="lab-idea"></span></div>
           <div class="lab-controls" id="lab-controls"></div>
@@ -4533,7 +4671,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
             <p>三维部分是自己写的 Canvas 2D 引擎：透视投影、画家算法、手绘抖动墨线、
               球面大圆、拾取高亮。它不依赖 three.js，也不加载任何外部资源。全书共设置
               67 台可操作的参数机器，覆盖正文全部演示模式，且每台都带滑杆或触发控件；面板仪表不是装饰标签，
-              而是场景模型每次重算时直接回吐的结果。书页部分是 CSS 3D 的翻页动画，
+              而是场景模型每次重算时直接回吐的结果。此外全书 150 道例题/习题都配了「逐题动画解析」：点顶栏按钮或每页的题目芯片，题干与原文解析会一步一步播放，左页 3D 展台随步骤同步切换模式。书页部分是 CSS 3D 的翻页动画，
               配色有五套，可随时切换。</p>
           </div>
           <div class="intro-note">
@@ -5093,6 +5231,99 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     app.el.searchLayer.classList.remove('open');
   }
 
+  /* ---------------- 逐题动画播放器 ---------------- */
+  let probCur = null, probStep = 0, probTimer = null, probFilterSrc = null;
+  function probPlaying() { return !!probTimer; }
+  function stopProb() {
+    if (probTimer) { clearInterval(probTimer); probTimer = null; }
+    const b = document.getElementById('prob-play');
+    if (b) b.textContent = '▶ 播放解析';
+  }
+  function renderProbList() {
+    const list = document.getElementById('prob-list');
+    const meta = document.getElementById('prob-meta');
+    if (!list) return;
+    const q = (document.getElementById('prob-filter').value || '').trim();
+    const items = PROBLEMS.filter(pr =>
+      (probFilterSrc == null || pr.src === probFilterSrc) &&
+      (!q || pr.text.indexOf(q) >= 0 || pr.chTitle.indexOf(q) >= 0));
+    meta.textContent = probFilterSrc != null
+      ? `本页 ${items.length} 道题（点右上 ✕ 回到全书）`
+      : `全书 ${PROBLEMS.length} 道题 · 当前 ${items.length} 道`;
+    let html = '', lastCh = '';
+    items.forEach(pr => {
+      if (pr.ch !== lastCh) { lastCh = pr.ch; html += `<div class="prob-ch">${esc(pr.chNo)} ${esc(pr.chTitle)}</div>`; }
+      html += `<button class="prob-item${probCur && probCur.id === pr.id ? ' on' : ''}" data-prob="${pr.id}">
+        <span class="prob-item-t">${esc(pr.text.slice(0, 46))}</span>
+        <span class="prob-item-m">第 ${pr.page + 1} 页 · ${pr.steps.length} 步解析</span></button>`;
+    });
+    list.innerHTML = html || '<div class="prob-empty">没有匹配的题目</div>';
+  }
+  function syncExhibitStep() {
+    /* 步骤推进时，左页展台同步切换到该章的下一个演示模式 */
+    const chips = document.querySelectorAll('#viz-tools .chip');
+    if (!chips.length || !probCur) return;
+    const chip = chips[probStep % chips.length];
+    if (chip && !chip.classList.contains('on')) chip.click();
+  }
+  function renderPlayer() {
+    if (!probCur) return;
+    const total = probCur.steps.length;
+    document.getElementById('prob-kicker').textContent =
+      `${probCur.chNo} ${probCur.chTitle} · 第 ${probCur.page + 1} 页 · 本题 ${total} 步`;
+    document.getElementById('prob-title').textContent = probCur.text.slice(0, 60);
+    document.getElementById('prob-stmt').innerHTML = '<div class="prob-stmt-tag">题干</div>' + probCur.stmt;
+    const box = document.getElementById('prob-steps');
+    box.innerHTML = probCur.steps.map((h, i) => {
+      const st = probStep === 0 ? 'wait' : (i < probStep - 1 ? 'done' : (i === probStep - 1 ? 'cur' : 'wait'));
+      return `<div class="pstep ${st}"><span class="pstep-n">${i + 1}</span><div class="pstep-body">${h}</div></div>`;
+    }).join('');
+    document.getElementById('prob-fill').style.width = (total ? (probStep / total) * 100 : 100) + '%';
+    document.getElementById('prob-stepno').textContent =
+      probStep === 0 ? '题干就绪 · 点播放' : `第 ${probStep} / ${total} 步`;
+    const cur = box.querySelector('.pstep.cur');
+    if (cur) cur.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+  function setProbStep(n) {
+    if (!probCur) return;
+    probStep = Math.max(0, Math.min(probCur.steps.length, n));
+    renderPlayer();
+    syncExhibitStep();
+    if (probStep >= probCur.steps.length) stopProb();
+  }
+  function playProb() {
+    if (!probCur) return;
+    if (probTimer) { stopProb(); return; }
+    if (probStep >= probCur.steps.length) probStep = 0;
+    const b = document.getElementById('prob-play');
+    b.textContent = '⏸ 暂停';
+    const tick = () => setProbStep(probStep + 1);
+    probTimer = setInterval(tick, parseInt(document.getElementById('prob-speed').value, 10) || 2600);
+    tick();
+  }
+  function selectProblem(id, autoplay) {
+    const pr = PROBLEMS[id];
+    if (!pr) return;
+    stopProb();
+    probCur = pr; probStep = 0;
+    if (state.page !== pr.page) go(pr.page);
+    renderProbList();
+    renderPlayer();
+    if (autoplay) setTimeout(playProb, 350);
+  }
+  function openProblems(srcFilter) {
+    probFilterSrc = (typeof srcFilter === 'number') ? srcFilter : null;
+    document.getElementById('prob-filter').value = '';
+    renderProbList();
+    document.getElementById('prob-layer').classList.add('open');
+    if (!probCur && PROBLEMS.length) selectProblem(PROBLEMS[0].id, false);
+    else if (probCur) renderPlayer();
+  }
+  function closeProblems() {
+    stopProb();
+    document.getElementById('prob-layer').classList.remove('open');
+  }
+
   /* ---------------- 启动 ---------------- */
   function boot() {
     app.state = state;
@@ -5126,6 +5357,25 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     app.el.searchList = document.getElementById('search-list');
     app.el.searchMeta = document.getElementById('search-meta');
     app.el.searchClose = document.getElementById('search-close');
+    app.el.probN = document.getElementById('prob-n');
+    if (app.el.probN) app.el.probN.textContent = PROBLEMS.length + ' 题';
+    document.getElementById('btn-problems').addEventListener('click', () => openProblems(null));
+    document.getElementById('prob-close').addEventListener('click', closeProblems);
+    document.getElementById('prob-layer').addEventListener('click', e => { if (e.target.id === 'prob-layer') closeProblems(); });
+    document.getElementById('prob-list').addEventListener('click', e => {
+      const b = e.target.closest('[data-prob]');
+      if (b) selectProblem(parseInt(b.getAttribute('data-prob'), 10), true);
+    });
+    document.getElementById('prob-filter').addEventListener('input', renderProbList);
+    document.getElementById('prob-prev').addEventListener('click', () => { stopProb(); setProbStep(probStep - 1); });
+    document.getElementById('prob-next').addEventListener('click', () => { stopProb(); setProbStep(probStep + 1); });
+    document.getElementById('prob-replay').addEventListener('click', () => { stopProb(); probStep = 0; renderPlayer(); setTimeout(playProb, 200); });
+    document.getElementById('prob-play').addEventListener('click', playProb);
+    document.getElementById('prob-speed').addEventListener('change', () => { if (probTimer) { stopProb(); playProb(); } });
+    document.addEventListener('click', e => {
+      const b = e.target.closest && e.target.closest('[data-probs]');
+      if (b) openProblems(parseInt(b.getAttribute('data-probs'), 10));
+    });
     app.el.brandSub = document.getElementById('brand-sub');
     app.el.brandSub.textContent = `${RAW.chapters.length} 章 · ${RAW.stats.pages} 页 · ${RAW.author}`;
 
@@ -5177,6 +5427,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
   }
 
   app.pages = PAGES;
+  app.problems = PROBLEMS;
   app.raw = RAW;
   window.PAGES_META = { total: PAGES.length, front: FRONT, chapters: RAW.chapters };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

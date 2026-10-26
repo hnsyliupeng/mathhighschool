@@ -42,6 +42,57 @@
   PAGES.push({ kind: 'colophon' });
   PAGES.forEach((p, i) => { p.abs = i; });
 
+  /* ---------------- 逐题动画解析：从正文块中提取每一道题 ----------------
+     题 = 含“例题：”的块 / 编号题 / “已知·设”开头且含求证的块 / 带问号的设问块。
+     解析 = 同章后续原文块（跨页收集，公式已是排版好的 HTML），播放时逐步点亮。 */
+  const PROBLEMS = [];
+  const PROB_BY_PAGE = {};
+  (function extractProblems() {
+    const holder = document.createElement('div');
+    const norm = b => (b.textContent || '').replace(/\s+/g, ' ').trim();
+    const cue = t => {
+      if (!t || t.length < 10 || /^(解|答|证明)\s*[:：]/.test(t)) return false;
+      if (/例题[:：]/.test(t) && t.length > 10) return true;
+      const u = t.replace(/^（[^）]*）\s*/, '');
+      if (/^\d+[.、]/.test(u) && /(求|证明|已知|设|试|是否存在|判断|讨论)/.test(u) && u.length >= 16) return true;
+      if (/^(已知|设|若|过|在)/.test(u) && /(求|证明|试|是否存在|判断)/.test(u) && u.length >= 22) return true;
+      if (/[？?]/.test(u) && /(求|证明|是否|判断|轨迹|最值|最小|最大|范围|单调|极值)/.test(u) && u.length >= 18 && !/^(由|则|所以|故|得)/.test(u)) return true;
+      if (/^(求|试|判断|讨论)/.test(u) && u.length >= 14) return true;
+      if (/(设|已知|若)/.test(u) && /证明/.test(u) && u.length >= 25 && !/^证明/.test(u)) return true;
+      return false;
+    };
+    const streams = {};
+    RAW.pages.forEach((p, srcIdx) => {
+      holder.innerHTML = p.html;
+      Array.from(holder.querySelectorAll('p, li, h3, h4'))
+        .filter(b => !b.closest('.tb-wrap') && norm(b))
+        .forEach(b => { (streams[p.ch] = streams[p.ch] || []).push({ b, p, src: srcIdx }); });
+    });
+    Object.values(streams).forEach(stream => {
+      stream.forEach((it, i) => {
+        const t = norm(it.b);
+        if (!cue(t) || /^H[1-4]$/.test(it.b.tagName)) return;
+        const steps = [];
+        for (let j = i + 1; j < stream.length && steps.length < 12; j++) {
+          const nb = stream[j].b;
+          if (/^H[1-4]$/.test(nb.tagName)) break;
+          const nt = norm(nb);
+          if (cue(nt)) break;
+          if (nt) steps.push(nb.outerHTML);
+        }
+        if (!steps.length) steps.push('<p>（本题解析即紧随其后的推导，点播放逐步看完本节再回看题干。）</p>');
+        const prob = {
+          id: PROBLEMS.length, ch: it.p.ch, chNo: it.p.chNo || '', chTitle: it.p.chTitle || '',
+          scene: (CH[it.p.ch] || {}).scene || 'fallback', src: it.src, page: FRONT + it.src,
+          stmt: it.b.outerHTML, steps, text: t,
+        };
+        PROBLEMS.push(prob);
+        (PROB_BY_PAGE[it.src] = PROB_BY_PAGE[it.src] || []).push(prob);
+      });
+    });
+  })();
+  window.PROBLEMS = PROBLEMS;
+
   const FIRST_TEXT = FRONT;
   const LAST_TEXT = FIRST_TEXT + RAW.pages.length - 1;
 
@@ -232,6 +283,7 @@
           <div class="viz-hint">拖动旋转 · 滚轮缩放 · 双击复位</div>
         </div>
         <div class="scene-note"><span class="lbl">读图</span><span id="scene-note"></span></div>
+        ${(PROB_BY_PAGE[p.src] || []).length ? `<button class="prob-chip" data-probs="${p.src}">🎬 本页 ${(PROB_BY_PAGE[p.src]).length} 道题 · 逐题动画解析</button>` : ''}
         <div class="lab" id="lab" hidden>
           <div class="lab-head"><span class="lab-title">实验室 · 动手跑</span><span class="lab-idea" id="lab-idea"></span></div>
           <div class="lab-controls" id="lab-controls"></div>
@@ -332,7 +384,7 @@
             <p>三维部分是自己写的 Canvas 2D 引擎：透视投影、画家算法、手绘抖动墨线、
               球面大圆、拾取高亮。它不依赖 three.js，也不加载任何外部资源。全书共设置
               67 台可操作的参数机器，覆盖正文全部演示模式，且每台都带滑杆或触发控件；面板仪表不是装饰标签，
-              而是场景模型每次重算时直接回吐的结果。书页部分是 CSS 3D 的翻页动画，
+              而是场景模型每次重算时直接回吐的结果。此外全书 150 道例题/习题都配了「逐题动画解析」：点顶栏按钮或每页的题目芯片，题干与原文解析会一步一步播放，左页 3D 展台随步骤同步切换模式。书页部分是 CSS 3D 的翻页动画，
               配色有五套，可随时切换。</p>
           </div>
           <div class="intro-note">
@@ -892,6 +944,99 @@
     app.el.searchLayer.classList.remove('open');
   }
 
+  /* ---------------- 逐题动画播放器 ---------------- */
+  let probCur = null, probStep = 0, probTimer = null, probFilterSrc = null;
+  function probPlaying() { return !!probTimer; }
+  function stopProb() {
+    if (probTimer) { clearInterval(probTimer); probTimer = null; }
+    const b = document.getElementById('prob-play');
+    if (b) b.textContent = '▶ 播放解析';
+  }
+  function renderProbList() {
+    const list = document.getElementById('prob-list');
+    const meta = document.getElementById('prob-meta');
+    if (!list) return;
+    const q = (document.getElementById('prob-filter').value || '').trim();
+    const items = PROBLEMS.filter(pr =>
+      (probFilterSrc == null || pr.src === probFilterSrc) &&
+      (!q || pr.text.indexOf(q) >= 0 || pr.chTitle.indexOf(q) >= 0));
+    meta.textContent = probFilterSrc != null
+      ? `本页 ${items.length} 道题（点右上 ✕ 回到全书）`
+      : `全书 ${PROBLEMS.length} 道题 · 当前 ${items.length} 道`;
+    let html = '', lastCh = '';
+    items.forEach(pr => {
+      if (pr.ch !== lastCh) { lastCh = pr.ch; html += `<div class="prob-ch">${esc(pr.chNo)} ${esc(pr.chTitle)}</div>`; }
+      html += `<button class="prob-item${probCur && probCur.id === pr.id ? ' on' : ''}" data-prob="${pr.id}">
+        <span class="prob-item-t">${esc(pr.text.slice(0, 46))}</span>
+        <span class="prob-item-m">第 ${pr.page + 1} 页 · ${pr.steps.length} 步解析</span></button>`;
+    });
+    list.innerHTML = html || '<div class="prob-empty">没有匹配的题目</div>';
+  }
+  function syncExhibitStep() {
+    /* 步骤推进时，左页展台同步切换到该章的下一个演示模式 */
+    const chips = document.querySelectorAll('#viz-tools .chip');
+    if (!chips.length || !probCur) return;
+    const chip = chips[probStep % chips.length];
+    if (chip && !chip.classList.contains('on')) chip.click();
+  }
+  function renderPlayer() {
+    if (!probCur) return;
+    const total = probCur.steps.length;
+    document.getElementById('prob-kicker').textContent =
+      `${probCur.chNo} ${probCur.chTitle} · 第 ${probCur.page + 1} 页 · 本题 ${total} 步`;
+    document.getElementById('prob-title').textContent = probCur.text.slice(0, 60);
+    document.getElementById('prob-stmt').innerHTML = '<div class="prob-stmt-tag">题干</div>' + probCur.stmt;
+    const box = document.getElementById('prob-steps');
+    box.innerHTML = probCur.steps.map((h, i) => {
+      const st = probStep === 0 ? 'wait' : (i < probStep - 1 ? 'done' : (i === probStep - 1 ? 'cur' : 'wait'));
+      return `<div class="pstep ${st}"><span class="pstep-n">${i + 1}</span><div class="pstep-body">${h}</div></div>`;
+    }).join('');
+    document.getElementById('prob-fill').style.width = (total ? (probStep / total) * 100 : 100) + '%';
+    document.getElementById('prob-stepno').textContent =
+      probStep === 0 ? '题干就绪 · 点播放' : `第 ${probStep} / ${total} 步`;
+    const cur = box.querySelector('.pstep.cur');
+    if (cur) cur.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+  function setProbStep(n) {
+    if (!probCur) return;
+    probStep = Math.max(0, Math.min(probCur.steps.length, n));
+    renderPlayer();
+    syncExhibitStep();
+    if (probStep >= probCur.steps.length) stopProb();
+  }
+  function playProb() {
+    if (!probCur) return;
+    if (probTimer) { stopProb(); return; }
+    if (probStep >= probCur.steps.length) probStep = 0;
+    const b = document.getElementById('prob-play');
+    b.textContent = '⏸ 暂停';
+    const tick = () => setProbStep(probStep + 1);
+    probTimer = setInterval(tick, parseInt(document.getElementById('prob-speed').value, 10) || 2600);
+    tick();
+  }
+  function selectProblem(id, autoplay) {
+    const pr = PROBLEMS[id];
+    if (!pr) return;
+    stopProb();
+    probCur = pr; probStep = 0;
+    if (state.page !== pr.page) go(pr.page);
+    renderProbList();
+    renderPlayer();
+    if (autoplay) setTimeout(playProb, 350);
+  }
+  function openProblems(srcFilter) {
+    probFilterSrc = (typeof srcFilter === 'number') ? srcFilter : null;
+    document.getElementById('prob-filter').value = '';
+    renderProbList();
+    document.getElementById('prob-layer').classList.add('open');
+    if (!probCur && PROBLEMS.length) selectProblem(PROBLEMS[0].id, false);
+    else if (probCur) renderPlayer();
+  }
+  function closeProblems() {
+    stopProb();
+    document.getElementById('prob-layer').classList.remove('open');
+  }
+
   /* ---------------- 启动 ---------------- */
   function boot() {
     app.state = state;
@@ -925,6 +1070,25 @@
     app.el.searchList = document.getElementById('search-list');
     app.el.searchMeta = document.getElementById('search-meta');
     app.el.searchClose = document.getElementById('search-close');
+    app.el.probN = document.getElementById('prob-n');
+    if (app.el.probN) app.el.probN.textContent = PROBLEMS.length + ' 题';
+    document.getElementById('btn-problems').addEventListener('click', () => openProblems(null));
+    document.getElementById('prob-close').addEventListener('click', closeProblems);
+    document.getElementById('prob-layer').addEventListener('click', e => { if (e.target.id === 'prob-layer') closeProblems(); });
+    document.getElementById('prob-list').addEventListener('click', e => {
+      const b = e.target.closest('[data-prob]');
+      if (b) selectProblem(parseInt(b.getAttribute('data-prob'), 10), true);
+    });
+    document.getElementById('prob-filter').addEventListener('input', renderProbList);
+    document.getElementById('prob-prev').addEventListener('click', () => { stopProb(); setProbStep(probStep - 1); });
+    document.getElementById('prob-next').addEventListener('click', () => { stopProb(); setProbStep(probStep + 1); });
+    document.getElementById('prob-replay').addEventListener('click', () => { stopProb(); probStep = 0; renderPlayer(); setTimeout(playProb, 200); });
+    document.getElementById('prob-play').addEventListener('click', playProb);
+    document.getElementById('prob-speed').addEventListener('change', () => { if (probTimer) { stopProb(); playProb(); } });
+    document.addEventListener('click', e => {
+      const b = e.target.closest && e.target.closest('[data-probs]');
+      if (b) openProblems(parseInt(b.getAttribute('data-probs'), 10));
+    });
     app.el.brandSub = document.getElementById('brand-sub');
     app.el.brandSub.textContent = `${RAW.chapters.length} 章 · ${RAW.stats.pages} 页 · ${RAW.author}`;
 
@@ -976,6 +1140,7 @@
   }
 
   app.pages = PAGES;
+  app.problems = PROBLEMS;
   app.raw = RAW;
   window.PAGES_META = { total: PAGES.length, front: FRONT, chapters: RAW.chapters };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
