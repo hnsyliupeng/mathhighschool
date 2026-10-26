@@ -142,18 +142,28 @@
         }
         if (!GX.gauges) GX.gauges = [['系数 a·b·c', qa + ' · ' + qb + ' · ' + qc], ['Δ=b²−4ac', F2(D)], ['实根', roots]];
       } else if (c.mode === 'cubic') {
-        const f = x => 0.42 * (x * x * x - 3 * x);
-        items.push(curve(f, -2.5, 2.5, 160, { st }));
-        [-Math.sqrt(3), 0, Math.sqrt(3)].forEach((x, i) => items.push(...mark(st, [x, 0, 0], ['x₁', 'x₂', 'x₃'][i] + '=' + (i === 1 ? '0' : (x < 0 ? '−√3' : '√3')), { dx: i === 1 ? 14 : -26, dy: -14 })));
-        items.push(E.label([0, 2.3, 0], '曲线穿过 x 轴三次', { size: 11.5, color: acc(st), dy: 12 }));
+        const pp = PV(c, 'p', 1);
+        const f = x => 0.42 * (x * x * x - 3 * pp * x);
+        items.push(curve(f, -2.5, 2.5, 180, { st }));
+        const roots = pp > 0.001 ? [-Math.sqrt(3 * pp), 0, Math.sqrt(3 * pp)] : [0];
+        roots.forEach((x, i) => { if (Math.abs(x) <= 2.55) items.push(...mark(st, [x, 0, 0], 'x' + (roots.length > 1 ? ['₁', '₂', '₃'][i] : '') + '=' + F2(x), { dx: x < 0 ? -26 : 16, dy: -14 })); });
+        items.push(E.label([0, 2.3, 0], pp > 0.001 ? '曲线穿过 x 轴三次' : '只剩一个实根', { size: 11.5, color: acc(st), dy: 12 }));
+        GX.gauges = [['参数 p（y=x³−3px）', F2(pp)], ['实根个数', roots.length], ['实根', roots.map(F2).join(' , ')], ['极值点 x', pp > 0.001 ? '±' + F2(Math.sqrt(pp)) : '无']];
+        if (pp < -0.001) GX.verdict = { text: '推过头：p<0 时导数 3x²−3p 恒正，曲线单调递增——三次方程仍必有实根，但只剩一个。', danger: true };
+        else if (Math.abs(pp) <= 0.001) GX.verdict = { text: '临界点：p=0 时三个实根在原点合流成三重根 x=0。', danger: false };
       } else {
-        const f = x => (x === 1 ? NaN : 1.1 / (x - 1) + 0.5);
-        items.push(curve(f, -2.6, 0.86, 80, { st }));
-        items.push(curve(f, 1.14, 3.0, 80, { st }));
-        items.push(E.line([1, -1.4, 0], [1, 2.5, 0], { color: ink(st), sw: 1, dash: [5, 5], alpha: .5 }));
-        items.push(E.label([1, 2.35, 0], 'x=1 渐近线', { size: 10.5, dx: 46, dy: 0, align: 'left' }));
-        items.push(...mark(st, [0.1, -0.72, 0], '根', { dx: -14, dy: 4 }));
-        items.push(E.label([-2.2, 2.15, 0], '定义域 x≠1', { size: 11, color: acc(st), align: 'left' }));
+        const aa = PV(c, 'aa', 1), hh = PV(c, 'hh', 0.5);
+        const f = x => 1.1 / (x - aa) + hh;
+        items.push(curve(f, -2.6, aa - 0.14, 90, { st }));
+        items.push(curve(f, aa + 0.14, 3.0, 90, { st }));
+        items.push(E.line([aa, -1.4, 0], [aa, 2.5, 0], { color: ink(st), sw: 1, dash: [5, 5], alpha: .5 }));
+        items.push(E.label([aa, 2.35, 0], 'x=' + F2(aa) + ' 渐近线', { size: 10.5, dx: 46, dy: 0, align: 'left' }));
+        const root = Math.abs(hh) < 0.02 ? null : aa - 1.1 / hh;
+        if (root != null && root >= -2.6 && root <= 3 && Math.abs(root - aa) > 0.2) items.push(...mark(st, [root, 0, 0], '根 x=' + F2(root), { dx: root < aa ? -28 : 16, dy: -14 }));
+        items.push(E.line([-2.6, hh, 0], [3, hh, 0], { color: acc(st), sw: 1, dash: [4, 4], alpha: .45 }));
+        items.push(E.label([-2.2, 2.15, 0], '定义域 x≠' + F2(aa), { size: 11, color: acc(st), align: 'left' }));
+        GX.gauges = [['竖直渐近线 x', F2(aa)], ['水平渐近线 y', F2(hh)], ['方程的根', root == null ? '逃到无穷远' : F2(root)], ['值域', 'y≠' + F2(hh)]];
+        if (Math.abs(hh) < 0.08) GX.verdict = { text: '推过头：水平渐近线压到 y=0 附近，根被推向无穷远——分式方程先看分母与渐近线，再谈解。', danger: true };
       }
       return { items, fit: 1, gauges: GX.gauges, verdict: GX.verdict };
     },
@@ -211,15 +221,21 @@
       const st = c.st, items = [];
       const GX = { gauges: null, verdict: null };
       if (c.mode === 'region') {
-        const P = [[0, 0, 0], [3, 0, 0], [0, 2.2, 0]];
-        items.push(E.face(P, { color: G.tint(st, .12), alpha0: .5, edgeColor: acc(st), sw: 2, key: 'in:reg', tip: '满足 x≥0,y≥0,x+y≤3 的区域' }));
+        const ss = PV(c, 's', 2.2), tx = PV(c, 'tx', 0.8), ty = PV(c, 'ty', 0.7);
+        const P = [[0, 0, 0], [ss, 0, 0], [0, ss, 0]];
+        const inside = tx >= 0 && ty >= 0 && tx + ty <= ss + 1e-9;
+        items.push(E.face(P, { color: G.tint(st, .12), alpha0: .5, edgeColor: acc(st), sw: 2, key: 'in:reg', tip: '满足 x≥0,y≥0,x+y≤s 的区域' }));
         items.push(E.line([-0.4, 0, 0], [3.4, 0, 0], { color: ink(st), sw: 1.3, arrow: true }));
         items.push(E.line([0, -0.4, 0], [0, 2.7, 0], { color: ink(st), sw: 1.3, arrow: true }));
-        items.push(E.line([3.2, -0.15, 0], [-0.25, 2.6, 0], { color: acc(st), sw: 1.8, dash: [6, 4] }));
-        items.push(E.label([1.5, 1.85, 0], 'x+y=3', { size: 11.5, color: acc(st), dx: 26, dy: -6, align: 'left' }));
-        items.push(E.label([0.95, 0.62, 0], '可行域', { size: 12.5, color: ink(st), dx: 4, dy: 4 }));
-        items.push(...mark(st, [3, 0, 0], 'x=3', { dx: 10, dy: 10 }));
-        items.push(...mark(st, [0, 2.2, 0], 'y=2.2', { dx: -14, dy: -10 }));
+        items.push(E.line([ss + 0.25, -0.25, 0], [-0.25, ss + 0.25, 0], { color: acc(st), sw: 1.8, dash: [6, 4] }));
+        items.push(E.label([ss * 0.62, ss * 0.62, 0], 'x+y=' + F2(ss), { size: 11.5, color: acc(st), dx: 26, dy: -6, align: 'left' }));
+        items.push(E.label([ss * 0.32, ss * 0.28, 0], '可行域', { size: 12.5, color: ink(st), dx: 4, dy: 4 }));
+        items.push(...mark(st, [ss, 0, 0], 'x=' + F2(ss), { dx: 10, dy: 10 }));
+        items.push(...mark(st, [0, ss, 0], 'y=' + F2(ss), { dx: -14, dy: -10 }));
+        items.push(E.point([tx, ty, 0], { r: 4.4, color: inside ? acc(st) : '#b03a2e', ring: true }));
+        items.push(E.label([tx, ty, 0], '检验点', { size: 10.5, dx: 12, dy: -12, align: 'left', color: inside ? acc(st) : '#b03a2e' }));
+        GX.gauges = [['边界 x+y≤s', F2(ss)], ['检验点 (x,y)', F2(tx) + ',' + F2(ty)], ['x+y', F2(tx + ty)], ['判定', inside ? '在区域内 ✓' : '在区域外 ✗']];
+        if (!inside) GX.verdict = { text: '推过头：检验点越过边界，x+y>s——半平面不是“大概这一侧”，边界算式当场判出局。', danger: true };
       } else if (c.mode === 'amgm') {
         const a = PV(c, 'a', 1.55), b = PV(c, 'b', 0.85);
         const y = .02;
@@ -308,14 +324,22 @@
         items.push(E.line([-3, 0, 0], [-0.2, 0, 0], { color: ink(st), sw: 2, alpha: .3 }));
         items.push(E.label([2.2, 2.3, 0], 'y = x + a/x', { size: 12, color: acc(st), dx: 30, dy: -6, align: 'left' }));
       } else {
-        items.push(curve(x => 0.7 * x + 1.1, -2.2, 0, 1, { st }));
-        items.push(curve(x => 0.275 * x * x + 0.55, 0, 2.3, 60, { st }));
-        items.push(E.point([0, 1.1, 0], { r: 3.4, color: acc(st), ring: true }));
-        items.push(E.point([0, 0.55, 0], { r: 3.0, color: ink(st) }));
-        items.push(E.line([0, -0.2, 0], [0, 2.2, 0], { color: ink(st), sw: 1, dash: [5, 4], alpha: .5 }));
-        items.push(E.label([0, 2.3, 0], '分段点 x=0', { size: 11, dx: 26, dy: 2, align: 'left' }));
-        items.push(E.label([-1.55, 1.55, 0], '实心：取到', { size: 10.5, color: acc(st), dx: -6, dy: -10, align: 'right' }));
-        items.push(E.label([1.5, 1.0, 0], '空心：不取', { size: 10.5, color: ink(st), dx: 10, dy: 12, align: 'left' }));
+        const bp = PV(c, 'bp', 0), px = PV(c, 'px', 1.2);
+        const fl = x => 0.7 * x + 1.1, fr = x => 0.275 * x * x + 0.55;
+        const fv = x => x < bp ? fl(x) : fr(x);
+        items.push(curve(fl, -2.2, bp, 40, { st }));
+        items.push(curve(fr, bp, 2.3, 60, { st }));
+        items.push(E.point([bp, fl(bp), 0], { r: 3.4, color: acc(st), ring: true }));
+        items.push(E.point([bp, fr(bp), 0], { r: 3.2, color: ink(st) }));
+        items.push(E.line([bp, -0.2, 0], [bp, 2.2, 0], { color: ink(st), sw: 1, dash: [5, 4], alpha: .5 }));
+        items.push(E.label([bp, 2.3, 0], '分段点 x=' + F2(bp), { size: 11, dx: 26, dy: 2, align: 'left' }));
+        items.push(E.point([px, fv(px), 0], { r: 4.2, color: acc(st), ring: true }));
+        items.push(E.line([px, 0, 0], [px, fv(px), 0], { color: acc(st), sw: .9, dash: [3, 4], alpha: .6 }));
+        items.push(E.label([px, fv(px), 0], '探针', { size: 10.5, dx: 10, dy: -12, align: 'left', color: acc(st) }));
+        const jump = fr(bp) - fl(bp);
+        GX.gauges = [['分段点 b', F2(bp)], ['左极限', F2(fl(bp))], ['f(b)（右段）', F2(fr(bp))], ['跳跃量', F2(jump)], ['探针 f(' + F2(px) + ')', F2(fv(px))]];
+        if (Math.abs(jump) < 0.03) GX.verdict = { text: '临界点：左右在分段点接上了，跳跃量≈0——分段函数先查分段点的左右值，再谈连续。', danger: false };
+        else GX.verdict = { text: '注意：分段点处左极限与 f(b) 不等，图象在这里“断开”；实心点取哪一段，必须按定义判定。', danger: true };
       }
       return { items, fit: 1, gauges: GX.gauges, verdict: GX.verdict };
     },
@@ -334,7 +358,13 @@
       const st = c.st, items = [];
       const GX = { gauges: null, verdict: null };
       if (c.mode === 'log') {
+        const ex = PV(c, 'ex', 1), num = Math.pow(10, ex);
+        GX.gauges = [['指数位置', F2(ex)], ['真数 10^位置', num >= 100 ? F2(num) : F2(num)], ['log₁₀(真数)', F2(Math.log10(num))], ['每右移 1 格', '真数 ×10']];
+        if (ex <= -1.9) GX.verdict = { text: '推过头：指数到 −2，真数只剩 0.01；对数轴把“乘以 10”变成“右移一格”，负方向同样等距。', danger: true };
         items.push(E.line([-2.4, 0, 0], [2.6, 0, 0], { color: ink(st), sw: 1.4, arrow: true }));
+        items.push(E.line([ex, 0, 0], [ex, 0.62, 0], { color: acc(st), sw: 1.4, dash: [4, 3] }));
+        items.push(E.point([ex, 0.62, 0], { r: 4, color: acc(st), ring: true }));
+        items.push(E.label([ex, 0.62, 0], '10^' + F2(ex), { size: 11, dx: 10, dy: -10, align: 'left', color: acc(st) }));
         [[-2, '0.01'], [-1, '0.1'], [0, '1'], [1, '10'], [2, '100']].forEach(([x, s2]) => {
           items.push(E.line([x, -0.08, 0], [x, 0.08, 0], { color: ink(st), sw: 1.6 }));
           items.push(E.label([x, -0.2, 0], s2, { size: 11, dy: 10 }));
@@ -553,30 +583,43 @@
       const GX = { gauges: null, verdict: null };
       const soft = (c.mode === 'cut' || c.mode === 'angle' || c.mode === 'ball') && !st.seeThrough;
       const alpha = st.seeThrough ? 0.34 : (soft ? 0.55 : 0.94);
-      const cube = cubeOf(st, { a: 2, alpha });
+      const edge = (c.mode === 'cube' || c.mode === 'ball') ? PV(c, 'edge', 2) : 2;
+      const cube = cubeOf(st, { a: edge, alpha });
       const items = [cube.items];
       const v = cube.v;
       const A = v.A, B = v.B, C = v.C, D = v.D, A1 = v['A₁'], B1 = v['B₁'], C1 = v['C₁'], D1 = v['D₁'];
       if (c.mode === 'cube') {
-        items.push(E.label([0, 0, 1.03], 'a', { size: 11, dx: -14, dy: 12, color: acc(st) }));
-        items.push(E.label([1.03, 0, 0], 'a', { size: 11, dx: 12, dy: 10, color: acc(st) }));
+        GX.gauges = [['棱长 a', F2(edge)], ['体积 a³', F2(edge * edge * edge)], ['表面积 6a²', F2(6 * edge * edge)], ['体对角线 √3a', F2(Math.sqrt(3) * edge)]];
+        items.push(E.label([0, 0, edge / 2 + 0.03], 'a', { size: 11, dx: -14, dy: 12, color: acc(st) }));
+        items.push(E.label([edge / 2 + 0.03, 0, 0], 'a', { size: 11, dx: 12, dy: 10, color: acc(st) }));
         const O = G.centroid([A, B, C, D, A1, B1, C1, D1]);
         items.push(E.point(O, { r: 3, color: acc(st), key: 'cu:o' }));
         items.push(E.label(O, '体对角线交于一点', { size: 10.5, dx: 30, dy: -8, align: 'left', color: acc(st) }));
         items.push(E.line(A, C1, { color: acc(st), sw: 1.2, dash: [6, 4], alpha: .8 }));
       } else if (c.mode === 'para') {
+        const sh = PV(c, 'sh', 0);
+        const L1 = [-1, 1.25, -1 + sh], L2 = [1, 1.25, -1 + sh];
         items.push(E.face([A, B, B1, A1], { color: acc(st), alpha0: .22, edgeColor: acc(st), sw: 2, key: 'cu:ab' }));
         items.push(E.line(C, D, { color: acc(st), sw: 2.6, key: 'cu:cd' }));
-        items.push(E.line([C[0], C[1], C[2]], [D[0], D[1], D[2]], { color: acc(st), sw: 2.6 }));
+        items.push(E.line(L1, L2, { color: ink(st), sw: 2.4, key: 'cu:mov' }));
+        items.push(E.point(L1, { r: 3, color: ink(st) })); items.push(E.point(L2, { r: 3, color: ink(st) }));
+        items.push(E.label([0, 1.42, -1 + sh], '可动直线 l ∥ AB', { size: 10.5, dy: -12, color: ink(st) }));
         items.push(E.label([0, 1.05, -1.02], 'AB A₁B₁ ∥ CD', { size: 11, dx: 0, dy: -14, color: acc(st) }));
         items.push(E.label([-0.9, 0.05, 1.0], '平面 ABB₁A₁', { size: 10.5, dx: -6, dy: 12, align: 'right', color: acc(st) }));
+        GX.gauges = [['直线到平面距离', F2(2 - sh)], ['l 与 AB 方向点积', '4（平行）'], ['l 是否在平面外', sh >= 1.98 ? '否：已落入平面' : '是'], ['结论', sh >= 1.98 ? '前提失效' : 'l ∥ 平面']];
+        if (sh >= 1.98) GX.verdict = { text: '推过头：直线滑进平面内部，“平面外一条直线”这个前提没了，线面平行判定定理不能再用。', danger: true };
       } else if (c.mode === 'perp') {
+        const tg = PV(c, 'tilt', 0) * Math.PI / 180;
+        const tip = [A[0] + 2 * Math.sin(tg), A[1] + 2 * Math.cos(tg), A[2]];
+        const dAB = Math.sin(tg) * 2, dAD = 0;
         items.push(E.face([A, B, C, D], { color: acc(st), alpha0: .2, edgeColor: acc(st), sw: 1.8 }));
-        items.push(E.line(A, A1, { color: acc(st), sw: 2.6, key: 'cu:aa1' }));
-        items.push(G.rightAngle(B, A, A1, .22, { color: acc(st) }));
-        items.push(G.rightAngle(D, A, A1, .22, { color: acc(st) }));
-        items.push(E.label([A[0] + .12, 1.0, A[2]], 'AA₁ ⊥ 平面 ABCD', { size: 10.5, dx: 22, dy: 0, align: 'left', color: acc(st) }));
+        items.push(E.line(A, tip, { color: acc(st), sw: 2.6, key: 'cu:aa1' }));
+        items.push(E.point(tip, { r: 3.2, color: acc(st) }));
+        if (Math.abs(tg) < 0.02) { items.push(G.rightAngle(B, A, A1, .22, { color: acc(st) })); items.push(G.rightAngle(D, A, A1, .22, { color: acc(st) })); }
+        items.push(E.label([A[0] + .12, 1.0, A[2]], Math.abs(tg) < 0.02 ? 'AA₁ ⊥ 平面 ABCD' : '斜线 l（已倾斜）', { size: 10.5, dx: 22, dy: 0, align: 'left', color: acc(st) }));
         items.push(E.label([0, -0.16, 0.4], '底面 ABCD', { size: 10.5, dy: 14 }));
+        GX.gauges = [['倾角 θ', F2(PV(c, 'tilt', 0)) + '°'], ['方向·AB', F2(dAB)], ['方向·AD', F2(dAD)], ['结论', Math.abs(tg) < 0.02 ? 'l ⊥ 平面 ✓' : '只剩一条垂直 ✗']];
+        if (Math.abs(tg) > 0.02) GX.verdict = { text: '推过头：直线一倾斜，与 AB 的点积立刻不为 0——线面垂直要在平面内找到“两条相交直线”同时垂直，少一条都不算。', danger: true };
       } else if (c.mode === 'cut') {
         const u = PV(c, 'u', 0.5);
         const h = [G.mid(A, B, u), G.mid(B, C, u), G.mid(C, C1, u), G.mid(C1, D1, u), G.mid(D1, A1, u), G.mid(A1, A, u)];
@@ -592,25 +635,31 @@
         items.push(E.label(h[2], '正六边形截面', { size: 11, color: acc(st), dx: 24, dy: -8, align: 'left' }));
         items.push(E.label([0, 2.35, 0], '截面随分点 u 滑动 · u=0.5 为正六边形', { size: 10, dy: -4 }));
       } else if (c.mode === 'angle') {
+        const hh = PV(c, 'hh', 2), Q = [A[0], A[1] + hh, A[2]];
         const O = G.mid(B, D);
-        items.push(E.face([A1, B, D], { color: acc(st), alpha0: .26, edgeColor: acc(st), sw: 1.9, key: 'cu:p1' }));
+        const ang = Math.atan2(hh, Math.SQRT2) * 180 / Math.PI;
+        GX.gauges = [['上点高度 h', F2(hh)], ['AO 距离', F2(Math.SQRT2)], ['tanθ=h/AO', F2(hh / Math.SQRT2)], ['二面角 θ', F2(ang) + '°']];
+        if (hh < 0.25) GX.verdict = { text: '推过头：上点压回底面，两半平面合拢，二面角趋于 0°——角的大小由两半平面的张开程度决定。', danger: true };
+        items.push(E.face([Q, B, D], { color: acc(st), alpha0: .26, edgeColor: acc(st), sw: 1.9, key: 'cu:p1' }));
+        items.push(E.point(Q, { r: 3.2, color: acc(st) }));
+        items.push(E.label(Q, hh >= 1.98 ? 'A₁' : 'Q', { size: 11, dx: 10, dy: -10, align: 'left', color: acc(st) }));
         items.push(E.face([A, B, D], { color: G.tint(st, .2), alpha0: .2, edgeColor: ink(st), sw: 1.5 }));
         items.push(E.line(B, D, { color: ink(st), sw: 2.2, key: 'cu:bd' }));
         items.push(E.line(A, O, { color: acc(st), sw: 1.5, dash: [4, 3] }));
-        items.push(E.line(A1, O, { color: acc(st), sw: 1.5, dash: [4, 3] }));
+        items.push(E.line(Q, O, { color: acc(st), sw: 1.5, dash: [4, 3] }));
         items.push(G.rightAngle(A, O, B, .2, { color: acc(st) }));
-        items.push(E.angle(A, O, A1, 'θ', { color: acc(st) }));
-        items.push(E.label([0, 1.2, 0.55], '二面角 A₁-BD-A', { size: 10.8, color: acc(st), dx: 34, dy: -6, align: 'left' }));
+        items.push(E.angle(A, O, Q, 'θ', { color: acc(st) }));
+        items.push(E.label([0, 1.2, 0.55], '二面角 Q-BD-A', { size: 10.8, color: acc(st), dx: 34, dy: -6, align: 'left' }));
         items.push(E.label(O, 'O', { size: 10.5, dx: -12, dy: 10 }));
       } else {
-        const O = [0, 1, 0];
-        const R = Math.sqrt(3);
+        const O = [0, edge / 2, 0];
+        const R = Math.sqrt(3) * edge / 2;
         items.push(G.sphere({ c: O, r: R, color: G.tint(st, .12), alpha: .5, key: 'cu:ball' }));
         items.push(E.label(O, 'O', { size: 12, dx: -12, dy: 10, color: acc(st) }));
         items.push(E.line(A, C1, { color: acc(st), sw: 1.8, dash: [6, 4] }));
         items.push(E.label(G.mid(A, C1), '2R = √3a', { size: 11, dx: 26, dy: -6, align: 'left', color: acc(st) }));
       }
-      if (c.mode === 'ball') GX.gauges = [['棱长 a', '2'], ['体对角线 √3a', F2(Math.sqrt(3) * 2)], ['外接球 R=√3a/2', F2(Math.sqrt(3))], ['球表面积 4πR²', F2(4 * Math.PI * 3) ]];
+      if (c.mode === 'ball') GX.gauges = [['棱长 a', F2(edge)], ['体对角线 √3a', F2(Math.sqrt(3) * edge)], ['外接球 R=√3a/2', F2(Math.sqrt(3) * edge / 2)], ['球表面积 4πR²', F2(4 * Math.PI * 3 * edge * edge / 4)], ['球/方体积比', F2(Math.PI * Math.sqrt(3) / 6)]];
       return { items, fit: 0.98, gauges: GX.gauges, verdict: GX.verdict };
     },
   };
@@ -632,6 +681,12 @@
       items.push(cube.items);
       if (c.mode === 'sys') {
         const O = A;
+        const u = PV(c, 'u', 0.5), Q = G.mid(A1, B1, u);
+        GX.gauges = [['目标点 Q', 'A₁B₁ 上 ' + F2(u)], ['Q 坐标 (x,y,z)', '(' + F2(2 * u) + ', 0, 2)'], ['建系原点', 'A(0,0,0)'], ['读法', '沿 x→y→z 量']];
+        items.push(E.point(Q, { r: 4, color: acc(st), ring: true }));
+        items.push(E.label(Q, 'Q(' + F2(2 * u) + ',0,2)', { size: 10.5, dx: 12, dy: -12, align: 'left', color: acc(st) }));
+        items.push(E.line(Q, [Q[0], 0, Q[2]], { color: acc(st), sw: .9, dash: [3, 4], alpha: .65 }));
+        items.push(E.line([Q[0], 0, Q[2]], [Q[0], 0, 1], { color: acc(st), sw: .9, dash: [3, 4], alpha: .45 }));
         items.push(G.arrow(O, [O[0] + 2.6, O[1], O[2]], { color: acc(st), sw: 1.8, key: 'v3:x' }));
         items.push(G.arrow(O, [O[0], O[1], O[2] - 2.6], { color: acc(st), sw: 1.8, key: 'v3:y' }));
         items.push(G.arrow(O, [O[0], O[1] + 2.6, O[2]], { color: acc(st), sw: 1.8, key: 'v3:z' }));
@@ -642,10 +697,14 @@
       } else if (c.mode === 'normal') {
         items.push(E.face([A1, B, D1], { color: acc(st), alpha0: .24, edgeColor: acc(st), sw: 2, hatch: true, key: 'v3:pl' }));
         const O = G.centroid([A1, B, D1]);
-        const n = [1, 1, -1];
-        const tip = V.add(O, V.mul(n, 0.85 / Math.sqrt(3)));
+        const kk = PV(c, 'kk', -1);
+        const n = [1, 1, kk];
+        const tip = V.add(O, V.mul(V.norm(n), 0.85));
+        const vA = V.sub(B, A1), vB = V.sub(D, B);
+        GX.gauges = [['试探 n', '(1,1,' + F2(kk) + ')'], ['n·A₁B', F2(V.dot(n, vA))], ['n·BD', F2(V.dot(n, vB))], ['是否为法向量', Math.abs(V.dot(n, vA)) < 0.01 && Math.abs(V.dot(n, vB)) < 0.01 ? '是 ✓' : '否 ✗']];
+        if (Math.abs(kk + 1) > 0.02) GX.verdict = { text: '推过头：第三个分量一偏，n·BD 立刻不为 0——法向量不是“差不多垂直”，两个点积必须同时归零。', danger: true };
         items.push(G.arrow(O, tip, { color: ink(st), sw: 2, key: 'v3:n' }));
-        items.push(E.label(tip, 'n=(1,1,−1)', { size: 11, dx: 10, dy: -10, align: 'left' }));
+        items.push(E.label(tip, 'n=(1,1,' + F2(kk) + ')', { size: 11, dx: 10, dy: -10, align: 'left' }));
         items.push(E.point(O, { r: 3, color: ink(st) }));
         items.push(E.label([0.6, 1.9, 0.2], '平面 A₁BD', { size: 10.5, color: acc(st), dx: 24, dy: -8, align: 'left' }));
         items.push(E.label([0, 1.0, -1.1], 'n·A₁B = 0, n·BD = 0', { size: 10.5, dy: -14 }));
@@ -724,10 +783,18 @@
       items.push(G.revolve([[0, 0], [k * ymax, -ymax]], { st, seg: 56, alpha, key: 'co:dn', capBottom: false, capTop: true }));
       items.push(E.line([0, -ymax - .25, 0], [0, ymax + .25, 0], { color: ink(st), sw: 1, dash: [7, 5], alpha: .55 }));
       if (c.mode === 'cone') {
+        const aDeg = Math.atan(k) * 180 / Math.PI, bDeg = PV(c, 'beta', 45), brad = bDeg * Math.PI / 180;
+        const ecc = Math.cos(brad) / Math.cos(aDeg * Math.PI / 180);
+        const type = ecc < 0.92 ? '椭圆' : (ecc > 1.08 ? '双曲线' : '抛物线（临界）');
+        const nn = V.norm([Math.cos(brad), Math.sin(brad), 0]);
+        const PP = ecc < 0.92 ? [0, 0.95, 0] : (ecc > 1.08 ? [0.45, 0, 0] : [0, 0.75, 0.25]);
+        const uu = V.norm(V.cross(nn, [0, 1, 0.001])), vv2 = V.norm(V.cross(nn, uu));
+        items.push(G.planeQuad(PP, uu, vv2, 1.55, 1.55, { color: acc(st), alpha: .13, edgeColor: acc(st), sw: 1.3, dash: [6, 4], key: 'co:plane0' }));
+        coneSection(k, PP, nn, ymax, 220).forEach((br, i) => { if (br.length >= 3) items.push(E.poly(br, { closed: false, color: acc(st), sw: 2.6, layer: 'top', key: 'co:curve0' + i })); });
         items.push(E.label([0, ymax + 0.55, 0], '母线 l 与轴成定角 α', { size: 11, dy: -2, color: acc(st) }));
         items.push(E.label([k * ymax * 0.72, ymax * 0.55, k * ymax * 0.72], 'l', { size: 11.5, dx: 12, dy: -4, align: 'left' }));
-        items.push(E.label([0, -ymax - 0.55, 0], '平面截双锥 → 三种圆锥曲线', { size: 10.5, dy: 10 }));
-        return { items, fit: 0.96 };
+        items.push(E.label([0, -ymax - 0.55, 0], '当前 β 预览 → ' + type, { size: 11, dy: 10, color: acc(st) }));
+        return { items, fit: 0.96, gauges: [['截面倾角 β', F2(bDeg) + '°'], ['锥半角 α', F2(aDeg) + '°'], ['离心率 e', F2(ecc)], ['将截得', type]], verdict: ecc > 1.08 ? { text: '推过头：β<α，预览平面同时截到上下锥，曲线裂成两支。', danger: true } : null };
       }
       const alphaDeg = Math.atan(k) * 180 / Math.PI;
       const defBeta = { ellipse: 66, hyperbola: 18, parabola: 32 }[c.mode] || 45;
@@ -819,7 +886,9 @@
     build(t, c) {
       const st = c.st, items = [];
       if (c.mode === 'surf') {
-        const f = (x, y) => 0.42 * (x * x - y * y) * .5 + 0.9;
+        const kk = PV(c, 'kk', -1), px = PV(c, 'px', 0.8), py = PV(c, 'py', 0.4);
+        const f = (x, y) => 0.42 * (x * x + kk * y * y) * .5 + 0.9;
+        const GXs = { gauges: [['y² 系数 k', F2(kk)], ['曲面类型', kk < -0.02 ? '马鞍面' : (kk > 0.02 ? '椭圆抛物面' : '抛物柱面')], ['P 点', '(' + F2(px) + ',' + F2(py) + ',' + F2(f(px, py)) + ')'], ['∂z/∂x', F2(0.42 * px)], ['∂z/∂y', F2(0.42 * kk * py)]], verdict: kk > 0.02 ? { text: '推过头：k 变正后马鞍“合拢”成碗，原点由鞍点变极小点——偏导同为 0，类型却完全不同。', danger: true } : null };
         const N = 9, R = 2.0;
         for (let i = 0; i <= N; i++) {
           const a = -R + 2 * R * i / N;
@@ -833,9 +902,13 @@
           items.push(E.poly(p2, { color: acc(st), sw: 1, alpha: .45 }));
         }
         items.push(...frame3(st, { len: 2.2 }));
+        items.push(E.point([px, f(px, py), py], { r: 4, color: acc(st), ring: true }));
+        items.push(E.line([px - .55, f(px, py) - 0.42 * px * .55, py], [px + .55, f(px, py) + 0.42 * px * .55, py], { color: acc(st), sw: 1.8 }));
+        items.push(E.line([px, f(px, py) - 0.42 * kk * py * .55, py - .55], [px, f(px, py) + 0.42 * kk * py * .55, py + .55], { color: ink(st), sw: 1.4, dash: [4, 3] }));
+        items.push(E.label([px, f(px, py), py], 'P', { size: 11, dx: 10, dy: -10, align: 'left', color: acc(st) }));
         items.push(E.label([0, 2.95, 0], 'z = f(x, y)', { size: 12, color: acc(st), dy: -2 }));
-        items.push(E.label([0, -0.42, 2.25], '马鞍面：偏导为 0 但不是极值', { size: 10.5, dy: 10 }));
-        return { items, fit: 1.0 };
+        items.push(E.label([0, -0.42, 2.25], kk < -0.02 ? '马鞍面：偏导为 0 但不是极值' : '沿两轴的切线斜率 = 偏导数', { size: 10.5, dy: 10 }));
+        return { items, fit: 1.0, gauges: GXs.gauges, verdict: GXs.verdict };
       }
       items.push(grid(st, { xr: 3, yr: 2.6 }), ...flatAxes(st, { xr: 3.2, yu: 2.9, yd: 1.2 }));
       const GX = { gauges: null, verdict: null };
@@ -855,19 +928,34 @@
         items.push(E.label([x0, 0, 0], 'x₀', { size: 10.5, dy: 14 }));
         items.push(E.label([0.4, 2.55, 0], 'k = f′(x₀) = ' + k.toFixed(2), { size: 12, color: acc(st), dy: -4 }));
       } else if (c.mode === 'ext') {
-        const xs = [-2 / Math.sqrt(1.92), 2 / Math.sqrt(1.92)];
-        const pts = [[xs[0], f(xs[0])], [xs[1], f(xs[1])]];
-        pts.forEach(([x, y], i) => {
-          items.push(E.line([x - .45, y, 0], [x + .45, y, 0], { color: acc(st), sw: 1.4, dash: [5, 4] }));
-          items.push(E.point([x, y, 0], { r: 4, color: acc(st), ring: true }));
-          items.push(E.label([x, y, 0], i === 0 ? '极大值' : '极小值', { size: 11, dx: i === 0 ? -18 : 18, dy: -14, align: i === 0 ? 'right' : 'left', color: acc(st) }));
-        });
+        const dc = PV(c, 'dc', 0.95);
+        const fe = x => 0.32 * x * x * x - dc * x + 0.6;
+        items.pop();
+        items.push(curve(fe, -2.35, 2.35, 180, { st, sw: 2.5 }));
+        if (dc > 0.001) {
+          const xe = Math.sqrt(dc / 0.96);
+          const pts = [[-xe, fe(-xe)], [xe, fe(xe)]];
+          GX.gauges = [['导数一次项 d', F2(dc)], ['极值点 x', '±' + F2(xe)], ['极大值', F2(fe(-xe))], ['极小值', F2(fe(xe))]];
+          pts.forEach(([x, y], i) => {
+            items.push(E.line([x - .45, y, 0], [x + .45, y, 0], { color: acc(st), sw: 1.4, dash: [5, 4] }));
+            items.push(E.point([x, y, 0], { r: 4, color: acc(st), ring: true }));
+            items.push(E.label([x, y, 0], i === 0 ? '极大值' : '极小值', { size: 11, dx: i === 0 ? -18 : 18, dy: -14, align: i === 0 ? 'right' : 'left', color: acc(st) }));
+          });
+        } else {
+          GX.gauges = [['导数一次项 d', F2(dc)], ['极值点 x', '无'], ['单调性', '全程递增'], ['极值', '不存在']];
+          GX.verdict = { text: '推过头：d≤0 时 f′(x)=0.96x²−d 恒正，曲线没有极值点——先判导数有没有零点，再找极值。', danger: true };
+        }
         items.push(E.label([0, 2.55, 0], "f′(x)=0 且左右变号", { size: 11.5, dy: -4 }));
       } else {
+        const px = PV(c, 'px', 0.2), pk = df(px), xe = Math.sqrt(0.95 / 0.96);
         [-2.1, -1.0, 0.2, 1.0, 2.0].forEach(x => {
           const k = df(x);
           items.push(E.label([x, f(x), 0], (k > 0 ? '↗' : '↘'), { size: 13, dy: -14, bold: true }));
         });
+        items.push(E.point([px, f(px), 0], { r: 4.4, color: acc(st), ring: true }));
+        items.push(E.line([px, 0, 0], [px, f(px), 0], { color: acc(st), sw: .9, dash: [3, 4], alpha: .6 }));
+        items.push(E.label([px, f(px), 0], '探针', { size: 10.5, dx: 10, dy: -12, align: 'left', color: acc(st) }));
+        GX.gauges = [['探针 x', F2(px)], ["f'(探针)", F2(pk)], ['所在区间', px < -xe ? '增区间' : (px > xe ? '增区间' : '减区间')], ['判定', pk > 0 ? '递增 ↗' : '递减 ↘']];
         items.push(E.label([0, 2.55, 0], "f′>0 递增 · f′<0 递减", { size: 11.5, dy: -4 }));
       }
       return { items, fit: 1.0, gauges: GX.gauges, verdict: GX.verdict };
@@ -887,16 +975,20 @@
       const st = c.st, items = [];
       const GX = { gauges: null, verdict: null };
       if (c.mode === 'table') {
+        const ca = Math.round(PV(c, 'ca', 35)), cb = Math.round(PV(c, 'cb', 15)), cc = Math.round(PV(c, 'cc', 15)), cd = Math.round(PV(c, 'cd', 35));
+        { const nn = ca + cb + cc + cd, chi = nn * Math.pow(ca * cd - cb * cc, 2) / ((ca + cb) * (cc + cd) * (ca + cc) * (cb + cd) || 1);
+          GX.gauges = [['总数 n', nn], ['ad−bc', ca * cd - cb * cc], ['χ²', F2(chi)], ['5% 临界值 3.841', chi > 3.841 ? '有关联 ✓' : '证据不足']];
+          if (chi < 0.1) GX.verdict = { text: '推过头：四格接近独立比例时 χ²≈0——列联表先算期望差距，不要只盯着某一格大不大。', danger: true }; }
         const cell = (x, z, txt, col) => {
           items.push(E.face([[x - .58, 0, z - .44], [x + .58, 0, z - .44], [x + .58, 0, z + .44], [x - .58, 0, z + .44]], {
             color: col, alpha0: .5, edgeColor: ink(st), sw: 1.3,
           }));
           items.push(E.label([x, 0.02, z], txt, { size: 13 }));
         };
-        cell(-0.62, -0.5, 'a', G.tint(st, .08));
-        cell(0.62, -0.5, 'b', G.tint(st, .16));
-        cell(-0.62, 0.5, 'c', G.tint(st, .16));
-        cell(0.62, 0.5, 'd', G.tint(st, .24));
+        cell(-0.62, -0.5, 'a=' + ca, G.tint(st, .08));
+        cell(0.62, -0.5, 'b=' + cb, G.tint(st, .16));
+        cell(-0.62, 0.5, 'c=' + cc, G.tint(st, .16));
+        cell(0.62, 0.5, 'd=' + cd, G.tint(st, .24));
         items.push(E.label([-0.62, 0.02, -0.5], '阳性', { size: 10.5, dx: 4, dy: -30 }));
         items.push(E.label([0.62, 0.02, -0.5], '阴性', { size: 10.5, dx: 4, dy: -30 }));
         items.push(E.label([-0.62, 0.02, -0.5], '甲类', { size: 10.5, dx: -52, dy: 2, align: 'right' }));
@@ -997,10 +1089,16 @@
         return { items, fit: 1.04, gauges: GX.gauges, verdict: GX.verdict };
       }
       if (c.mode === 'cond') {
+        const bx = PV(c, 'bx', -0.3);
+        const areaA = 2 * 2.2, areaB = 1.8 * 1.5;
+        const ovx = Math.max(0, Math.min(0.3, bx + 1.8) - Math.max(-1.7, bx)), ovz = Math.max(0, Math.min(1.0, 0.9) - Math.max(-1.2, -0.6));
+        const ov = ovx * ovz;
+        GX.gauges = [['面积 A', F2(areaA)], ['面积 B', F2(areaB)], ['交叠 AB', F2(ov)], ['P(B|A)', F2(ov / areaA)], ['P(A|B)', F2(ov / areaB)]];
+        if (ov <= 0.001) GX.verdict = { text: '推过头：B 滑到与 A 完全错开，P(B|A)=0——条件概率先把样本空间缩到 A，再看还剩多少 B。', danger: true };
         items.push(E.face([[-1.7, 0.02, -1.2], [0.3, 0.02, -1.2], [0.3, 0.02, 1.0], [-1.7, 0.02, 1.0]], { color: acc(st), alpha0: .28, edgeColor: acc(st), sw: 1.8, key: 'pb:A' }));
         items.push(E.label([-1.25, 0.03, -0.55], 'A', { size: 14, color: acc(st) }));
-        items.push(E.face([[-0.3, 0.03, -0.6], [1.5, 0.03, -0.6], [1.5, 0.03, 0.9], [-0.3, 0.03, 0.9]], { color: G.tint(st, .16), alpha0: .42, edgeColor: ink(st), sw: 1.6, key: 'pb:B' }));
-        items.push(E.label([0.9, 0.04, 0.35], 'B', { size: 14 }));
+        items.push(E.face([[bx, 0.03, -0.6], [bx + 1.8, 0.03, -0.6], [bx + 1.8, 0.03, 0.9], [bx, 0.03, 0.9]], { color: G.tint(st, .16), alpha0: .42, edgeColor: ink(st), sw: 1.6, key: 'pb:B' }));
+        items.push(E.label([bx + 1.2, 0.04, 0.35], 'B', { size: 14 }));
         items.push(E.label([0, 1.05, 0], 'P(B|A) = P(AB)/P(A)', { size: 12, color: acc(st), dy: -6 }));
         items.push(E.label([0, 0.68, 0], 'A 发生的前提下再看 B', { size: 10.5, dy: -2 }));
         return { items, fit: 1.02, gauges: GX.gauges, verdict: GX.verdict };
@@ -1082,10 +1180,14 @@
           }
           items.push(E.face(pts, { color: col, alpha0: .3, edgeColor: ink(st), sw: 1.6 }));
         };
-        disc(-0.55, 0, 1.05, G.tint(st, .14));
-        disc(0.55, 0, 1.05, G.tint(st, .28));
-        items.push(E.label([-1.2, 0.03, -0.7], 'A', { size: 14 }));
-        items.push(E.label([1.2, 0.03, -0.7], 'B', { size: 14 }));
+        const sep = PV(c, 'sep', 0.55), rr = 1.05, dd = 2 * sep;
+        const ovA = dd >= 2 * rr ? 0 : 2 * rr * rr * Math.acos(dd / (2 * rr)) - (dd / 2) * Math.sqrt(Math.max(0, 4 * rr * rr - dd * dd));
+        GX.gauges = [['圆心距', F2(dd)], ['单圆面积 πr²', F2(Math.PI * rr * rr)], ['交叠面积', F2(ovA)], ['并集面积', F2(2 * Math.PI * rr * rr - ovA)]];
+        if (ovA <= 0.001) GX.verdict = { text: '推过头：两圆分开，交叠面积归零，容斥退化成直接相加——先确认有没有重复计数。', danger: true };
+        disc(-sep, 0, rr, G.tint(st, .14));
+        disc(sep, 0, rr, G.tint(st, .28));
+        items.push(E.label([-sep - 0.65, 0.03, -0.7], 'A', { size: 14 }));
+        items.push(E.label([sep + 0.65, 0.03, -0.7], 'B', { size: 14 }));
         items.push(E.label([0, 0.03, 0.1], 'A∩B', { size: 10.5, dy: 4 }));
         items.push(E.label([0, 0.95, 0], '|A∪B| = |A| + |B| − |A∩B|', { size: 12, color: acc(st), dy: -6 }));
         items.push(E.label([0, 0.6, 0], '容斥原理：先加后减重复部分', { size: 10.5, dy: -2 }));
@@ -1115,6 +1217,13 @@
       items.push(E.label([1.6, 2.2, 0], 'B(1.6,2.2)', { size: 10.5, dx: 6, dy: -12, align: 'left' }));
       items.push(E.label([0, 1.5, 0], 'C(0,1.5)', { size: 10.5, dx: -10, dy: -8, align: 'right' }));
       if (c.mode === 'region') {
+        const tx = PV(c, 'tx', 1), ty = PV(c, 'ty', 0.8);
+        let sign = 0, inside = true;
+        for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length]; const cr = (b[0] - a[0]) * (ty - a[1]) - (b[1] - a[1]) * (tx - a[0]); if (Math.abs(cr) > 1e-9) { if (sign === 0) sign = Math.sign(cr); else if (Math.sign(cr) !== sign) inside = false; } }
+        GX.gauges = [['检验点', '(' + F2(tx) + ',' + F2(ty) + ')'], ['是否可行', inside ? '是 ✓' : '否 ✗'], ['z=2x+3y', F2(2 * tx + 3 * ty)], ['下一步', inside ? '再到顶点比 z' : '先回到可行域']];
+        if (!inside) GX.verdict = { text: '推过头：点跑出可行域，目标值再大也不是解——线性规划先判可行，再谈最优。', danger: true };
+        items.push(E.point([tx, ty, 0], { r: 4.4, color: inside ? acc(st) : '#b03a2e', ring: true }));
+        items.push(E.label([tx, ty, 0], '检验点', { size: 10.5, dx: 10, dy: -12, align: 'left', color: inside ? acc(st) : '#b03a2e' }));
         items.push(E.label([0.9, 0.7, 0], '可行域', { size: 12, color: acc(st) }));
       } else if (c.mode === 'obj') {
         const ca = PV(c, 'ca', 2), cb = PV(c, 'cb', 3);
@@ -1131,10 +1240,19 @@
         items.push(E.label(top[mi], 'z 最大 @ ' + names4[mi], { size: 11, dx: 8, dy: -10, align: 'left', color: acc(st) }));
         items.push(E.label([0.2, 2.6, 0], '平移目标线至边界', { size: 10.5, dy: -4 }));
       } else {
-        for (let x = 0; x <= 3; x++) for (let y = 0; y <= 2.4; y++) {
-          const inside = x + y * 1.36 <= 3.05 && y <= 2.2 && (x + y * 0.35 <= 3.0);
-          if (inside) items.push(E.point([x, y, 0], { r: 2, color: acc(st) }));
+        const ca = PV(c, 'ca', 2), cb = PV(c, 'cb', 3);
+        const inPoly = (x, y) => { let sign = 0; for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length]; const cr = (b[0] - a[0]) * (y - a[1]) - (b[1] - a[1]) * (x - a[0]); if (Math.abs(cr) > 1e-9) { if (sign === 0) sign = Math.sign(cr); else if (Math.sign(cr) !== sign) return false; } } return true; };
+        let best = null, cnt = 0;
+        for (let x = 0; x <= 3; x++) for (let y = 0; y <= 2; y++) {
+          if (!inPoly(x, y)) continue;
+          cnt++; const val = ca * x + cb * y;
+          items.push(E.point([x, y, 0], { r: 2.2, color: acc(st) }));
+          if (!best || val > best.v) best = { x, y, v: val };
         }
+        const contVals = P.map(([x, y]) => ca * x + cb * y), contMax = Math.max(...contVals);
+        if (best) { items.push(E.point([best.x, best.y, 0], { r: 4.6, color: acc(st), ring: true })); items.push(E.label([best.x, best.y, 0], '最佳整点', { size: 10.5, dx: 10, dy: -12, align: 'left', color: acc(st) })); }
+        GX.gauges = [['目标 z', ca + 'x+' + cb + 'y'], ['可行整点数', cnt], ['最佳整点', best ? '(' + best.x + ',' + best.y + ')' : '无'], ['整点最大值', best ? F2(best.v) : '—'], ['连续最大值', F2(contMax)]];
+        if (best && contMax - best.v > 0.01) GX.verdict = { text: '注意：连续最优在顶点，整数最优却要退回域内找整点，两者差 ' + F2(contMax - best.v) + '——整数规划不能直接四舍五入。', danger: true };
         items.push(E.label([0.3, 2.6, 0], '整点中比较目标值', { size: 10.5, dy: -4 }));
       }
       return { items, fit: 1.04, gauges: GX.gauges, verdict: GX.verdict };
@@ -1186,7 +1304,11 @@
         items.push(E.label([0.1, 0.4, 0], '公共的 ' + GX.gauges[2][1] + ' 格', { size: 10.5, dy: -2 }));
       } else {
         const isPrime = n => { if (n < 2) return false; for (let i = 2; i * i <= n; i++) if (n % i === 0) return false; return true; };
-        for (let n = 2; n <= 46; n++) {
+        const NN = Math.round(PV(c, 'up', 46));
+        let pi = 0, largest = 0; for (let n = 2; n <= NN; n++) if (isPrime(n)) { pi++; largest = n; }
+        GX.gauges = [['范围 2..N', NN], ['素数个数 π(N)', pi], ['最大素数', largest], ['素数占比', F2(pi / Math.max(1, NN - 1))]];
+        if (NN >= 55) GX.verdict = { text: '推过头：范围拉大，素数占比继续下降——素数没有简单公式，但“越来越稀”可以被计数看见。', danger: true };
+        for (let n = 2; n <= NN; n++) {
           const a = n * 0.62;
           const p = [Math.cos(a) * (0.8 + n * 0.042), 0.1 + n * 0.045, Math.sin(a) * (0.8 + n * 0.042)];
           items.push(E.point(p, { r: isPrime(n) ? 3.4 : 1.8, color: isPrime(n) ? acc(st) : ink(st), alpha: isPrime(n) ? 1 : .4, key: 'nt:n' + n }));
@@ -1227,22 +1349,32 @@
           items.push(E.label([R * 1.1 * Math.cos(a), cy + R * 1.1 * Math.sin(a), 0], deg + '°', { size: 10.5, dx: 6, dy: -8 }));
         });
         items.push(E.label([0, cy + R + 0.55, 0], 'cos 读横轴 · sin 读纵轴', { size: 11, color: acc(st), dy: -2 }));
+        const dg = PV(c, 'deg', 45), dr = dg * Math.PI / 180, P = [R * Math.cos(dr), cy + R * Math.sin(dr), 0];
+        items.push(E.line([0, cy, 0], P, { color: ink(st), sw: 2.6 }));
+        items.push(E.point(P, { r: 4.2, color: ink(st), ring: true }));
+        items.push(E.label(P, dg + '° 探针', { size: 10.5, dx: 10, dy: -12, align: 'left' }));
+        GX.gauges = [['探针角 θ', F2(dg) + '°'], ['sinθ', F2(Math.sin(dr))], ['cosθ', F2(Math.cos(dr))], ['tanθ', Math.abs(Math.cos(dr)) < 0.02 ? '不存在' : F2(Math.tan(dr))]];
+        if (dg >= 89) GX.verdict = { text: '推过头：θ=90° 时点在圆顶，cos=0，tan 不存在；特殊角表不是把 90° 的正切记成“很大”。', danger: true };
       } else if (c.mode === 'tri') {
+        const L = PV(c, 'leg', 2), ss = PV(c, 'short', 1.04);
+        GX.gauges = [['45°三角形腿', F2(L)], ['斜边 √2·腿', F2(Math.SQRT2 * L)], ['30°短边', F2(ss)], ['30°斜边 2·短边', F2(2 * ss)], ['sin45°（与尺度无关）', F2(Math.SQRT1_2)]];
+        GX.verdict = { text: '尺度实验：三角形放大或缩小，边长都变，但 sin、cos、tan 这些“比值”不变——三角函数只认角度。', danger: false };
         // 45-45-90
-        const P1 = [[-1.9, 0, 0], [0.1, 0, 0], [0.1, 2.0, 0]];
+        const P1 = [[-1.9, 0, 0], [-1.9 + L, 0, 0], [-1.9 + L, L, 0]];
         items.push(E.face(P1, { color: G.tint(st, .14), alpha0: .4, edgeColor: ink(st), sw: 1.5 }));
         items.push(G.rightAngle(P1[0], P1[1], P1[2], .16, { color: acc(st) }));
-        items.push(E.label([-0.95, 0.02, 0], '1', { size: 11, dy: 14 }));
-        items.push(E.label([0.1, 1.0, 0], '1', { size: 11, dx: 12 }));
-        items.push(E.label([-0.9, 1.0, 0], '√2', { size: 11, dx: -12 }));
+        items.push(E.label([-1.9 + L / 2, 0.02, 0], F2(L), { size: 11, dy: 14 }));
+        items.push(E.label([-1.9 + L, L / 2, 0], F2(L), { size: 11, dx: 12 }));
+        items.push(E.label([-1.9 + L / 2, L / 2, 0], '√2·' + F2(L), { size: 11, dx: -12 }));
         items.push(E.label([-0.9, -0.28, 0], '45°-45°-90°', { size: 10.5, dy: 10 }));
         // 30-60-90
-        const P2 = [[1.1, 0, 0], [2.9, 0, 0], [2.9, 1.04, 0]];
+        const bx = 1.1, bw = Math.sqrt(3) * ss;
+        const P2 = [[bx, 0, 0], [bx + bw, 0, 0], [bx + bw, ss, 0]];
         items.push(E.face(P2, { color: G.tint(st, .28), alpha0: .4, edgeColor: ink(st), sw: 1.5 }));
         items.push(G.rightAngle(P2[0], P2[1], P2[2], .16, { color: acc(st) }));
-        items.push(E.label([2.0, 0.02, 0], '√3', { size: 11, dy: 14 }));
-        items.push(E.label([2.9, 0.52, 0], '1', { size: 11, dx: 12 }));
-        items.push(E.label([2.0, 0.6, 0], '2', { size: 11, dy: -6 }));
+        items.push(E.label([bx + bw / 2, 0.02, 0], '√3·' + F2(ss), { size: 11, dy: 14 }));
+        items.push(E.label([bx + bw, ss / 2, 0], F2(ss), { size: 11, dx: 12 }));
+        items.push(E.label([bx + bw / 2, ss / 2 + 0.1, 0], '2·' + F2(ss), { size: 11, dy: -6 }));
         items.push(E.label([2.0, -0.28, 0], '30°-60°-90°', { size: 10.5, dy: 10 }));
         items.push(E.label([0.5, 2.5, 0], 'sin30°=1/2 · tan45°=1 · sin60°=√3/2', { size: 10.5, color: acc(st), dy: -2 }));
       } else {
@@ -1295,24 +1427,29 @@
         items.push(E.label([0, 2.6, 0], '最后写「综上所述」', { size: 10.5, dy: -2 }));
       } else if (c.mode === 'stack') {
         const steps = ['结论', '条件', '定义域', '取等', '连接符'];
+        const done = Math.round(PV(c, 'done', 5));
+        GX.gauges = [['已写项目', done + ' / 5'], ['缺失项目', steps.slice(done).join('、') || '无'], ['完整度', F2(done / 5 * 100) + '%'], ['风险', done >= 5 ? '低' : '步骤分流失']];
+        if (done < 5) GX.verdict = { text: '推过头：少写「' + (steps[done] || '') + '」这类项目，答案可能对，但阅卷时会在步骤与条件处扣分。', danger: true };
         steps.forEach((txt, i) => {
-          const b = G.box({ st, w: 1.9 - i * .14, h: .17, d: .9, cy: i * .3, tint: G.tint(st, .05 + i * .055), key: 'ex:s' + i });
+          const b = G.box({ st, w: 1.9 - i * .14, h: .17, d: .9, cy: i * .3, tint: G.tint(st, i < done ? .05 + i * .055 : .01), key: 'ex:s' + i });
           items.push(b.items);
-          items.push(E.label([1.15, i * .3 + .08, 0], txt, { size: 10.5, dx: 20, align: 'left' }));
+          items.push(E.label([1.15, i * .3 + .08, 0], (i < done ? '✓ ' : '✗ 缺 ') + txt, { size: 10.5, dx: 20, align: 'left', color: i < done ? ink(st) : '#b03a2e' }));
         });
         items.push(E.label([0, 1.9, 0], '书写规范 = 分数', { size: 12, color: acc(st), dy: -4 }));
       } else {
         items.push(E.line([-2.2, 0, 0], [2.6, 0, 0], { color: ink(st), sw: 1.3, arrow: true }));
         items.push(E.line([0, 0, 0], [0, 1.9, 0], { color: ink(st), sw: 1.1, arrow: true, alpha: .7 }));
-        const p = Math.SQRT2;
+        const mm = PV(c, 'm', 2), p = Math.sqrt(mm), res = p - 1;
+        GX.gauges = [['根号内参数 m', F2(mm)], ['√m', F2(p)], ['√m−1', F2(res)], ['平方验算', F2(res * res) + ' = ' + F2(mm + 1) + '−2√' + F2(mm)]];
+        if (Math.abs(mm - 4) < 0.01) GX.verdict = { text: '临界点：m=4 时 √m−1=1，嵌套根式直接塌成整数——能否化简先看根号里能否凑成完全平方。', danger: false };
         items.push(E.line([0, 0, 0], [p, 0, 0], { color: acc(st), sw: 2.6 }));
         items.push(E.line([0, 0, 0], [1, 0, 0], { color: ink(st), sw: 2.6 }));
-        items.push(E.label([p / 2, 0.06, 0], '√2', { size: 11, dy: -12, color: acc(st) }));
+        items.push(E.label([p / 2, 0.06, 0], '√' + F2(mm), { size: 11, dy: -12, color: acc(st) }));
         items.push(E.label([0.5, -0.06, 0], '1', { size: 11, dy: 12 }));
         items.push(E.point([p, 0, 0], { r: 3.4, color: acc(st) }));
-        items.push(E.point([p - 1, 0, 0], { r: 3.8, color: ink(st), ring: true }));
-        items.push(E.label([p - 1, 0, 0], '√2−1 ≈ 0.414', { size: 10.5, dy: -16, dx: 10, align: 'left' }));
-        items.push(E.label([0.6, 1.55, 0], '√(3−2√2) = √2−1', { size: 11.5, color: acc(st), dy: -4 }));
+        items.push(E.point([res, 0, 0], { r: 3.8, color: ink(st), ring: true }));
+        items.push(E.label([res, 0, 0], '√' + F2(mm) + '−1 ≈ ' + F2(res), { size: 10.5, dy: -16, dx: 10, align: 'left' }));
+        items.push(E.label([0.6, 1.55, 0], '√(' + F2(mm + 1) + '−2√' + F2(mm) + ') = √' + F2(mm) + '−1', { size: 11.5, color: acc(st), dy: -4 }));
         items.push(E.label([0.6, 1.2, 0], '先凑完全平方，再开方', { size: 10.5, dy: -2 }));
       }
       return { items, fit: 1.02, gauges: GX.gauges, verdict: GX.verdict };
@@ -1333,10 +1470,12 @@
       const st = c.st, items = [];
       const GX = { gauges: null, verdict: null };
       if (c.mode === 'tesseract') {
-        GX.gauges = [['顶点', '16'], ['棱', '32'], ['胞（立方体）', '8'], ['投影', '4D→3D']];
+        const wa = PV(c, 'wa', 0), wz = PV(c, 'wz', 0);
+        GX.gauges = [['顶点', '16'], ['棱', '32'], ['XW 转角', F2(wa) + '°'], ['YZ 转角', F2(wz) + '°'], ['胞（立方体）', '8']];
+        if (Math.abs(((wa % 360) + 360) % 360 - 90) < 6) GX.verdict = { text: '临界视角：XW 平面转到 90° 附近，内外两个立方体在投影里交换位置感——四维旋转只能借投影追踪。', danger: false };
         const verts = [];
         for (let i = 0; i < 16; i++) verts.push([(i & 1) ? 1 : -1, (i & 2) ? 1 : -1, (i & 4) ? 1 : -1, (i & 8) ? 1 : -1]);
-        const a = t * 0.5, b = t * 0.33;
+        const a = t * 0.5 + wa * Math.PI / 180, b = t * 0.33 + wz * Math.PI / 180;
         const rot = v => {
           let [x, y, z, w] = v;
           let x2 = x * Math.cos(a) - w * Math.sin(a), w2 = x * Math.sin(a) + w * Math.cos(a);

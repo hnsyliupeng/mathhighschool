@@ -51,8 +51,8 @@ const cover = await page.evaluate(() => {
   return { sceneSpecs: Object.keys(labs).length, modes, withControls: specs };
 });
 console.log(`\n[覆盖] ${cover.sceneSpecs} 个场景 · ${cover.modes} 台机器 · ${cover.withControls} 台带控件`);
-if (cover.sceneSpecs < 18) fail('实验室场景覆盖不足'); else ok('≥18 章有实验室');
-if (cover.withControls < 30) fail('带控件机器不足 30'); else ok('≥30 台带控件机器');
+if (cover.sceneSpecs !== 20) fail('实验室场景覆盖应为 20'); else ok('20 章全部有实验室');
+if (cover.modes !== 67 || cover.withControls !== 67) fail(`机器应为 67/67 带控件，实际 ${cover.modes}/${cover.withControls}`); else ok('正文 67 个模式全部有实验室且带控件');
 
 /* 2. 方程：改 c，Δ 与根同步变；推过头 Δ<0 */
 await page.evaluate(() => window.BOOK_GO(5)); // 第 1 章首页
@@ -108,27 +108,37 @@ const xr = await page.evaluate(() => {
 });
 if (!xr) fail('透视开关未生效'); else ok('透视内部开关生效');
 
-/* 7. 抽查每章实验室不报错地拖一遍首控件 */
+/* 7. 全模式巡检：逐章逐模式点开，实验室必须可见、仪表 ≥3、拖首控件后仪表有变化或保持有效 */
 const sweep = await page.evaluate(async () => {
   const wait = ms => new Promise(r => setTimeout(r, ms));
   const bad = [];
+  let visited = 0;
   for (const ch of window.BOOK.raw.chapters) {
     window.BOOK_GO(4 + ch.first);
-    await wait(320);
-    const lab = document.getElementById('lab');
-    if (!lab || lab.hidden) continue;
-    const inp = document.querySelector('[data-param]');
-    if (inp) {
-      const mid = (parseFloat(inp.min) + parseFloat(inp.max)) / 2;
-      inp.value = mid; inp.dispatchEvent(new Event('input', { bubbles: true }));
-      await wait(240);
-      const gv = document.querySelectorAll('#lab-gauges .gauge b');
-      if (!gv.length) bad.push(ch.scene + ':无仪表');
+    await wait(260);
+    const chips = [...document.querySelectorAll('#viz-tools .chip')];
+    if (!chips.length) { bad.push(ch.scene + ':无模式芯片'); continue; }
+    for (const chip of chips) {
+      chip.click();
+      await wait(110);
+      visited++;
+      const lab = document.getElementById('lab');
+      if (!lab || lab.hidden) { bad.push(ch.scene + ':' + chip.textContent + ':实验室隐藏'); continue; }
+      const before = document.getElementById('lab-gauges').textContent;
+      if (document.querySelectorAll('#lab-gauges .gauge').length < 3) bad.push(ch.scene + ':' + chip.textContent + ':仪表不足');
+      const inp = document.querySelector('[data-param]');
+      if (inp) {
+        const mid = (parseFloat(inp.min) + parseFloat(inp.max)) / 2;
+        inp.value = mid; inp.dispatchEvent(new Event('input', { bubbles: true }));
+        await wait(90);
+        const after = document.getElementById('lab-gauges').textContent;
+        if (!after || after === before && parseFloat(inp.value) === parseFloat(inp.min)) bad.push(ch.scene + ':' + chip.textContent + ':拖杆后无仪表');
+      }
     }
   }
-  return bad;
+  return { bad, visited };
 });
-if (sweep.length) fail('逐章抽查问题：' + sweep.join('；')); else ok('逐章拖控件：仪表均有读数');
+if (sweep.bad.length) fail('全模式巡检问题：' + sweep.bad.slice(0, 6).join('；')); else ok(`全模式巡检：${sweep.visited} 个模式逐个点开，实验室与仪表均正常`);
 
 if (errs.length) fail('控制台报错：' + errs.slice(0, 3).join(' | '));
 else ok('控制台无报错');
