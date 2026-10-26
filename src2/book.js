@@ -699,6 +699,7 @@
     app.el.toc = document.getElementById('btn-toc');
     app.el.menu = document.getElementById('btn-menu');
     app.el.sidebar = document.getElementById('sidebar');
+    if (window.innerWidth <= 980) app.el.sidebar.classList.add('hide');
     app.el.sbBody = document.getElementById('sb-body');
     app.el.stats = document.getElementById('sb-stats');
     app.el.fontMinus = document.querySelector('[data-font="-1"]');

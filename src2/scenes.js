@@ -471,8 +471,8 @@
       const v = cube.v;
       const A = v.A, B = v.B, C = v.C, D = v.D, A1 = v['A₁'], B1 = v['B₁'], C1 = v['C₁'], D1 = v['D₁'];
       if (c.mode === 'cube') {
-        items.push(E.label([0, 1, 1.02], 'a', { size: 11, dx: 0, dy: 14, color: acc(st) }));
-        items.push(E.label([1.0, 0.02, 0], 'a', { size: 11, dx: -2, dy: 12, color: acc(st) }));
+        items.push(E.label([0, 0, 1.03], 'a', { size: 11, dx: -14, dy: 12, color: acc(st) }));
+        items.push(E.label([1.03, 0, 0], 'a', { size: 11, dx: 12, dy: 10, color: acc(st) }));
         const O = G.centroid([A, B, C, D, A1, B1, C1, D1]);
         items.push(E.point(O, { r: 3, color: acc(st), key: 'cu:o' }));
         items.push(E.label(O, '体对角线交于一点', { size: 10.5, dx: 30, dy: -8, align: 'left', color: acc(st) }));

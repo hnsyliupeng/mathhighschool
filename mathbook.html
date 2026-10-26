@@ -729,8 +729,37 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
   .cover-toc { margin-top: 10px; }
   .cover h1 { font-size: 26px; }
 }
+@media (max-width: 980px) {
+  .leaf-viz .scene-note { margin-bottom: 8px; }
+  .leaf-viz .pagenum {
+    position: static; left: auto; right: auto; margin: 0 12px 10px;
+    justify-content: flex-end;
+  }
+  .leaf-viz .pagenum::after { display: none; }
+}
+@media (max-width: 700px) {
+  .topbar { flex-wrap: nowrap; gap: 6px; }
+  .brand { min-width: 0; flex: 0 1 auto; overflow: hidden; }
+  .brand-txt { min-width: 0; overflow: hidden; }
+  .brand-cn {
+    display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .tools { flex-wrap: nowrap; flex: 0 0 auto; }
+  .brand-cn { font-size: 14px; }
+  .brand-cn em { font-size: 12px; }
+  .tools { overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .tools::-webkit-scrollbar { display: none; }
+  .palette-wrap, .fontsize-wrap, #btn-reset, .tools-sep { display: none; }
+  .tool { padding: 4px 8px; font-size: 10.5px; }
+  .menu-toggle { width: 26px; height: 26px; }
+  .nav { gap: 6px; padding: 5px 8px 8px; }
+  .progress { width: 26vw; }
+  .ch-jump select { max-width: 96px; font-size: 10px; }
+  .book { height: auto; max-height: none; }
+}
 @media (max-width: 560px) {
   .brand-sub, .tools-sep { display: none; }
+  .brand-cn { display: none; }
   .scene-note { font-size: 10.5px; margin: 5px 10px 10px; }
   .runhead { padding: 9px 14px 5px; }
   .pane { padding: 4px 15px 22px 14px; }
@@ -2454,8 +2483,8 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
       const v = cube.v;
       const A = v.A, B = v.B, C = v.C, D = v.D, A1 = v['A₁'], B1 = v['B₁'], C1 = v['C₁'], D1 = v['D₁'];
       if (c.mode === 'cube') {
-        items.push(E.label([0, 1, 1.02], 'a', { size: 11, dx: 0, dy: 14, color: acc(st) }));
-        items.push(E.label([1.0, 0.02, 0], 'a', { size: 11, dx: -2, dy: 12, color: acc(st) }));
+        items.push(E.label([0, 0, 1.03], 'a', { size: 11, dx: -14, dy: 12, color: acc(st) }));
+        items.push(E.label([1.03, 0, 0], 'a', { size: 11, dx: 12, dy: 10, color: acc(st) }));
         const O = G.centroid([A, B, C, D, A1, B1, C1, D1]);
         items.push(E.point(O, { r: 3, color: acc(st), key: 'cu:o' }));
         items.push(E.label(O, '体对角线交于一点', { size: 10.5, dx: 30, dy: -8, align: 'left', color: acc(st) }));
@@ -3966,6 +3995,7 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
     app.el.toc = document.getElementById('btn-toc');
     app.el.menu = document.getElementById('btn-menu');
     app.el.sidebar = document.getElementById('sidebar');
+    if (window.innerWidth <= 980) app.el.sidebar.classList.add('hide');
     app.el.sbBody = document.getElementById('sb-body');
     app.el.stats = document.getElementById('sb-stats');
     app.el.fontMinus = document.querySelector('[data-font="-1"]');
