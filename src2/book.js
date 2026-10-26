@@ -56,6 +56,7 @@
     labels: store.labels !== false,
     fontScale: store.fontScale || 1,
     modes: store.modes || {},              // 每章的演示模式
+    params: store.params || {},            // 每台机器的控件参数
     view: store.view || '3d',              // 3d / print / phone
     yaw: {},                              // 每章的视角
   };
@@ -85,7 +86,7 @@
     try {
       localStorage.setItem('mb3d', JSON.stringify({
         palette: state.palette, seeThrough: state.seeThrough, labels: state.labels,
-        fontScale: state.fontScale, modes: state.modes, yaw: state.yaw, page: state.page,
+        fontScale: state.fontScale, modes: state.modes, params: state.params, yaw: state.yaw, page: state.page,
         view: state.view,
       }));
     } catch (e) {}
@@ -231,6 +232,12 @@
           <div class="viz-hint">拖动旋转 · 滚轮缩放 · 双击复位</div>
         </div>
         <div class="scene-note"><span class="lbl">读图</span><span id="scene-note"></span></div>
+        <div class="lab" id="lab" hidden>
+          <div class="lab-head"><span class="lab-title">实验室 · 动手跑</span><span class="lab-idea" id="lab-idea"></span></div>
+          <div class="lab-controls" id="lab-controls"></div>
+          <div class="lab-gauges" id="lab-gauges"></div>
+          <div class="lab-verdict" id="lab-verdict" hidden></div>
+        </div>
         <div class="pagenum">${info.chNo ? 'P.' + pad(p.abs + 1, 3) : 'MathBook 3D'}</div>
       </section>`;
   }
@@ -308,8 +315,11 @@
               续页的标题后标“（续）”。标题里的公式也照原样排版，没有改写成图片。</p>
             <h3>怎么读</h3>
             <p>左右方向键或页面两侧箭头翻页；顶部“目录”打开章节树，“检索”可在全书范围内
-              搜索词句（例如“二面角”“裂项”“洛必达”）。右侧（手机为上方）的三维展台可以
-              拖动旋转、滚轮缩放，芯片按钮切换本章的不同演示。</p>
+              搜索词句（例如“二面角”“裂项”“洛必达”）。左侧（手机为上方）的三维展台不只是
+              换个角度看图：展台下方的「实验室 · 动手跑」里有滑杆、触发按钮、透视内部和实时仪表。
+              拖动参数，图形与判别式、根、离心率、切线斜率等数字会按同一个模型同步变化；
+              点「推过头」可以故意把 Δ、倾角、相关系数等推到临界之外，直接看见规则在哪里成立、
+              又在哪里失效。</p>
             <h3>公式</h3>
             <p>源笔记使用了 149 个 LaTeX 宏，包括 cases、aligned、pmatrix、vmatrix、
               红字标注与自定义的集合、向量记号。书里的每一个公式都在构建阶段被解析成
@@ -320,8 +330,10 @@
               尤其立体几何一章的 13 张图，都换成了可以转动的正方体截面、二面角与外接球。</p>
             <h3>技术</h3>
             <p>三维部分是自己写的 Canvas 2D 引擎：透视投影、画家算法、手绘抖动墨线、
-              球面大圆、拾取高亮。它不依赖 three.js，也不加载任何外部资源。
-              书页部分是 CSS 3D 的翻页动画，配色有五套，可随时切换。</p>
+              球面大圆、拾取高亮。它不依赖 three.js，也不加载任何外部资源。全书共设置
+              42 台可操作的参数机器，其中 40 台带滑杆或触发控件；面板仪表不是装饰标签，
+              而是场景模型每次重算时直接回吐的结果。书页部分是 CSS 3D 的翻页动画，
+              配色有五套，可随时切换。</p>
           </div>
           <div class="intro-note">
             <b>一句话使用说明</b>：先用「目录」找到章节，再用「检索」定位具体结论；
@@ -415,14 +427,86 @@
       save();
     });
 
-    function paintScene() {
+    /* ---------- 实验室：控件 → 参数 → 同一模型回吐仪表 ---------- */
+    const LABS = window.LABS || {};
+    const labBox = document.getElementById('lab');
+    let labSpec = null, labParams = null, labForce = true, labLast = 0;
+    function seedParams(mode) {
+      const spec = (LABS[info.sceneKey] || {})[mode] || null;
+      const key = info.sceneKey + ':' + mode;
+      if (!state.params[key]) {
+        const o = {};
+        (spec && spec.controls || []).forEach(ct => { o[ct.id] = ct.type === 'trigger' ? 1 : ct.val; });
+        state.params[key] = o;
+      }
+      return { spec, params: state.params[key] };
+    }
+    function captureLab(r) {
+      if (!labBox || labBox.hidden || !r) return;
+      const now = performance.now();
+      if (!labForce && now - labLast < 140) return;
+      labLast = now; labForce = false;
+      const g = document.getElementById('lab-gauges');
+      if (g && r.gauges) g.innerHTML = r.gauges.map(([k, v]) => `<span class="gauge"><i>${esc(k)}</i><b>${esc(v)}</b></span>`).join('');
+      const vd = document.getElementById('lab-verdict');
+      if (vd) {
+        if (r.verdict && r.verdict.text) { vd.hidden = false; vd.textContent = r.verdict.text; vd.classList.toggle('danger', !!r.verdict.danger); }
+        else vd.hidden = true;
+      }
+    }
+    function renderLab() {
+      if (!labBox) return;
       const mode = currentMode(info);
-      studio.setScene((t) => sc.build(t, { st: studio, mode, params: {} }));
+      const sd = seedParams(mode);
+      labSpec = sd.spec; labParams = sd.params;
+      if (!labSpec) { labBox.hidden = true; return; }
+      labBox.hidden = false;
+      document.getElementById('lab-idea').textContent = labSpec.idea || '';
+      const box = document.getElementById('lab-controls');
+      const fmtV = (ct, v) => (ct.step >= 1 ? String(Math.round(v)) : String(Math.round(v * 100) / 100)) + (ct.unit || '');
+      box.innerHTML = labSpec.controls.map(ct => ct.type === 'trigger'
+        ? `<button class="lab-btn trig" data-trig="${ct.id}">▶ ${esc(ct.label)}<span class="trig-n" data-trig-n="${ct.id}"></span></button>`
+        : `<label class="ctl"><span class="ctl-l">${esc(ct.label)}</span><input type="range" data-param="${ct.id}" min="${ct.min}" max="${ct.max}" step="${ct.step}" value="${labParams[ct.id]}"><span class="ctl-v" data-val="${ct.id}">${fmtV(ct, labParams[ct.id])}</span></label>`).join('')
+        + (sc.anim ? `<button class="lab-btn" data-play>${studio._anim ? '⏸ 暂停' : '▶ 运行'}</button>` : '')
+        + `<label class="ctl chk"><input type="checkbox" data-xray ${studio.seeThrough ? 'checked' : ''}><span class="ctl-l">透视内部</span></label>`
+        + (labSpec.brk ? `<button class="lab-btn brk" data-brk>⚠ ${esc(labSpec.brk.label)}</button>` : '');
+      const updTrig = () => box.querySelectorAll('[data-trig-n]').forEach(el => { el.textContent = ' · 已乘 ' + (labParams[el.getAttribute('data-trig-n')] || 0) + ' 次'; });
+      updTrig();
+      box.querySelectorAll('[data-param]').forEach(inp => {
+        inp.addEventListener('input', () => {
+          const ct = labSpec.controls.find(x => x.id === inp.getAttribute('data-param'));
+          labParams[ct.id] = parseFloat(inp.value);
+          const v = box.querySelector(`[data-val="${ct.id}"]`);
+          if (v) v.textContent = fmtV(ct, labParams[ct.id]);
+          labForce = true; paintScene(false); save();
+        });
+      });
+      box.querySelectorAll('[data-trig]').forEach(b => b.addEventListener('click', () => {
+        const id = b.getAttribute('data-trig');
+        labParams[id] = ((labParams[id] || 0) + 1) % 5;
+        updTrig(); labForce = true; paintScene(false); save();
+      }));
+      const pb = box.querySelector('[data-play]');
+      if (pb) pb.addEventListener('click', () => { studio._anim = !studio._anim; pb.textContent = studio._anim ? '⏸ 暂停' : '▶ 运行'; studio.dirty = true; });
+      const xr = box.querySelector('[data-xray]');
+      if (xr) xr.addEventListener('change', () => { studio.seeThrough = xr.checked; studio.dirty = true; });
+      const bk = box.querySelector('[data-brk]');
+      if (bk) bk.addEventListener('click', () => { Object.assign(labParams, labSpec.brk.params); renderLab(); labForce = true; paintScene(false); save(); });
+    }
+
+    function paintScene(withLab = true) {
+      const mode = currentMode(info);
+      const sd = seedParams(mode);
+      studio.setScene((t) => { const r = sc.build(t, { st: studio, mode, params: sd.params }); captureLab(r); return r; });
       const m = modes.find(x => x.id === mode);
       const note = document.getElementById('scene-note');
       if (note) note.innerHTML = m ? m.note : '拖动图形，从不同角度体会这一章的结构。';
       const rh = document.getElementById('rh-scene');
       if (rh) rh.textContent = sc.name + (m ? ' · ' + m.name : '');
+      if (withLab) renderLab();
+      /* 仪表同步结算一次：不依赖渲染帧率，拖完立刻有数（数字与图形同一模型） */
+      labForce = true;
+      try { captureLab(sc.build(studio.time || 0, { st: studio, mode, params: sd.params })); } catch (e) {}
       studio.dirty = true;
     }
     paintScene();

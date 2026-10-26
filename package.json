@@ -9,8 +9,9 @@
     "measure": "node tools/measure-pieces.mjs && node tools/md2book.mjs && node build/build-book.mjs",
     "test:book": "node test/book.mjs",
     "test:scenes": "node test/scenes.mjs",
+    "test:lab": "node test/lab.mjs",
     "test:fill": "node tools/fill-report.mjs",
-    "test": "node test/scenes.mjs && node test/book.mjs"
+    "test": "node test/scenes.mjs && node test/lab.mjs && node test/book.mjs"
   },
   "repository": {
     "type": "git",

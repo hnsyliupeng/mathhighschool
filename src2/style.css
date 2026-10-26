@@ -913,3 +913,45 @@ table.tb tbody tr:nth-child(even) { background: rgba(240, 227, 200, .18); }
 .stage.print .stack, .stage.print .spine { display: none; }
 .stage.print .book-shadow { opacity: .55; }
 .stage.print .pane { overflow-y: auto; }
+
+/* ================= 实验室 · 机器面板 ================= */
+.lab {
+  flex: 0 0 auto; margin: 0 16px 20px; padding: 8px 10px 9px;
+  border: 1.4px solid var(--ink); border-radius: 8px;
+  background: rgba(255, 253, 246, .66);
+  box-shadow: 2px 2.5px 0 rgba(43, 40, 35, .10);
+}
+.scene-note:has(+ .lab:not([hidden])) { margin-bottom: 6px; }
+.lab-head { display: flex; gap: 8px; align-items: baseline; }
+.lab-title {
+  font-family: var(--kai); font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  color: var(--accent); white-space: nowrap;
+}
+.lab-idea { font-size: 10.8px; line-height: 1.45; color: var(--ink-2); }
+.lab-controls { display: flex; flex-wrap: wrap; gap: 5px 12px; align-items: center; margin-top: 7px; }
+.ctl { display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; color: var(--ink-2); }
+.ctl input[type="range"] { width: 86px; accent-color: var(--accent); height: 18px; cursor: pointer; }
+.ctl-v { font-weight: 700; color: var(--ink); min-width: 30px; font-variant-numeric: tabular-nums; }
+.ctl.chk input { accent-color: var(--accent); }
+.lab-btn {
+  border: 1.2px solid var(--ink); background: rgba(253, 249, 238, .95); border-radius: 999px;
+  font-size: 10.5px; padding: 3px 9px; cursor: pointer; letter-spacing: .02em;
+}
+.lab-btn:hover { background: var(--ink); color: var(--paper); }
+.lab-btn.brk { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+.lab-btn.brk:hover { background: var(--accent); color: #fff; }
+.lab-gauges { display: flex; flex-wrap: wrap; gap: 4px 6px; margin-top: 7px; }
+.gauge {
+  display: inline-flex; gap: 5px; align-items: baseline; border: 1px dashed var(--rule);
+  border-radius: 6px; padding: 2px 7px; background: rgba(251, 246, 233, .8);
+}
+.gauge i { font-style: normal; font-size: 9.8px; color: var(--ink-3); letter-spacing: .02em; }
+.gauge b { font-size: 11.5px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.lab-verdict {
+  margin-top: 7px; font-size: 10.8px; line-height: 1.5; border-radius: 6px;
+  padding: 5px 8px; background: var(--accent-soft); color: var(--ink);
+  border-left: 3px solid var(--accent);
+}
+.lab-verdict:not(.danger) { border-left-color: #2f8f76; background: rgba(47, 143, 118, .12); }
+.stage.phone .lab { margin: 8px 10px 12px; }
+.stage.phone .ctl input[type="range"] { width: 104px; }
