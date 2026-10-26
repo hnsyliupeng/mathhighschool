@@ -212,7 +212,61 @@ if (inter.bigClosed) ok('大表浮层可关闭'); else fail('大表浮层关不�
 if (inter.keyNext === 21 && inter.keyBack === 20) ok('方向键翻页正常'); else fail(`方向键异常 ${inter.keyNext}/${inter.keyBack}`);
 if (typeof inter.saved === 'number') ok('localStorage 记忆页位'); else fail('未写入记忆');
 
-/* ---------- 5. 零外部依赖 ---------- */
+/* ---------- 5. 3D 书：相机 / 翻页 / 视图 ---------- */
+console.log('\n[3D 书]');
+const three = await page.evaluate(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const out = {};
+  const S = window.STAGE;
+  window.BOOK_GO(90); await sleep(1100);
+  out.mode = S.mode;
+  out.stageBox = (() => { const r = document.getElementById('stage').getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; })();
+  const inside = () => {
+    const s = document.getElementById('stage').getBoundingClientRect();
+    const b = document.querySelector('.book3d').getBoundingClientRect();
+    return b.left >= s.left - 2 && b.right <= s.right + 2 && b.top >= s.top - 2 && b.bottom <= s.bottom + 2;
+  };
+  out.fitDefault = inside();
+  // 相机姿态：全部要留在舞台里
+  const poses = [[-40, 60], [40, 60], [0, 0], [0, 70], [-14, 24]];
+  out.poses = [];
+  for (const [y, p] of poses) {
+    S.setCam({ yaw: y, pitch: p }, { instant: true });
+    await sleep(320);
+    out.poses.push([y, p, inside()]);
+  }
+  // 翻页：纸片真的存在并且在转
+  S.resetCam(true); await sleep(300);
+  const before = window.BOOK.state.page;
+  window.BOOK_GO(before + 1);
+  await sleep(320);
+  const leaf = document.getElementById('turn-leaf');
+  out.leafVisible = !!leaf && !leaf.hidden;
+  out.leafAngle = leaf ? parseFloat(leaf.style.getPropertyValue('--turn')) : 0;
+  await sleep(1100);
+  out.turnDone = window.BOOK.state.page === before + 1 && (!leaf || leaf.hidden);
+  // 视图切换
+  document.getElementById('btn-print').click(); await sleep(700);
+  out.printMode = S.mode === 'print';
+  out.printFit = inside();
+  document.getElementById('btn-3d').click(); await sleep(500);
+  out.backTo3d = S.mode === '3d';
+  // 转台
+  document.getElementById('btn-spin').click(); await sleep(420);
+  out.spinning = S.spinning;
+  document.getElementById('btn-spin').click();
+  return out;
+});
+if (three.mode === '3d') ok('默认立体视角'); else fail('默认不是立体视角：' + three.mode);
+if (three.fitDefault) ok('整本书完整落在舞台内'); else fail('书被裁切');
+if (three.poses.every(p => p[2])) ok(`5 个相机姿态都不裁切`); else fail('部分姿态裁切：' + JSON.stringify(three.poses.filter(p => !p[2])));
+if (three.leafVisible && three.leafAngle < -25) ok(`翻页纸片在转动（${three.leafAngle.toFixed(0)}°）`); else fail(`翻页纸片异常 ${three.leafVisible}/${three.leafAngle}`);
+if (three.turnDone) ok('翻页结束页位正确、纸片归位'); else fail('翻页未收尾');
+if (three.printMode && three.printFit) ok('正视图切换正常'); else fail('正视图异常');
+if (three.backTo3d) ok('可以回到立体视角'); else fail('回不到立体视角');
+if (three.spinning) ok('转台自转可用'); else fail('转台不可用');
+
+/* ---------- 6. 零外部依赖 ---------- */
 const html = fs.readFileSync('/home/user/mathhighschool/mathbook.html', 'utf8');
 const ext = [];
 if (/<script[^>]+src=/i.test(html)) ext.push('script src');

@@ -18,6 +18,8 @@ const js = [
   read('src/geo.js'),
   '/* ---- scenes.js ---- */',
   read('src2/scenes.js'),
+  '/* ---- stage.js ---- */',
+  read('src2/stage.js'),
   '/* ---- book.js ---- */',
   read('src2/book.js'),
 ].join('\n');

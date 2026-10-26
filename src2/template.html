@@ -25,6 +25,12 @@
       <button class="tool" id="btn-toc" title="全书目录">目录</button>
       <button class="tool" id="btn-search" title="全书检索 (/)">检索</button>
       <span class="tools-sep"></span>
+      <div class="view-wrap">
+        <button class="tool on" id="btn-3d" title="立体视角：拖动旋转整本书 (V)">立体</button>
+        <button class="tool" id="btn-print" title="正视图 / 阅读模式 (P)">正视</button>
+        <button class="tool" id="btn-spin" title="转台：让书自己慢慢转">转台</button>
+      </div>
+      <span class="tools-sep"></span>
       <button class="tool" id="btn-see" title="透视：看见内部结构与截面 (T)"><span class="dot-led"></span>透视</button>
       <button class="tool on" id="btn-labels" title="标注：显示点、线、面名称 (L)"><span class="dot-led"></span>标注</button>
       <div class="palette-wrap"><span>配色</span><div class="swatches" id="swatches"></div></div>
@@ -49,8 +55,12 @@
       </div>
     </aside>
 
-    <main class="stage">
-      <div class="book" id="book"></div>
+    <main class="stage" id="stage">
+      <div class="camera" id="camera">
+        <div class="book3d" id="book"></div>
+      </div>
+      <div class="stage-hud" id="stage-hud"></div>
+      <div class="stage-hint" id="stage-hint">拖动旋转 · 滚轮推拉 · 双击复位 · 按 P 正视</div>
     </main>
   </div>
 

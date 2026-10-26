@@ -38,8 +38,8 @@ const META = {
 };
 const ORDER = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','99'];
 
-const TARGET = 780;          // 每页正文的目标高度（px，1440×900 版式下）
-const HARD_MAX = 900;
+const TARGET = 640;          // 每页正文的目标高度（px，1440×900 版式下）
+const HARD_MAX = 690;
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const plain = html => html.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
@@ -190,7 +190,6 @@ function main() {
     if (!chMap[p.ch]) chMap[p.ch] = { id: p.ch, no: p.ch, title: p.chTitle, short: p.chShort, motto: chapterRanges.find(r => r.no === p.ch).meta.motto, scene: chapterRanges.find(r => r.no === p.ch).meta.scene, sections: [], first: i, last: i, count: 0 };
     const c = chMap[p.ch];
     c.last = i; c.count++;
-    if (p.secOf && !c.sections.some(s => s.t === p.secOf)) c.sections.push({ t: p.secOf, page: i });
   });
   const chaptersOut = ORDER.filter(no => chMap[no]).map(no => chMap[no]);
 
@@ -205,8 +204,12 @@ function main() {
     p.cont = !!(prev && prev.ch === p.ch && prev.secOf === p.secOf && idx > 0);
     delete p.pieces;
   });
-  chaptersOut.forEach(c => {
-    c.sections = c.sections.map(s => ({ t: s.t, page: s.page }));
+  /* 目录只登记“小节起始页”；原文里同名小节二次出现时标（续） */
+  pages.forEach((p, i) => {
+    const c = chMap[p.ch];
+    if (!c || !p.secOf || p.cont) return;
+    const used = c.sections.filter(s => s.t === p.secOf).length;
+    c.sections.push({ t: used ? p.secOf + (used === 1 ? '（续）' : `（续${used}）`) : p.secOf, page: i });
   });
 
   const unknown = getUnknown();

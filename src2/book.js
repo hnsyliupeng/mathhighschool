@@ -56,13 +56,37 @@
     labels: store.labels !== false,
     fontScale: store.fontScale || 1,
     modes: store.modes || {},              // 每章的演示模式
+    view: store.view || '3d',              // 3d / print / phone
     yaw: {},                              // 每章的视角
   };
+  let urlTimer = 0;
+  function syncURL() {
+    clearTimeout(urlTimer);
+    urlTimer = setTimeout(() => {
+      const c = window.STAGE ? window.STAGE.cameraState() : null;
+      let h = '#p' + (state.page + 1);
+      if (c) h += '&yaw=' + c.yaw.toFixed(1) + '&pitch=' + c.pitch.toFixed(1) + '&dk=' + c.dk;
+      if (state.view !== '3d') h += '&state=' + state.view;
+      try { history.replaceState(null, '', h); } catch (e) {}
+    }, 260);
+  }
+
+  function setView(mode, opts) {
+    state.view = mode;
+    if (window.STAGE) window.STAGE.setMode(mode, { silent: true, keepCam: !!(opts && opts.keepCam) });
+    if (app.el.btn3d) app.el.btn3d.classList.toggle('on', mode === '3d');
+    if (app.el.btnPrint) app.el.btnPrint.classList.toggle('on', mode === 'print');
+    if (!(opts && opts.silent)) render(null);
+    save();
+    syncURL();
+  }
+
   function save() {
     try {
       localStorage.setItem('mb3d', JSON.stringify({
         palette: state.palette, seeThrough: state.seeThrough, labels: state.labels,
         fontScale: state.fontScale, modes: state.modes, yaw: state.yaw, page: state.page,
+        view: state.view,
       }));
     } catch (e) {}
   }
@@ -110,30 +134,48 @@
     const p = PAGES[state.page];
     app.page = p;
     const info = pageInfo(p);
-    const book = app.el.book;
     if (app.studio) { app.studio.destroy(); app.studio = null; }
-    book.innerHTML = '';
-    book.classList.toggle('cover-mode', p.kind === 'cover');
-    document.body.classList.toggle('is-cover', p.kind === 'cover');
+    const book = app.el.book;
+    const cover = p.kind === 'cover';
+    book.innerHTML = cover ? coverHTML() : spreadHTML(p, info);
+    app.el.stage.classList.toggle('cover-mode', cover);
+    document.body.classList.toggle('is-cover', cover);
+    if (cover) bindCover();
+    else { bindViz(info); bindText(); }
+    if (window.STAGE) window.STAGE.update({ page: state.page, total: PAGES.length });
+    updateNav(info);
+    updateSidebar(info);
+    syncURL();
+    save();
+  }
 
-    if (p.kind === 'cover') {
-      book.innerHTML = coverHTML();
-      bindCover();
-    } else {
-      book.innerHTML = spreadHTML(p, info);
-      addFlip(dir);
-      bindViz(info);
-      bindText();
+  /* 翻页：底层先摆好 (左来自旧页 / 右来自新页)，纸片在上层翻过去 */
+  function renderUnder(dir, from, to) {
+    const fromP = PAGES[from], toP = PAGES[to];
+    const info = pageInfo(toP);
+    if (app.studio) { app.studio.destroy(); app.studio = null; }
+    const under = dir === 'next' ? { left: fromP, right: toP } : { left: toP, right: fromP };
+    app.page = toP;
+    app.el.book.innerHTML = spreadHTML(toP, info, under);
+    app.el.stage.classList.remove('cover-mode');
+    bindViz(pageInfo(under.left));
+    bindText();
+    const leafFront = dir === 'next' ? textFace(fromP, pageInfo(fromP)) : textFace(toP, pageInfo(toP));
+    const leafBack = dir === 'next' ? vizFacePaper(toP, pageInfo(toP)) : vizFacePaper(fromP, pageInfo(fromP));
+    if (window.STAGE) {
+      window.STAGE.turn(dir, { front: leafFront, back: leafBack }, () => render(null));
+      window.STAGE.update({ page: to, total: PAGES.length });
     }
     updateNav(info);
     updateSidebar(info);
-    try { history.replaceState(null, '', '#p' + (state.page + 1)); } catch (e) {}
+    syncURL();
     save();
   }
 
   function coverHTML() {
     const st = RAW.stats;
     return `
+      <div class="book-shadow"></div>${stackHTML('l')}${stackHTML('r')}
       <div class="cover">
         <div class="cover-book"></div>
         <div class="cover-left">
@@ -152,9 +194,6 @@
             <div><b>${(st.words / 1000).toFixed(0)}k</b><span>字</span></div>
             <div><b>${(FORMULAS / 1000).toFixed(1)}k</b><span>处公式</span></div>
           </div>
-          <div class="cover-toc">
-            ${RAW.chapters.map(c => `<a data-goto="${FRONT + c.first}"><span>${c.no}</span>${esc(c.title)}</a>`).join('')}
-          </div>
           <div class="cover-cta">
             <button class="btn-open" data-goto="1">翻开这本书 ▸</button>
             <span class="hint">← → 翻页 · M 目录 · / 检索</span>
@@ -167,10 +206,12 @@
       </div>`;
   }
 
-  function spreadHTML(p, info) {
-    const isText = p.kind === 'text';
-    const body = isText ? `<div class="pane" id="pane">${p.html}</div>`
-      : `<div class="pane" id="pane">${sheetHTML(p)}</div>`;
+  function stackHTML(side) {
+    return `<div class="stack stack-${side}"><div class="back"></div><div class="fore"></div><div class="foot"></div><div class="head"></div></div>`;
+  }
+
+  /* 左页：三维展台 */
+  function vizFace(p, info) {
     return `
       <section class="leaf leaf-viz">
         <div class="page-edges"></div>
@@ -191,7 +232,35 @@
         </div>
         <div class="scene-note"><span class="lbl">读图</span><span id="scene-note"></span></div>
         <div class="pagenum">${info.chNo ? 'P.' + pad(p.abs + 1, 3) : 'MathBook 3D'}</div>
-      </section>
+      </section>`;
+  }
+
+  /* 翻页时纸背面上那一页（没有 canvas，只有版式） */
+  function vizFacePaper(p, info) {
+    const sc = sceneOf(info);
+    return `
+      <section class="leaf leaf-viz">
+        <div class="runhead">
+          <span>${info.chNo ? '第 ' + info.chNo + ' 章 · ' + esc(info.chShort || info.chTitle || '') : 'MathBook · 3D'}</span>
+          <span class="rule"></span>
+          <b>${esc(sc.name)}</b>
+        </div>
+        <div class="viz-paper">
+          <div class="vp-box">
+            <div class="vp-name">${esc(sc.name)}</div>
+            <div class="vp-note">三维演示 · 停下后即可拖动旋转</div>
+          </div>
+        </div>
+        <div class="pagenum">${info.chNo ? 'P.' + pad(p.abs + 1, 3) : 'MathBook 3D'}</div>
+      </section>`;
+  }
+
+  /* 右页：正文 */
+  function textFace(p, info) {
+    const isText = p.kind === 'text';
+    const body = isText ? `<div class="pane" id="pane">${p.html}</div>`
+      : `<div class="pane" id="pane">${sheetHTML(p)}</div>`;
+    return `
       <section class="leaf leaf-text">
         <div class="page-edges"></div>
         <div class="runhead">
@@ -201,9 +270,21 @@
         </div>
         ${body}
         <div class="pagenum">${p.abs + 1} — ${PAGES.length}</div>
-        <button class="turn-zone left" data-turn="prev" title="上一页"><span>‹</span></button>
-        <button class="turn-zone right" data-turn="next" title="下一页"><span>›</span></button>
       </section>`;
+  }
+
+  function spreadHTML(p, info, under) {
+    const leftP = (under && under.left) || p;
+    const rightP = (under && under.right) || p;
+    return `<div class="book-shadow"></div>${stackHTML('l')}${stackHTML('r')}
+      ${vizFace(leftP, pageInfo(leftP))}
+      ${textFace(rightP, pageInfo(rightP))}
+      <div class="spine"></div>
+      <div class="turn-leaf" id="turn-leaf" hidden>
+        <div class="tl-side tl-front"></div>
+        <div class="tl-side tl-back"></div>
+      </div>
+      <div class="turn-glow" id="turn-glow"></div>`;
   }
 
   function sceneOf(info) { return S[info.sceneKey] || S.fallback; }
@@ -391,8 +472,15 @@
     if (pane) {
       pane.scrollTop = 0;
       fitMath(pane);
+      /* 缩放/取景会把页宽算到下一帧，量一次不够：布局稳定后再量一次 */
+      requestAnimationFrame(() => {
+        if (document.getElementById('pane') !== pane) return;
+        pane.querySelectorAll('.math-block').forEach(el => el.classList.remove('fit-s', 'fit-xs', 'fit-scroll'));
+        fitMath(pane);
+      });
     }
-    closeBigTable();
+    /* 只在翻到别的页时才关掉大表浮层：重复渲染同一页不该打断阅读 */
+    if (bigTablePage !== state.page) closeBigTable();
     document.querySelectorAll('[data-turn]').forEach(b => {
       b.addEventListener('click', e => {
         e.stopPropagation();
@@ -432,7 +520,9 @@
     });
   }
 
+  let bigTablePage = -1;
   function openBigTable(table) {
+    bigTablePage = state.page;
     const layer = document.getElementById('bigtable-layer');
     const panel = document.getElementById('bigtable-panel');
     if (!layer || !panel) return;
@@ -443,6 +533,7 @@
   }
 
   function closeBigTable() {
+    bigTablePage = -1;
     const layer = document.getElementById('bigtable-layer');
     if (layer) layer.classList.remove('on');
   }
@@ -455,6 +546,7 @@
   /* 过宽的公式逐级缩排，实在放不下就允许横向滚动 */
   function fitMath(pane) {
     pane.querySelectorAll('.math-block').forEach(el => {
+      if (el.scrollWidth <= el.clientWidth + 1) return;
       let guard = 0;
       while (el.scrollWidth > el.clientWidth + 1 && guard < 3) {
         guard++;
@@ -463,6 +555,13 @@
         else el.classList.add('fit-scroll');
       }
     });
+    /* 行内公式过长（尤其窄屏）时单独转成可横向滚动的块，别让书页边缘切掉 */
+    const narrow = pane.clientWidth;
+    if (narrow) {
+      pane.querySelectorAll('p .math, li .math, td .math').forEach(el => {
+        el.classList.toggle('math-wide', el.getBoundingClientRect().width > narrow + 1);
+      });
+    }
     wrapWideTables(pane);
   }
 
@@ -477,12 +576,28 @@
   }
 
   /* ---------------- 导航 ---------------- */
+  /* 窗口尺寸变化后重新量一遍，别让公式/表格卡在旧的宽度上 */
+  let fitTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(fitTimer);
+    fitTimer = setTimeout(() => {
+      const pane = document.getElementById('pane');
+      if (pane) { fitMath(pane); }
+    }, 260);
+  });
+
   function go(n, animate) {
     n = Math.max(0, Math.min(PAGES.length - 1, n));
     if (n === state.page) return;
-    const dir = animate === false ? null : (n > state.page ? 'next' : 'prev');
+    const from = state.page;
+    const dir = n > from ? 'next' : 'prev';
+    const adjacent = Math.abs(n - from) === 1;
+    const canTurn = animate !== false && adjacent && window.STAGE
+      && window.STAGE.mode === '3d'
+      && PAGES[from].kind !== 'cover' && PAGES[n].kind !== 'cover';
     state.page = n;
-    render(dir);
+    if (canTurn) renderUnder(dir, from, n);
+    else render(null);
   }
   window.BOOK_GO = go;
 
@@ -624,6 +739,13 @@
       if (!app.el.sidebar.classList.contains('hide')) app.el.sbBody.scrollTop = 0;
     });
     app.el.menu.addEventListener('click', () => app.el.sidebar.classList.toggle('hide'));
+    if (app.el.btn3d) app.el.btn3d.addEventListener('click', () => setView('3d'));
+    if (app.el.btnPrint) app.el.btnPrint.addEventListener('click', () => setView(state.view === 'print' ? '3d' : 'print'));
+    if (app.el.btnSpin) app.el.btnSpin.addEventListener('click', () => {
+      if (!window.STAGE) return;
+      if (window.STAGE.spinning) window.STAGE.stopSpin(); else { setView('3d'); window.STAGE.startSpin(); }
+      app.el.btnSpin.classList.toggle('on', window.STAGE.spinning);
+    });
 
     app.el.fontMinus.addEventListener('click', () => setFont(state.fontScale - 0.08));
     app.el.fontPlus.addEventListener('click', () => setFont(state.fontScale + 0.08));
@@ -663,6 +785,9 @@
       else if (e.key === 't' || e.key === 'T') app.el.see.click();
       else if (e.key === 'l' || e.key === 'L') app.el.labels.click();
       else if (e.key === 'm' || e.key === 'M') app.el.toc.click();
+      else if (e.key === 'v' || e.key === 'V') setView('3d');
+      else if (e.key === 'p' || e.key === 'P') setView(state.view === 'print' ? '3d' : 'print');
+      else if (e.key === 'r' || e.key === 'R') { if (window.STAGE) { window.STAGE.stopSpin(); window.STAGE.resetCam(); } }
       else if (e.key === '/') { openSearch(); e.preventDefault(); }
       else if (e.key === 'Escape') closeSearch();
     });
@@ -687,6 +812,11 @@
   function boot() {
     app.state = state;
     app.el.book = document.getElementById('book');
+    app.el.stage = document.getElementById('stage');
+    app.el.camera = document.getElementById('camera');
+    app.el.btn3d = document.getElementById('btn-3d');
+    app.el.btnPrint = document.getElementById('btn-print');
+    app.el.btnSpin = document.getElementById('btn-spin');
     app.el.prev = document.getElementById('nav-prev');
     app.el.next = document.getElementById('nav-next');
     app.el.fill = document.getElementById('prog-fill');
@@ -724,12 +854,41 @@
     buildSidebar();
     bindGlobal();
 
+    /* 相机 / 视图 —— 支持参考站那套 URL 参数：state=print&turn=next&yaw=&pitch=&dk= */
+    const qs = new URLSearchParams(location.search || '');
+    const hashRaw = (location.hash || '').replace(/^#/, '');
+    const hp = new URLSearchParams(hashRaw.replace(/&/g, '&'));
+    const param = k => {
+      if (qs.has(k)) return qs.get(k);
+      const m = new RegExp('(?:^|[#&])' + k + '=([^&]+)').exec(location.hash || '');
+      return m ? decodeURIComponent(m[1]) : (hp.has(k) ? hp.get(k) : null);
+    };
+    const num = (k, d) => { const v = parseFloat(param(k)); return Number.isFinite(v) ? v : d; };
+
+    if (window.STAGE) {
+      window.STAGE.init({
+        stage: app.el.stage, camera: app.el.camera, book: app.el.book,
+        onCam: () => syncURL(),
+      });
+      window.STAGE.setCam({ yaw: num('yaw', -14), pitch: num('pitch', 24), dk: num('dk', 820) }, { instant: true });
+    }
+    const stParam = (param('state') || '').toLowerCase();
+    const autoMode = window.innerWidth <= 900 ? 'phone' : (window.innerWidth < 1200 ? 'print' : '3d');
+    const startView = stParam === 'print' ? 'print' : stParam === 'phone' ? 'phone'
+      : (stParam === '3d' ? '3d' : autoMode);
+
     let start = 0;
     const h = /#p(\d+)/.exec(location.hash || '');
+    const pageParam = parseInt(param('page'), 10);
     if (h) start = Math.max(0, Math.min(PAGES.length - 1, parseInt(h[1], 10) - 1));
+    else if (Number.isFinite(pageParam)) start = Math.max(0, Math.min(PAGES.length - 1, pageParam - 1));
     else if (typeof store.page === 'number') start = Math.max(0, Math.min(PAGES.length - 1, store.page));
     state.page = start;
+    const hasCam = qs.has('yaw') || qs.has('pitch') || qs.has('dk') || /[#&](yaw|pitch|dk)=/.test(location.hash || '');
+    setView(startView, { silent: true, keepCam: hasCam });
     render(null);
+    if ((param('turn') || '').toLowerCase() === 'next') setTimeout(() => go(state.page + 1), 420);
+    if ((param('turn') || '').toLowerCase() === 'prev') setTimeout(() => go(state.page - 1), 420);
   }
 
   app.pages = PAGES;
