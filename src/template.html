@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>高中立体几何 3D 互动解读 · 人教A版必修二第八章</title>
+<meta name="description" content="人教A版（2019）数学必修第二册第八章《立体几何初步》3D 互动教材：可旋转、可透视、可分步讲解的立体几何 3D Book。">
+<style>
+/*__CSS__*/
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-cn">立体几何 <em>3D</em> 互动解读</span>
+      <span class="brand-sub">人教 A 版 · 必修第二册 · 第八章</span>
+    </div>
+    <div class="tools">
+      <button class="tool" id="btn-see" title="透视：看见内部结构与截面 (T)"><span class="dot-led"></span>透视</button>
+      <button class="tool on" id="btn-labels" title="标注：显示点、线、面名称 (L)"><span class="dot-led"></span>标注</button>
+      <div class="palette-wrap"><span>颜色</span><div class="swatches" id="swatches"></div></div>
+      <button class="tool" id="btn-reset" title="重置视角与当前页参数">重置</button>
+    </div>
+  </header>
+
+  <main class="stage">
+    <div class="book" id="book"></div>
+  </main>
+
+  <footer class="nav">
+    <button class="nav-btn" id="nav-prev">‹ 上一页</button>
+    <div class="progress-wrap">
+      <div class="progress"><i id="prog-fill"></i></div>
+      <span class="page-label" id="page-label"></span>
+      <div class="dots"></div>
+    </div>
+    <button class="nav-btn" id="nav-next">下一页 ›</button>
+  </footer>
+</div>
+<noscript><p style="padding:24px;font-family:serif">本教材需要启用 JavaScript 才能旋转三维图形。</p></noscript>
+<script>
+/*__JS__*/
+</script>
+</body>
+</html>
