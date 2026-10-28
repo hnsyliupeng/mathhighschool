@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-28",
+  "browserVersion": "153.0.8010.0",
+  "cases": [
+    "rod-helix",
+    "plate-gravity",
+    "plate-wrinkle"
+  ],
+  "time": 10,
+  "zoomDifference": 0.429046630859375,
+  "resetDifference": 0,
+  "mobileWidth": 390,
+  "errors": [],
+  "scope": "Camera interaction and captured viewport only; this is still a proxy model, not a rod-physics validation."
+}

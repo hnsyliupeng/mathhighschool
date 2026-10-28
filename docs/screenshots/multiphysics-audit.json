@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-28",
+  "results": [
+    {
+      "id": "hyper-membrane",
+      "description": "mother-line pressure inflation",
+      "time": 1.88,
+      "displacement": 5.0629,
+      "rewind": 0.5,
+      "screenshot": "31-membrane-inflation.jpg",
+      "canvas": true,
+      "solverWarning": false
+    },
+    {
+      "id": "robot-magnetic",
+      "description": "magnetically actuated beam",
+      "time": 2.09,
+      "displacement": -0.2558,
+      "rewind": 0.5,
+      "screenshot": "32-magnetic-field.jpg",
+      "canvas": true,
+      "solverWarning": false
+    },
+    {
+      "id": "robot-swim",
+      "description": "swimming displacement with camera tracking",
+      "time": 2.11,
+      "displacement": 0.3068,
+      "rewind": 0.5,
+      "screenshot": "33-swimmer-propulsion.jpg",
+      "canvas": true,
+      "solverWarning": false
+    }
+  ],
+  "browserErrors": [],
+  "scope": "Browser interaction and visual audit only; numerical agreement is reported separately."
+}

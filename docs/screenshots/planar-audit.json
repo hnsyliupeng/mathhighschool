@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-28",
+  "buckling": {
+    "time": 2.27,
+    "screenshot": "27-buckling-loaded.jpg"
+  },
+  "snap": {
+    "beforeTime": 14.57,
+    "beforeY": 0.1656,
+    "afterTime": 16.73,
+    "afterY": -0.2972,
+    "replayY": -0.3003,
+    "screenshots": [
+      "28-snap-before.jpg",
+      "29-snap-after.jpg"
+    ]
+  },
+  "browserErrors": [],
+  "scope": "Visual/interaction checks; numerical reference agreement is recorded separately."
+}

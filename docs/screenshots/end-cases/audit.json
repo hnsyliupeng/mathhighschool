@@ -1,0 +1,198 @@
+{
+  "date": "2026-10-28",
+  "browserVersion": "153.0.8010.0",
+  "viewport": "1440×1000",
+  "reports": [
+    {
+      "id": "mass-single",
+      "time": 10,
+      "duration": 10,
+      "metric": "-0.0611 m",
+      "screenshot": "01-mass-single.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "mass-multi",
+      "time": 10,
+      "duration": 10,
+      "metric": "-0.8030 m",
+      "screenshot": "02-mass-multi.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "beam-gravity",
+      "time": 10,
+      "duration": 10,
+      "metric": "-0.3822 m",
+      "screenshot": "03-beam-gravity.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "beam-buckling",
+      "time": 10,
+      "duration": 10,
+      "metric": "+0.3799 m",
+      "screenshot": "04-beam-buckling.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "beam-snap",
+      "time": 20,
+      "duration": 20,
+      "metric": "-0.2811 m",
+      "screenshot": "05-beam-snap.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "rod-helix",
+      "time": 10,
+      "duration": 10,
+      "metric": "-8.8509 相对长度",
+      "screenshot": "06-rod-helix.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "rod-bifurcation",
+      "time": 10,
+      "duration": 10,
+      "metric": "+0.3927 相对长度",
+      "screenshot": "07-rod-bifurcation.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "rod-growth",
+      "time": 10,
+      "duration": 10,
+      "metric": "-0.1355 相对长度",
+      "screenshot": "08-rod-growth.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "axis-inflate",
+      "time": 2,
+      "duration": 2,
+      "metric": "+0.7830 m",
+      "screenshot": "09-axis-inflate.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "axis-snap",
+      "time": 6,
+      "duration": 6,
+      "metric": "-0.4237 m",
+      "screenshot": "10-axis-snap.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "plate-gravity",
+      "time": 10,
+      "duration": 10,
+      "metric": "-3.1791 相对长度",
+      "screenshot": "11-plate-gravity.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "plate-wrinkle",
+      "time": 10,
+      "duration": 10,
+      "metric": "-3.1896 相对长度",
+      "screenshot": "12-plate-wrinkle.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "shell-indent",
+      "time": 10,
+      "duration": 10,
+      "metric": "-0.1230 相对长度",
+      "screenshot": "13-shell-indent.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "net-gravity",
+      "time": 2,
+      "duration": 2,
+      "metric": "-0.4391 m",
+      "screenshot": "14-net-gravity.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "net-form",
+      "time": 10,
+      "duration": 10,
+      "metric": "+0.1671 相对长度",
+      "screenshot": "15-net-form.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "lattice-gravity",
+      "time": 10,
+      "duration": 10,
+      "metric": "-0.0328 相对长度",
+      "screenshot": "16-lattice-gravity.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "hyper-cable",
+      "time": 1,
+      "duration": 1,
+      "metric": "-0.6316 m",
+      "screenshot": "17-hyper-cable.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "hyper-membrane",
+      "time": 2,
+      "duration": 2,
+      "metric": "+5.7869 m",
+      "screenshot": "18-hyper-membrane.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "robot-magnetic",
+      "time": 20,
+      "duration": 20,
+      "metric": "-0.3671 m",
+      "screenshot": "19-robot-magnetic.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "robot-swim",
+      "time": 5,
+      "duration": 5,
+      "metric": "+0.8239 m",
+      "screenshot": "20-robot-swim.jpg",
+      "warning": false,
+      "overflow": false
+    },
+    {
+      "id": "robot-crawl",
+      "time": 10,
+      "duration": 10,
+      "metric": "-0.0500 相对长度",
+      "screenshot": "21-robot-crawl.jpg",
+      "warning": false,
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "scope": "Terminal-time browser playback, finite displayed displacement, nonblank WebGL, controls, overflow and screenshots; not reference accuracy or physical validity."
+}

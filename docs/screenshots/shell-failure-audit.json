@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-28",
+  "browserVersion": "153.0.8010.0",
+  "scope": "This intentionally difficult parameter set is an interaction/rollback test, not a physical instability claim or original-reference comparison.",
+  "nodes": 24,
+  "youngMPa": 0.2,
+  "pressureMultiplier": 2,
+  "lastConvergedTime": 0.55,
+  "failedStep": 0.56,
+  "meridionalStrainDisplayed": "4.46e+5 %",
+  "csvUnchanged": true,
+  "playbackDisabled": true,
+  "rewindRecovery": true,
+  "parameterResetRecovery": true,
+  "mobileWidths": [
+    320,
+    390
+  ],
+  "browserErrors": [],
+  "images": [
+    "43-shell-nonconvergence.jpg",
+    "44-mobile-shell-nonconvergence.jpg",
+    "45-shell-extreme-strain.jpg"
+  ]
+}

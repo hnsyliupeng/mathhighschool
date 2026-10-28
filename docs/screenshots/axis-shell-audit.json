@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-28",
+  "results": [
+    {
+      "id": "axis-inflate",
+      "time": 2,
+      "displacement": 0.783,
+      "loaded": "37-axis-inflation-loaded.jpg",
+      "meridionalStrainPercent": 41.5,
+      "loadCurve": true,
+      "csv": true,
+      "parameterReset": true,
+      "terminalBounded": true,
+      "partialConstraintGuide": true
+    },
+    {
+      "id": "axis-snap",
+      "before": 3.9,
+      "after": 4.2,
+      "beforeDisplacement": -0.2287,
+      "afterDisplacement": -0.3963,
+      "rewind": 3.8,
+      "loadCurve": true,
+      "branchReplay": true,
+      "residualRewind": true,
+      "radialSlidingGuide": true,
+      "images": [
+        "38-axis-cap-before.jpg",
+        "39-axis-cap-after.jpg"
+      ]
+    }
+  ],
+  "mobile": "41-mobile-axis-cap.jpg",
+  "mobileWidths": [
+    320,
+    390
+  ],
+  "browserErrors": [],
+  "scope": "Visual and interaction audit only; original-reference accuracy is reported separately."
+}

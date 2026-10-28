@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-28",
+  "browserVersion": "153.0.8010.0",
+  "case": "rod_network/case_1",
+  "nodes": 631,
+  "edges": 720,
+  "fullyFixedNodes": 6,
+  "terminalTime": 2,
+  "terminalDisplacement": -0.4391,
+  "terminalEdgeStrainPercent": 17.4,
+  "rewindAt": 0.5,
+  "csvRows": 41,
+  "zeroGravityStationary": true,
+  "png": true,
+  "formula": true,
+  "mobileWidths": [
+    320,
+    390
+  ],
+  "browserErrors": [],
+  "scope": "Interaction and screenshot review only; reference accuracy and convergence limits are documented separately.",
+  "images": [
+    "47-net-loaded.jpg",
+    "48-mobile-net.jpg",
+    "49-net-theory.jpg"
+  ]
+}

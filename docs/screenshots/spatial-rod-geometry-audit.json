@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-28",
+  "referenceCommit": "20d732f3fffdd5137eee720e46175de3a98016c6",
+  "runner": "GNU Octave 7.2.0 WebAssembly",
+  "reports": [
+    {
+      "name": "oblique",
+      "maxFrameError": 2.220446049250313e-16,
+      "maxScalarError": 5.551115123125783e-17,
+      "maxAngleGradientError": 1.1102230246251565e-16,
+      "maxFiniteDifferenceError": 8.071954216148924e-11,
+      "passed": true
+    },
+    {
+      "name": "vertical-fallback",
+      "maxFrameError": 3.3306690738754696e-16,
+      "maxScalarError": 5.551115123125783e-17,
+      "maxAngleGradientError": 5.551115123125783e-17,
+      "maxFiniteDifferenceError": 4.491128302586134e-11,
+      "passed": true
+    },
+    {
+      "name": "straight",
+      "maxFrameError": 2.7755575615628914e-17,
+      "maxScalarError": 1.734723475976807e-18,
+      "maxAngleGradientError": 0,
+      "maxFiniteDifferenceError": 5.5245807928372415e-12,
+      "passed": true
+    }
+  ],
+  "scope": "Three prescribed local geometries: upstream initialization, material rotations and two angle components of bending/twist energy gradient. No trajectory, translational forces, complete Hessian, evolving reference twist, or spatial-rod case validation."
+}

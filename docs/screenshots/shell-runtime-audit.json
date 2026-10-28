@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-28",
+  "scope": "The 3.90 s seed comes from TypeScript; this is a conditional local diagnostic, not an independent full source trajectory.",
+  "nodeVersion": "v22.22.3",
+  "nodeV8": "12.4.254.21-node.56",
+  "browserVersion": "153.0.8010.0",
+  "node": {
+    "pass": false,
+    "start": 3.9,
+    "end": 4.1,
+    "strictError": 0.24585893334772568,
+    "reactionError": 113664.39027075216,
+    "switchStep": 803,
+    "replayError": 0.11918058249364716,
+    "replayLimits": 7,
+    "replayUnconverged": 7,
+    "maxReplayResidual": 86132.91959005012,
+    "sourceLimits": 7,
+    "sourceUnconverged": 6
+  },
+  "browser": {
+    "pass": false,
+    "start": 3.9,
+    "end": 4.1,
+    "strictError": 0.24585893334772602,
+    "reactionError": 113664.39027075216,
+    "switchStep": 803,
+    "replayError": 0.1541220454052903,
+    "replayLimits": 9,
+    "replayUnconverged": 8,
+    "maxReplayResidual": 853410.0791789198,
+    "sourceLimits": 7,
+    "sourceUnconverged": 6
+  },
+  "replayErrorDifference": 0.03494146291164313
+}

@@ -1,0 +1,93 @@
+/** Loaded-state, force-path and rewind visual audit for the two axisymmetric shells. */
+import {createRequire} from 'node:module'
+import {mkdir,writeFile} from 'node:fs/promises'
+import path from 'node:path'
+import {waitForVisibleGeometry} from './audit-canvas.mjs'
+const require=createRequire(path.join(process.env.AUDIT_MODULE_ROOT||process.cwd(),'package.json'))
+const {chromium}=require('playwright-core'),bundle=process.env.CHROME_BIN?null:require('@sparticuz/chromium').default
+if(process.env.CHROMIUM_LIB_DIR)process.env.LD_LIBRARY_PATH=[process.env.CHROMIUM_LIB_DIR,process.env.LD_LIBRARY_PATH].filter(Boolean).join(':')
+const browser=await chromium.launch({executablePath:process.env.CHROME_BIN||await bundle.executablePath(),headless:true,args:[...(bundle?.args||[]),'--no-sandbox','--enable-webgl','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']})
+const page=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1}),base=process.env.AUDIT_BASE_URL||'http://127.0.0.1:5173',errors=[]
+page.on('pageerror',e=>errors.push(String(e)))
+const assert=(v,m)=>{if(!v)throw Error(m)}
+const time=async()=>parseFloat(await page.getByTestId('time-value').innerText())
+const waitTime=async t=>page.waitForFunction(t=>parseFloat(document.querySelector('[data-testid="time-value"]')?.textContent||'0')>=t,t,{timeout:240000})
+const pause=async()=>page.getByTestId('play-pause').evaluate(el=>{if(!el.disabled&&el.getAttribute('aria-label')==='暂停')el.click()})
+const screenshot=async name=>{await waitForVisibleGeometry(page);await page.screenshot({path:`docs/screenshots/${name}`,type:'jpeg',quality:82,fullPage:true})}
+try{
+ await mkdir('docs/screenshots',{recursive:true})
+ const results=[]
+ await page.goto(`${base}/?page=workspace&case=axis-inflate`,{waitUntil:'networkidle'})
+ await waitTime(2);await pause();await page.waitForTimeout(250)
+ const t=await time(),d=parseFloat((await page.locator('.chart-meta strong').innerText()).replace(/\s/g,''))
+ assert(t===2&&d>.4,`Disk terminal state incorrect: ${t}`)
+ const strain=parseFloat(await page.getByTestId('meridional-strain').innerText())
+ assert(strain>41&&strain<42&&(await page.locator('.strain-caveat').innerText()).includes('不是完整应变'),`Disk meridional strain missing or misleading: ${strain}%`)
+ assert(await page.getByTestId('play-pause').isDisabled(),'Completed run can be restarted past its duration')
+ assert((await page.locator('.viewport-top-left').innerText()).includes('40 MERIDIAN NODES'),'Disk meridian count missing')
+ assert((await page.locator('.viewport-legend').innerText()).includes('中心 r 固定'),'Disk partial constraint guide missing')
+ assert(await page.locator('.solver-warning').count()===0,'Disk solver warning')
+ await page.getByRole('button',{name:'压力—位移'}).click()
+ assert((await page.locator('.chart-meta').innerText()).includes('Pa'),'Pressure curve missing units')
+ assert(await page.getByLabel('压力随中心位移变化的记录曲线').count()===1,'Pressure curve missing')
+ await screenshot('37-axis-inflation-loaded.jpg')
+ const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'导出数据'}).click();const download=await downloadPromise
+ const csv=await (await import('node:fs/promises')).readFile(await download.path(),'utf8')
+ assert(csv.includes('load_curve_x')&&csv.includes('Pa'),'Pressure CSV columns/units missing')
+ await page.getByRole('tab',{name:'验证说明'}).click();assert((await page.locator('.insight-content').innerText()).includes('默认 40 节点'),'Disk limitations missing')
+ await page.getByLabel('母线节点').fill('30');await page.getByRole('button',{name:'应用并重新运行'}).click()
+ await page.waitForFunction(()=>document.querySelector('.viewport-top-left')?.textContent?.includes('30 MERIDIAN NODES'),null,{timeout:30000})
+ results.push({id:'axis-inflate',time:t,displacement:d,loaded:'37-axis-inflation-loaded.jpg',meridionalStrainPercent:strain,loadCurve:true,csv:true,parameterReset:true,terminalBounded:true,partialConstraintGuide:true})
+ console.log('PASS axis-inflate',JSON.stringify(results.at(-1)))
+ await page.goto(`${base}/?page=workspace&case=axis-snap`,{waitUntil:'networkidle'})
+ // Record across the transition, then rewind to a deterministic pre-switch
+ // snapshot; render/scheduling latency can otherwise skip past the narrow window.
+ await waitTime(4.2);await pause()
+ const slider=page.getByLabel('回看已记录的仿真时间')
+ await slider.evaluate(el=>{const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;setter.call(el,'390');el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}))})
+ await page.waitForTimeout(250)
+ const before=await time(),beforeDisp=parseFloat((await page.locator('.chart-meta strong').innerText()).replace(/\s/g,''))
+ assert((await page.locator('.viewport-legend').innerText()).includes('径向可滑动'),'Cap radial-sliding guide missing')
+ assert(before>=3.8&&before<4&&!((await page.getByTestId('loading-phase').innerText()).includes('已切换')),`Cap pre-switch state missing at ${before}`)
+ assert((await page.getByTestId('solver-residual').innerText()).includes('e-'),'Rewind did not restore residual')
+ await screenshot('38-axis-cap-before.jpg')
+ await page.getByTestId('play-pause').click();await waitTime(4.1);await pause()
+ const after=await time(),afterDisp=parseFloat((await page.locator('.chart-meta strong').innerText()).replace(/\s/g,''))
+ const phase=await page.getByTestId('loading-phase').innerText()
+ assert(phase.includes('已切换平衡分支'),`Cap branch switch missing: ${phase}`)
+ assert(afterDisp<beforeDisp-.06,`Cap did not switch branches: ${beforeDisp} -> ${afterDisp}`)
+ assert(await page.locator('.solver-warning').count()===0,'Cap solver warning')
+ await page.getByRole('button',{name:'约束反力—位移'}).click()
+ assert((await page.locator('.chart-meta').innerText()).includes('N'),'Reaction curve missing units')
+ assert(await page.getByLabel('约束反力随加载位移变化的记录曲线').count()===1,'Reaction curve missing')
+ await screenshot('39-axis-cap-after.jpg')
+ await page.getByRole('tab',{name:'验证说明'}).click();assert((await page.locator('.insight-content').innerText()).includes('不是跃迁动力学'),'Cap limitation missing')
+ await slider.evaluate(el=>{const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;setter.call(el,'380');el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}))})
+ await page.waitForTimeout(250)
+ const rewind=await time();assert(rewind<3.95,`Cap rewind failed: ${rewind}`)
+ assert(!(await page.getByTestId('loading-phase').innerText()).includes('已切换'),'Rewind retained branch state')
+ await page.getByTestId('play-pause').click();await waitTime(4.1);await pause()
+ assert((await page.getByTestId('loading-phase').innerText()).includes('已切换平衡分支'),'Replayed branch switch missing')
+ await waitForVisibleGeometry(page)
+ results.push({id:'axis-snap',before,after,beforeDisplacement:beforeDisp,afterDisplacement:afterDisp,rewind,loadCurve:true,branchReplay:true,residualRewind:true,radialSlidingGuide:true,images:['38-axis-cap-before.jpg','39-axis-cap-after.jpg']})
+ console.log('PASS axis-snap',JSON.stringify(results.at(-1)))
+ await page.getByRole('tab',{name:'核心公式'}).click();await page.getByRole('button',{name:'展开详细推导'}).click()
+ assert(await page.locator('.derivation .katex-error').count()===0,'Axis chapter KaTeX error')
+ await page.screenshot({path:'docs/screenshots/40-axis-theory.jpg',type:'jpeg',quality:82,fullPage:true})
+ const mobile=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1})
+ mobile.on('pageerror',e=>errors.push(String(e)))
+ await mobile.goto(`${base}/?page=workspace&case=axis-snap`,{waitUntil:'networkidle'})
+ await mobile.waitForFunction(()=>parseFloat(document.querySelector('[data-testid="time-value"]')?.textContent||'0')>=.5,null,{timeout:60000})
+ await mobile.getByTestId('play-pause').evaluate(el=>{if(!el.disabled&&el.getAttribute('aria-label')==='暂停')el.click()})
+ await mobile.getByRole('button',{name:'约束反力—位移'}).click()
+ const checkMobileLayout=async width=>{
+   await mobile.setViewportSize({width,height:844})
+   const layout=await mobile.evaluate(()=>{const a=document.querySelector('.viewport-top-left').getBoundingClientRect(),b=document.querySelector('.viewport-tools').getBoundingClientRect(),legend=document.querySelector('.viewport-legend').getBoundingClientRect(),shell=document.querySelector('.viewport-shell').getBoundingClientRect();return {overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth,overlap:a.right>b.left&&a.bottom>b.top&&b.bottom>a.top,legendClipped:legend.left<shell.left||legend.right>shell.right,label:document.querySelector('.viewport-top-left').innerText}})
+   assert(!layout.overflow&&!layout.overlap&&!layout.legendClipped&&layout.label.includes('母线节点'),`Axis mobile layout ${width}px: ${JSON.stringify(layout)}`)
+ }
+ await checkMobileLayout(320);await checkMobileLayout(390)
+ await waitForVisibleGeometry(mobile);await mobile.screenshot({path:'docs/screenshots/41-mobile-axis-cap.jpg',type:'jpeg',quality:82,fullPage:true})
+ await mobile.close()
+ assert(errors.length===0,`Browser errors: ${errors.join(' | ')}`)
+ await writeFile('docs/screenshots/axis-shell-audit.json',JSON.stringify({date:new Date().toISOString().slice(0,10),results,mobile:'41-mobile-axis-cap.jpg',mobileWidths:[320,390],browserErrors:errors,scope:'Visual and interaction audit only; original-reference accuracy is reported separately.'},null,2)+'\n')
+}finally{await browser.close()}

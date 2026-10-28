@@ -1,0 +1,125 @@
+{
+  "date": "2026-10-28",
+  "referenceCommit": "20d732f3fffdd5137eee720e46175de3a98016c6",
+  "runner": "GNU Octave 7.2.0 WebAssembly",
+  "results": [
+    {
+      "case": "mass-single",
+      "sourceIntegrationSteps": 999,
+      "savedSamplesCompared": 101,
+      "maxDifference": 0,
+      "tolerance": 1e-9
+    },
+    {
+      "case": "mass-multi",
+      "sourceIntegrationSteps": 999,
+      "savedSamplesCompared": 101,
+      "maxDifference": 0,
+      "tolerance": 1e-9
+    },
+    {
+      "case": "beam-gravity",
+      "sourceIntegrationSteps": 50,
+      "savedSamplesCompared": 50,
+      "maxDifference": 0,
+      "tolerance": 1e-9
+    },
+    {
+      "case": "beam-buckling",
+      "stepsReproduced": 20,
+      "maxProbeDifference": 0,
+      "commonFrames": 1,
+      "maxFrameDifference": 0,
+      "tolerance": 1e-9,
+      "sourceIterationLimitExits": 0
+    },
+    {
+      "case": "beam-snap",
+      "stepsReproduced": 20,
+      "maxProbeDifference": 0,
+      "commonFrames": 1,
+      "maxFrameDifference": 0,
+      "tolerance": 1e-9,
+      "sourceIterationLimitExits": 0
+    },
+    {
+      "case": "axis-inflate",
+      "stepsReproduced": 5,
+      "maxProbeDifference": 0,
+      "commonFrames": 1,
+      "maxFrameDifference": 0,
+      "tolerance": 1e-9,
+      "sourceIterationLimitExits": 1
+    },
+    {
+      "case": "axis-snap",
+      "stepsReproduced": 5,
+      "maxProbeDifference": 0,
+      "commonFrames": 1,
+      "maxFrameDifference": 0,
+      "tolerance": 1e-9,
+      "sourceIterationLimitExits": 0,
+      "maxReactionDifference": 0,
+      "reactionTolerance": 0.00001
+    },
+    {
+      "case": "net-gravity (original)",
+      "stepsReproduced": 5,
+      "maxProbeDifference": 0,
+      "commonFrames": 5,
+      "maxFrameDifference": 0,
+      "tolerance": 1e-12,
+      "sourceIterationLimitExits": 0
+    },
+    {
+      "case": "net-gravity (vectorized)",
+      "stepsReproduced": 5,
+      "maxProbeDifference": 0,
+      "commonFrames": 5,
+      "maxFrameDifference": 0,
+      "tolerance": 1e-12,
+      "sourceIterationLimitExits": 0
+    },
+    {
+      "case": "hyper-cable",
+      "stepsReproduced": 25,
+      "maxProbeDifference": 0,
+      "commonFrames": 2,
+      "maxFrameDifference": 0,
+      "tolerance": 1e-9,
+      "sourceIterationLimitExits": 0
+    },
+    {
+      "case": "hyper-membrane",
+      "stepsReproduced": 10,
+      "maxProbeDifference": 0,
+      "commonFrames": 2,
+      "maxFrameDifference": 0,
+      "tolerance": 1e-9,
+      "sourceIterationLimitExits": 0
+    },
+    {
+      "case": "robot-magnetic",
+      "stepsReproduced": 10,
+      "maxProbeDifference": 0,
+      "commonFrames": 1,
+      "maxFrameDifference": 0,
+      "tolerance": 1e-9,
+      "sourceIterationLimitExits": 0
+    },
+    {
+      "case": "robot-swim",
+      "stepsReproduced": 10,
+      "maxProbeDifference": 0,
+      "commonFrames": 1,
+      "maxFrameDifference": 0,
+      "tolerance": 1e-9,
+      "sourceIterationLimitExits": 0
+    }
+  ],
+  "extra": {
+    "shellElementMaxDifference": 0,
+    "netOriginalVersusVectorizedMaxDifference": 3.6366710692939e-16
+  },
+  "scope": "Reproduces saved source samples, not app-versus-source agreement. Mass scripts rerun 999 steps; gravity beam reruns 50. Other models rerun only early windows: 20 planar steps, 5 shell/network steps, 25 cable steps, 10 membrane/robot steps. Only shared saved full-node frames are compared. This does not verify late-time behavior or the nine teaching approximations."
+}

@@ -1,0 +1,96 @@
+{
+  "date": "2026-10-28",
+  "results": [
+    {
+      "name": "default",
+      "params": {
+        "stiffness": 1,
+        "load": 50,
+        "damping": 0.1
+      },
+      "attempted": 200,
+      "finishedTime": 2.0000000000000013,
+      "converged": true,
+      "rollback": null,
+      "finite": true,
+      "fixed": true,
+      "maxResidual": 0.000007598629959316362,
+      "minresFallbacks": 0,
+      "finalMaxAbsEdgeStrain": 0.17446960443158588,
+      "centerDisplacement": -0.4391352102659581
+    },
+    {
+      "name": "no-gravity",
+      "params": {
+        "stiffness": 1,
+        "load": 0,
+        "damping": 0.1
+      },
+      "attempted": 200,
+      "finishedTime": 2.0000000000000013,
+      "converged": true,
+      "rollback": null,
+      "finite": true,
+      "fixed": true,
+      "maxResidual": 0,
+      "minresFallbacks": 0,
+      "finalMaxAbsEdgeStrain": 0,
+      "centerDisplacement": 0
+    },
+    {
+      "name": "soft-high-gravity-undamped",
+      "params": {
+        "stiffness": 0.2,
+        "load": 100,
+        "damping": 0
+      },
+      "attempted": 200,
+      "finishedTime": 2.0000000000000013,
+      "converged": true,
+      "rollback": null,
+      "finite": true,
+      "fixed": true,
+      "maxResidual": 0.000008337775878033235,
+      "minresFallbacks": 0,
+      "finalMaxAbsEdgeStrain": 1.051846790928987,
+      "centerDisplacement": -0.9923988728428781
+    },
+    {
+      "name": "stiff-high-gravity-high-damping",
+      "params": {
+        "stiffness": 3,
+        "load": 100,
+        "damping": 1
+      },
+      "attempted": 200,
+      "finishedTime": 2.0000000000000013,
+      "converged": true,
+      "rollback": null,
+      "finite": true,
+      "fixed": true,
+      "maxResidual": 0.000009867150654386577,
+      "minresFallbacks": 1,
+      "finalMaxAbsEdgeStrain": 0.12671877846631174,
+      "centerDisplacement": -0.38189013327157584
+    },
+    {
+      "name": "soft-low-gravity-high-damping",
+      "params": {
+        "stiffness": 0.2,
+        "load": 1,
+        "damping": 1
+      },
+      "attempted": 200,
+      "finishedTime": 2.0000000000000013,
+      "converged": true,
+      "rollback": null,
+      "finite": true,
+      "fixed": true,
+      "maxResidual": 0.000009701861254647272,
+      "minresFallbacks": 0,
+      "finalMaxAbsEdgeStrain": 0.030223839672670172,
+      "centerDisplacement": -0.16989801814218525
+    }
+  ],
+  "scope": "Control boundary checks and failure rollback only; not an independent source comparison, convergence study, or material-validity assessment."
+}

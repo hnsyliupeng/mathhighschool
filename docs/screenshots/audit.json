@@ -1,0 +1,215 @@
+{
+  "date": "2026-10-28",
+  "viewport": "1440×1000",
+  "caseScreenshots": [
+    {
+      "id": "mass-single",
+      "name": "单自由度弹簧振子",
+      "time": "0.62 s",
+      "screenshot": "01-mass-single.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "mass-multi",
+      "name": "多自由度弹簧系统",
+      "time": "0.51 s",
+      "screenshot": "02-mass-multi.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "beam-gravity",
+      "name": "重力下的悬臂梁",
+      "time": "0.52 s",
+      "screenshot": "03-beam-gravity.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "beam-buckling",
+      "name": "受压梁的屈曲",
+      "time": "0.61 s",
+      "screenshot": "04-beam-buckling.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "beam-snap",
+      "name": "预屈曲梁的跃迁",
+      "time": "0.58 s",
+      "screenshot": "05-beam-snap.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "rod-helix",
+      "name": "重力下的空间螺旋杆",
+      "time": "0.62 s",
+      "screenshot": "06-rod-helix.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "rod-bifurcation",
+      "name": "预屈曲带的分叉",
+      "time": "0.52 s",
+      "screenshot": "07-rod-bifurcation.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "rod-growth",
+      "name": "环形带的生长",
+      "time": "0.62 s",
+      "screenshot": "08-rod-growth.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "axis-inflate",
+      "name": "轴对称平板充气",
+      "time": "0.91 s",
+      "screenshot": "09-axis-inflate.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "axis-snap",
+      "name": "轴对称球冠翻转",
+      "time": "0.97 s",
+      "screenshot": "10-axis-snap.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "plate-gravity",
+      "name": "重力下的薄板挠曲",
+      "time": "0.60 s",
+      "screenshot": "11-plate-gravity.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "plate-wrinkle",
+      "name": "薄板的重力褶皱",
+      "time": "0.54 s",
+      "screenshot": "12-plate-wrinkle.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "shell-indent",
+      "name": "圆柱壳的局部压痕",
+      "time": "0.58 s",
+      "screenshot": "13-shell-indent.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "net-gravity",
+      "name": "重力下的柔性网",
+      "time": "0.91 s",
+      "screenshot": "14-net-gravity.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "net-form",
+      "name": "网壳的形态生成",
+      "time": "0.52 s",
+      "screenshot": "15-net-form.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "lattice-gravity",
+      "name": "重力下的空间格构",
+      "time": "0.64 s",
+      "screenshot": "16-lattice-gravity.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "hyper-cable",
+      "name": "超弹性平面索",
+      "time": "1.00 s",
+      "screenshot": "17-hyper-cable.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "hyper-membrane",
+      "name": "超弹性轴对称膜",
+      "time": "0.64 s",
+      "screenshot": "18-hyper-membrane.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "robot-magnetic",
+      "name": "磁场驱动柔性梁",
+      "time": "0.63 s",
+      "screenshot": "19-robot-magnetic.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "robot-swim",
+      "name": "流固耦合软体游动",
+      "time": "0.85 s",
+      "screenshot": "20-robot-swim.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    },
+    {
+      "id": "robot-crawl",
+      "name": "摩擦接触软体爬行",
+      "time": "0.64 s",
+      "screenshot": "21-robot-crawl.jpg",
+      "canvas": true,
+      "solverWarning": false,
+      "overflow": false
+    }
+  ],
+  "interactionChecks": [
+    "nonblank WebGL scene in each captured case",
+    "case switching",
+    "pause",
+    "step",
+    "node-count apply and canvas rebuild",
+    "formula tab",
+    "verification tab",
+    "CSV export",
+    "PNG export",
+    "library filter and search",
+    "8 KaTeX chapters and interactive planar curvature and spatial material-frame diagrams",
+    "15 numerical checks",
+    "21 case smoke checks",
+    "12 Octave reference comparisons (10 satisfy the stated strict window thresholds)",
+    "mobile navigation and overflow",
+    "WASM failure and honest JS fallback"
+  ],
+  "browserErrors": [],
+  "limitations": "Case smoke checks and screenshots do not validate agreement with the MATLAB reference."
+}
