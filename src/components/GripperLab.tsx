@@ -17,7 +17,7 @@ function downloadCsv(history:GripperFrame[]){
   const url=URL.createObjectURL(new Blob([header.join(',')+'\n'+rows.join('\n')+'\n'],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='tendon-gripper-equilibria.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)
 }
 
-export function GripperLab(){
+export function GripperLab({open3D}:{open3D:()=>void}){
   const [draft,setDraft]=useState<GripperParams>({...defaultGripperParams}),[applied,setApplied]=useState<GripperParams>({...defaultGripperParams}),[revision,setRevision]=useState(0)
   const [draftCycle,setDraftCycle]=useState(false),[appliedCycle,setAppliedCycle]=useState(false)
   const [showMesh,setShowMesh]=useState(true),[showReference,setShowReference]=useState(false),[showForces,setShowForces]=useState(true),[chart,setChart]=useState<GripperChartMetric>('tip'),[tab,setTab]=useState<'model'|'validation'>('model')
@@ -31,7 +31,7 @@ export function GripperLab(){
   const phase=cursor>0&&history[cursor].pull<history[cursor-1].pull?'卸载':'加载'
   return <div className="page-inner gripper-page">
     <div className="grip-intro"><div><div className="grip-kicker"><span/> SOFT ROBOTICS <ChevronRight size={12}/> INTERACTIVE MODEL</div><h1>腱驱软体抓手<span>。</span></h1><p>让牵引腱穿过柔性指体的导向孔，观察接触力如何传递并改变构型。</p></div><div className="grip-intro-tag"><span className="grip-intro-icon"><Activity size={19}/></span><div><strong>耦合求解</strong><small>超弹性 + 腱 + 孔壁接触</small></div></div></div>
-    <div className="grip-notice"><CircleHelp size={15}/><span>二维平面应变、准静态实验：实心指体中的孔壁以可转动、间隙随材料变形的无摩擦导向截面等效，网格未挖出实体孔洞；不包含三维孔壁或物体抓取接触。</span></div>
+    <div className="grip-notice"><CircleHelp size={15}/><span>二维平面应变、准静态实验：实心指体中的孔壁以可转动、间隙随材料变形的无摩擦导向截面等效，网格未挖出实体孔洞；不包含三维孔壁或物体抓取接触。<button className="grip3-inline" onClick={open3D}>进入三维实体孔抓手 →</button></span></div>
     <div className="grip-layout">
       <section className="grip-stage card">
         <div className="grip-stage-header"><div><span className="eyebrow">COUPLED SIMULATION</span><h2>牵引与孔壁接触</h2></div><div className="grip-stage-status"><i className={error?'failed':''}/><span data-testid="gripper-status">{error?'求解已回滚':!frame?'正在初始化':busy?'求解平衡中':playing?`${phase}中`:complete&&cursor===history.length-1?'已完成':'已暂停'}</span></div></div>

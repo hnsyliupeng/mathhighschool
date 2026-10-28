@@ -1,0 +1,22 @@
+{
+  "scope": "Independent NumPy energy and force reconstruction of one TypeScript final state; no experimental comparison or independent full loading solve.",
+  "energyJ": 0.00020950623028080369,
+  "energyAbsDifferenceJ": 8.538092108323347e-18,
+  "maxGradientDifferenceN": 1.2989609388114332e-14,
+  "freeResidualN": 6.458560857423492e-06,
+  "directionalDerivativeErrorsN": [
+    5.374367617605458e-11,
+    8.232770888627616e-11,
+    2.433346030098274e-10,
+    3.888817219632745e-12
+  ],
+  "parts": {
+    "solid": 0.00017859883712304805,
+    "axial": 2.9795527844883327e-05,
+    "bending": 2.074154134735483e-08,
+    "anchor": 9.826661837019302e-07,
+    "contact": 1.0845758782301778e-07,
+    "active": 9
+  },
+  "checksPassed": true
+}

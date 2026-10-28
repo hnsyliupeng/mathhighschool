@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-28",
+  "base": "http://127.0.0.1:4173",
+  "default": {
+    "tip": 10.4,
+    "tension": 0.139,
+    "contacts": 9,
+    "penetration": 7.97,
+    "denseCheck": 10.14
+  },
+  "coarseSampling": {
+    "tip": 10.42,
+    "tension": 0.139,
+    "contacts": 9,
+    "penetration": 2.45,
+    "denseCheck": 43.02
+  },
+  "refinedAtHalfMm": {
+    "tip": 2.05,
+    "tension": 0.015,
+    "contacts": 2,
+    "penetration": 0.18,
+    "denseCheck": 1.52
+  },
+  "unloaded": {
+    "tip": 0,
+    "tension": 0,
+    "contacts": 0,
+    "penetration": 0,
+    "denseCheck": 0
+  },
+  "fallback": {
+    "tip": 10.4,
+    "tension": 0.139,
+    "contacts": 9,
+    "penetration": 7.97,
+    "denseCheck": 10.14
+  },
+  "visiblePixels": {
+    "red": 152,
+    "teal": 3188,
+    "orange": 33
+  },
+  "gif": {
+    "width": 520,
+    "height": 373,
+    "frames": 13,
+    "uniqueCompressedFrames": 13,
+    "delays": [
+      180,
+      180,
+      180,
+      180,
+      180,
+      180,
+      180,
+      180,
+      180,
+      180,
+      180,
+      180,
+      650
+    ],
+    "bytes": 418635
+  },
+  "checks": [
+    "direct 3D entry and worker",
+    "sidebar and 2D/3D cross-navigation",
+    "explicit non-converged grid warning",
+    "4 KaTeX formulae",
+    "actual red tendon and contact markers",
+    "CSV/PNG",
+    "13-frame generated GIF",
+    "3D orbit and solid bore view",
+    "rewind/step/playback",
+    "undersampled penetration warning",
+    "calculated unloading",
+    "refined 3D grid",
+    "main-thread fallback",
+    "mobile navigation/overflow"
+  ],
+  "browserErrors": [],
+  "scope": "Browser behavior and rendered frames; not an experiment or continuous collision validation."
+}
