@@ -19,6 +19,7 @@ npm run dev
 
 - **算例工作台**：选择算例，调整参数并点击「应用并重新运行」。可播放/暂停、单步、回看已记录时间、切换节点和初始构型、旋转缩放、下载 PNG 与 CSV。螺旋杆和两例薄板会自动适配当前与可见初始构型；手动操作后停止自动取景，点击重置视角恢复。
 - **算例库**：21 个条目按原教程分类；每个条目有边界、载荷、观察量、核心公式、局限与原始代码/官方动画链接。
+- **腱驱软体抓手**：独立于原教程 21 例的自定义实验；可计算平面应变超弹性指体、只受拉腱和四处变形导向截面的双向罚接触，显示受力、间隙、应力、响应曲线，并支持加载/卸载及 CSV/PNG 导出。真实孔洞未在网格中挖出，不是三维孔壁或物体抓取仿真；详见[模型与验证](docs/TENDON_GRIPPER.md)。
 - **公式推导**：8 个主题覆盖通用框架、平面梁、空间杆、轴对称壳、离散壳、杆网络、超弹性和多物理场。平面曲率及空间杆材料标架各有可调、可播放的几何示意。
 - **验证中心**：在浏览器本地运行 15 项数值检查、21 个可运行性检查和 12 项独立参考时窗对照；球冠的额外条件窗口单独标示，不计作独立全程。对照在 Web Worker 中执行（不可用时回退至主线程）。
 
@@ -59,16 +60,20 @@ npm run dev
 ## 验证和截图
 
 ```bash
-npm test                     # 本轮 116/116：数值内核、空间标架、WASM 故障回退及相机等
+npm test                     # 本轮 128/128：数值内核、抓手接触、空间标架及其他回归
 npm run build                # 生产构建成功；仍有大于 500 kB 的 chunk 警告
 npx vite-node scripts/audit-all-durations.ts  # 21 例默认完整时程及逐步回看重演
 npx vite-node scripts/audit-spatial-rod-geometry.ts  # 3 个局部空间标架和转角梯度
+npx vite-node scripts/audit-gripper.ts --snapshot /tmp/gripper-snapshot.json  # 接触、网格和卸载审查
+python3 scripts/audit-gripper-independent.py /tmp/gripper-snapshot.json  # 可选，需 numpy/scipy
 npm audit                    # 本轮修复后 0 个已报告漏洞（仅表示当前数据库的扫描结果）
 npm run reference:compare    # 12 项独立时窗 + 1 项球冠条件诊断；有未通过项，故返回非零
 cargo test --manifest-path core-rs/Cargo.toml  # 需安装 Rust；本轮原生单测 3/3
 ```
 
 本轮在 Linux x86-64 的 Rust 1.88.0-dev 和 1.92.0-nightly 下分别重跑原生单测，均为 3/3，文档测试 0 项；**未从当前源码重编译 WASM**。对已有 `public/ddg_core.wasm` 的四个导出，单测分别用 1000 组确定性输入与 JS 对照并覆盖退化输入，也检查无效导出与加载失败后的 JS 回退。Rust 内核并非完整仿真求解器。
+
+新增的腱驱抓手采用二维实心指体与可变间隙的嵌入式导向截面，能计算腱—孔法向接触和力平衡，但未挖实体孔、不含三维孔面、摩擦、物体接触或动力学。默认标准网格的 4 mm 牵引末态有 4/4 截面接触，最大罚穿透约 3.87 μm；标准→加密网格时指端位移变化约 8%、张力变化约 31%，尚未网格收敛。[详细推导与数值记录](docs/TENDON_GRIPPER.md)。
 
 新增的空间杆局部测试覆盖斜杆、竖直参考轴退化回退和直杆三种构型：对比原 Octave 标架及积分曲率最大差 `3.33e-16`、材料转角能量梯度最大差 `1.11e-16`；梯度与中心差分最大差 `8.08e-11`。详见 [局部记录](docs/screenshots/spatial-rod-geometry-audit.json) 和[交互截图](docs/screenshots/52-spatial-rod-lab.jpg)。
 
@@ -214,6 +219,7 @@ src/engine/axisymmetric-membrane.ts  轴对称膜能量、梯度/Hessian、压�
 src/engine/axisymmetric-shell.ts     轴对称线弹性壳单元、准静态求解与分支启发式
 src/engine/axis-shell-window.ts       球冠临界条件窗口对照及残差诊断
 src/engine/soft-robot.ts        磁力、各向异性二次阻力及原迭代回放
+src/engine/gripper.ts           自定义二维超弹性指体、腱和变形导向截面接触
 src/engine/spatial-rod-geometry.ts   双边标架/积分曲率和材料转角梯度（非整杆求解器）
 src/engine/net-gravity.ts       原始柔性网伸长单元、隐式求解及应变监测
 src/engine/minres.ts            对称不定矩阵的矩阵自由迭代回退

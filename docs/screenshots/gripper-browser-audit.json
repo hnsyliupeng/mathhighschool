@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-28",
+  "base": "http://127.0.0.1:4173",
+  "default": {
+    "tip": 17.71,
+    "tension": 0.183,
+    "penetration": 3.87,
+    "contacts": "4 / 4"
+  },
+  "renderedPixels": {
+    "red": 192,
+    "teal": 1863
+  },
+  "unloaded": {
+    "tip": 0,
+    "tension": 0,
+    "penetration": 0,
+    "contacts": "0 / 4"
+  },
+  "fine": {
+    "tip": 4.94,
+    "tension": 0.033,
+    "penetration": 0.19,
+    "contacts": "3 / 4"
+  },
+  "fallback": {
+    "tip": 17.71,
+    "tension": 0.183,
+    "penetration": 3.87,
+    "contacts": "4 / 4"
+  },
+  "checks": [
+    "default 4 mm equilibrium and four contacts",
+    "colored nonblank WebGL",
+    "4 KaTeX equations",
+    "CSV and PNG export",
+    "contact and energy charts",
+    "reference toggle",
+    "rewind, step and playback",
+    "parameter changes and computed unload",
+    "refined mesh",
+    "high penetration warning",
+    "worker and no-worker agreement",
+    "mobile canvas/navigation/overflow",
+    "honest bore limitation"
+  ],
+  "browserErrors": [],
+  "scope": "Browser interactions and visualization; not an experimental or 3-D contact validation."
+}

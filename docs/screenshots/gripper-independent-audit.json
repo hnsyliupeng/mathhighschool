@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-28",
+  "checks": {
+    "independent_energy": true,
+    "independent_gradient": true,
+    "independent_free_residual": true,
+    "directional_derivatives": true,
+    "local_scipy_residual": true,
+    "local_scipy_shape": true
+  },
+  "energy_difference_J": 0.0,
+  "max_gradient_difference_N": 5.551115123125783e-17,
+  "free_residual_N": 5.627215946271288e-12,
+  "max_directional_derivative_error_N": 4.155079891265956e-10,
+  "scipy_local_relaxation": {
+    "success": true,
+    "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "iterations": 335,
+    "max_solid_node_coordinate_difference_m": 2.114013818166338e-09,
+    "energy_difference_J": 6.011901046432122e-17,
+    "free_residual_N": 3.7262308729243186e-07
+  },
+  "scope": "Independent NumPy assembly and SciPy local relaxation from a perturbed TypeScript solution; not an independent full trajectory, 3-D bore, or experimental validation."
+}

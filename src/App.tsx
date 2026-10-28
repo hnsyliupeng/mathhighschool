@@ -8,15 +8,16 @@ import { ThreeViewport, type ViewportHandle } from './components/ThreeViewport'
 import { ResponseChart } from './components/ResponseChart'
 import { MathBlock } from './components/MathBlock'
 import { LibraryPage, TheoryPage, ValidationPage } from './components/Pages'
+import { GripperLab } from './components/GripperLab'
 import './styles.css'
 
-type Page='workspace'|'library'|'theory'|'validation'
-const pageNames:Record<Page,string>={workspace:'算例工作台',library:'算例库',theory:'公式推导',validation:'验证中心'}
+type Page='workspace'|'gripper'|'library'|'theory'|'validation'
+const pageNames:Record<Page,string>={workspace:'算例工作台',gripper:'腱驱软体抓手',library:'算例库',theory:'公式推导',validation:'验证中心'}
 
 function Logo(){return <svg width="38" height="38" viewBox="0 0 38 38" fill="none" aria-hidden="true"><rect x="1" y="1" width="36" height="36" rx="10" stroke="#91ab94"/><path d="M9 24.5 18.8 9 29 24.5 18.8 29 9 24.5Z" stroke="#d1e0c8" strokeWidth="1.3"/><path d="M9 24.5 18.8 20l10.2 4.5M18.8 9v11m0 0v9" stroke="#d1e0c8" strokeWidth="1.1"/><circle cx="18.8" cy="20" r="1.6" fill="#dcae72"/></svg>}
 
 function Sidebar({page,setPage,onGuide,mobile,setMobile}:{page:Page;setPage:(p:Page)=>void;onGuide:()=>void;mobile:boolean;setMobile:(v:boolean)=>void}){
-  const nav:[Page,typeof Compass,string,string?][]=[['workspace',Compass,'算例工作台'],['library',Grid2X2,'算例库','21'],['theory',BookOpen,'公式推导','08'],['validation',ShieldCheck,'验证中心']]
+  const nav:[Page,typeof Compass,string,string?][]=[['workspace',Compass,'算例工作台'],['gripper',Activity,'腱驱软体抓手','NEW'],['library',Grid2X2,'算例库','21'],['theory',BookOpen,'公式推导','08'],['validation',ShieldCheck,'验证中心']]
   return <><div className={mobile?'sidebar-backdrop open':'sidebar-backdrop'} onClick={()=>setMobile(false)}/><aside className={mobile?'sidebar mobile-open':'sidebar'}>
     <div className="brand"><Logo/><div><strong>DDG <span>Lab</span></strong><small>离散几何实验室</small></div><button className="mobile-close icon-button" onClick={()=>setMobile(false)} aria-label="关闭导航"><X size={18}/></button></div>
     <div className="side-label">LEARN & EXPLORE</div><nav className="main-nav">{nav.map(([id,Icon,label,count])=><button data-testid={`nav-${id}`} key={id} className={page===id?'nav-item active':'nav-item'} onClick={()=>{setPage(id);setMobile(false)}}><Icon size={18} strokeWidth={1.7}/><span>{label}</span>{count&&<small>{count}</small>}{page===id&&<i/>}</button>)}</nav>
@@ -93,11 +94,11 @@ function Guide({onClose}:{onClose:()=>void}){return <div className="modal-backdr
 export default function App(){
   const params=new URLSearchParams(window.location.search),initialCase=getCase(params.get('case')??'beam-gravity')
   const pageParam=params.get('page') as Page|null
-  const [page,setPageState]=useState<Page>(pageParam&&['workspace','library','theory','validation'].includes(pageParam)?pageParam:'workspace')
+  const [page,setPageState]=useState<Page>(pageParam&&['workspace','gripper','library','theory','validation'].includes(pageParam)?pageParam:'workspace')
   const [item,setItem]=useState(initialCase),[chapter,setChapter]=useState('framework'),[search,setSearch]=useState(''),[guide,setGuide]=useState(false),[mobile,setMobile]=useState(false),[wasm,setWasm]=useState<boolean|null>(null)
   useEffect(()=>{loadRustKernels().then(setWasm)},[])
   const navigate=(p:Page)=>{setPageState(p);const url=new URL(window.location.href);url.searchParams.set('page',p);if(p==='workspace')url.searchParams.set('case',item.id);window.history.replaceState({},'',url);window.scrollTo({top:0,behavior:'smooth'})}
   const select=(next:CaseDefinition)=>{setItem(next);setPageState('workspace');const url=new URL(window.location.href);url.searchParams.set('page','workspace');url.searchParams.set('case',next.id);window.history.replaceState({},'',url);window.scrollTo({top:0,behavior:'smooth'})}
   const openTheory=(id:string)=>{setChapter(id);navigate('theory')}
-  return <div className="app-shell"><Sidebar page={page} setPage={navigate} onGuide={()=>setGuide(true)} mobile={mobile} setMobile={setMobile}/><div className="main-shell"><Topbar page={page} onSearch={q=>{setSearch(q);navigate('library')}} onGuide={()=>setGuide(true)} onMobile={()=>setMobile(true)} wasm={wasm}/><main>{page==='workspace'&&<Workspace key={item.id} item={item} onSelect={select} onLibrary={()=>navigate('library')} onTheory={openTheory} onValidation={()=>navigate('validation')}/>} {page==='library'&&<LibraryPage key={search} onSelect={select} initialSearch={search}/>} {page==='theory'&&<TheoryPage key={chapter} initialChapter={chapter} onCase={()=>navigate('workspace')}/>} {page==='validation'&&<ValidationPage onSelect={select}/>}</main></div>{guide&&<Guide onClose={()=>setGuide(false)}/>}</div>
+  return <div className="app-shell"><Sidebar page={page} setPage={navigate} onGuide={()=>setGuide(true)} mobile={mobile} setMobile={setMobile}/><div className="main-shell"><Topbar page={page} onSearch={q=>{setSearch(q);navigate('library')}} onGuide={()=>setGuide(true)} onMobile={()=>setMobile(true)} wasm={wasm}/><main>{page==='workspace'&&<Workspace key={item.id} item={item} onSelect={select} onLibrary={()=>navigate('library')} onTheory={openTheory} onValidation={()=>navigate('validation')}/>} {page==='gripper'&&<GripperLab/>} {page==='library'&&<LibraryPage key={search} onSelect={select} initialSearch={search}/>} {page==='theory'&&<TheoryPage key={chapter} initialChapter={chapter} onCase={()=>navigate('workspace')}/>} {page==='validation'&&<ValidationPage onSelect={select}/>}</main></div>{guide&&<Guide onClose={()=>setGuide(false)}/>}</div>
 }
