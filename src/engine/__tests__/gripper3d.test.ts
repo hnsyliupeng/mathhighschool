@@ -78,7 +78,7 @@ describe('coupled 3-D equilibrium',()=>{
     const skipped=new TendonGripper3D({...defaultGripper3DParams,pull:.0005}).step(.0005);expect(skipped.converged).toBe(false);expect(skipped.message).toContain('增量过大')
   },30000)
   it('rejects invalid physical and mesh parameters',()=>{
-    expect(()=>new TendonGripper3D({...defaultGripper3DParams,radius:.001})).toThrow();expect(()=>new TendonGripper3D({...defaultGripper3DParams,young:NaN})).toThrow();expect(()=>makeGripper3DMesh(3 as 1)).toThrow()
+    expect(()=>new TendonGripper3D({...defaultGripper3DParams,radius:.001})).toThrow();expect(()=>new TendonGripper3D({...defaultGripper3DParams,young:NaN})).toThrow();expect(()=>makeGripper3DMesh(4 as 1)).toThrow()
     const m=makeGripper3DMesh();expect(()=>neoHookeanTet(m.reference,m.tets[0],250000,NaN)).toThrow();expect(()=>wallPenalty([0,0,0],[0,0,1],[1,0,0],[.1,.1,.1],NaN,1)).toThrow()
   })
 })

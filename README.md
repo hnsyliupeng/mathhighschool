@@ -19,7 +19,7 @@ npm run dev
 
 - **算例工作台**：选择算例，调整参数并点击「应用并重新运行」。可播放/暂停、单步、回看已记录时间、切换节点和初始构型、旋转缩放、下载 PNG 与 CSV。螺旋杆和两例薄板会自动适配当前与可见初始构型；手动操作后停止自动取景，点击重置视角恢复。
 - **算例库**：21 个条目按原教程分类；每个条目有边界、载荷、观察量、核心公式、局限与原始代码/官方动画链接。
-- **三维实体孔抓手**（`/?page=gripper3d`）：独立的三维四面体超弹性指体，三段凸齿内挖出真实矩形贯通孔；有限半径腱与变形孔壁三角形双向罚接触，可调参数、旋转查看、计算加载/卸载并导出 CSV/PNG/GIF。采样接触不是连续碰撞检测，**网格尚未收敛，不能用于工程设计**；详见[三维模型与验证](docs/TENDON_GRIPPER_3D.md)及[示例 GIF](docs/media/tendon-gripper-3d.gif)。
+- **三维实体孔抓手**（`/?page=gripper3d`）：三维全积分六面体指体、真实挖空的矩形孔和有限半径可滑动腱；完整腱段—三角形多特征接触、离散路径 CCD、安全回滚及 CSV/PNG/GIF。默认 14.75 mm 牵引下，标准网格末段背梁实际转角约 **92.29°**，并非视觉放大；计算较慢。**严格验收尚未通过，不可用于工程设计**；见[推导与限制](docs/TENDON_GRIPPER_3D.md)和[大卷曲 GIF](docs/media/tendon-gripper-3d-continuous.gif)。
 - **二维等效抓手**（`/?page=gripper`）：平面应变超弹性指体、只受拉腱和四处变形导向截面的双向罚接触。它没有在网格中挖出真实孔洞，与三维实体孔模型是不同的降阶实验；详见[二维模型与验证](docs/TENDON_GRIPPER.md)。
 - **公式推导**：8 个主题覆盖通用框架、平面梁、空间杆、轴对称壳、离散壳、杆网络、超弹性和多物理场。平面曲率及空间杆材料标架各有可调、可播放的几何示意。
 - **验证中心**：在浏览器本地运行 15 项数值检查、21 个可运行性检查和 12 项独立参考时窗对照；球冠的额外条件窗口单独标示，不计作独立全程。对照在 Web Worker 中执行（不可用时回退至主线程）。
@@ -61,14 +61,15 @@ npm run dev
 ## 验证和截图
 
 ```bash
-npm test                     # 本轮 138/138：数值内核、二维/三维抓手、空间标架及其他回归
+npm test                     # 数值内核、二维/三维抓手、空间标架及其他回归
 npm run build                # 生产构建成功；仍有大于 500 kB 的 chunk 警告
 npx vite-node scripts/audit-all-durations.ts  # 21 例默认完整时程及逐步回看重演
 npx vite-node scripts/audit-spatial-rod-geometry.ts  # 3 个局部空间标架和转角梯度
 npx vite-node scripts/audit-gripper.ts --snapshot /tmp/gripper-snapshot.json  # 二维接触、网格和卸载审查
 python3 scripts/audit-gripper-independent.py /tmp/gripper-snapshot.json  # 可选，需 numpy/scipy
-npx vite-node scripts/audit-gripper3d.ts --snapshot /tmp/gripper3d-snapshot.json  # 三维网格、采样和卸载审查
-python3 scripts/audit-gripper3d-independent.py /tmp/gripper3d-snapshot.json  # 可选，需 numpy
+npx vite-node scripts/audit-gripper3d-continuous.ts --case curl  # 三维大卷曲及离散接触审查
+npx vite-node scripts/snapshot-gripper3d-continuous.ts curl
+python3 scripts/audit-gripper3d-continuous-independent.py  # 可选，需 numpy、scipy
 npm audit                    # 本轮修复后 0 个已报告漏洞（仅表示当前数据库的扫描结果）
 npm run reference:compare    # 12 项独立时窗 + 1 项球冠条件诊断；有未通过项，故返回非零
 cargo test --manifest-path core-rs/Cargo.toml  # 需安装 Rust；本轮原生单测 3/3
@@ -76,7 +77,7 @@ cargo test --manifest-path core-rs/Cargo.toml  # 需安装 Rust；本轮原生�
 
 本轮在 Linux x86-64 的 Rust 1.88.0-dev 和 1.92.0-nightly 下分别重跑原生单测，均为 3/3，文档测试 0 项；**未从当前源码重编译 WASM**。对已有 `public/ddg_core.wasm` 的四个导出，单测分别用 1000 组确定性输入与 JS 对照并覆盖退化输入，也检查无效导出与加载失败后的 JS 回退。Rust 内核并非完整仿真求解器。
 
-三维实体孔模型使用真实挖空四面体边界和双向腱—孔壁采样接触。默认 3 mm 加载，816→6528 四面体时指端位移 10.40→11.94 mm、首段腱力 0.1386→0.0910 N（变化约 +14.7% / −34.4%），**网格未收敛**；有限采样也不是连续碰撞检测。独立 NumPy 重组、密采样检查及 GIF、截图见[三维模型与验证](docs/TENDON_GRIPPER_3D.md)。
+三维实体孔模型当前使用全积分六面体、完整线段—三角形多特征增广接触和离散路径 CCD。默认 14.75 mm 工况在标准网格得到背梁末段平面转角 **92.29°**、指端横移 46.20 mm；单一末态的独立 NumPy/SciPy 重组通过。严格验收仍未通过：网格收敛、极细腱压力测试及连续体内部/曲面 CCD 等不能仅凭该结果认定通过。详见[三维推导及限制](docs/TENDON_GRIPPER_3D.md)与[逐项审查](docs/screenshots/gripper3d-continuous-audit.json)。
 
 原二维抓手采用实心指体与可变间隙的嵌入式导向截面，不含三维孔面；标准→加密网格时指端位移变化约 8%、张力变化约 31%，同样尚未网格收敛。[二维详细推导与数值记录](docs/TENDON_GRIPPER.md)。
 
@@ -225,7 +226,8 @@ src/engine/axisymmetric-shell.ts     轴对称线弹性壳单元、准静态求�
 src/engine/axis-shell-window.ts       球冠临界条件窗口对照及残差诊断
 src/engine/soft-robot.ts        磁力、各向异性二次阻力及原迭代回放
 src/engine/gripper.ts           自定义二维超弹性指体、腱和变形导向截面接触
-src/engine/gripper3d.ts         挖空三维四面体、腱—真实孔壁采样接触与耦合求解
+src/engine/gripper3d.ts         三维挖空网格及旧采样求解器（历史对照）
+src/engine/continuous-gripper3d.ts  三维全积分实体、完整腱段—孔壁接触及安全回滚
 src/components/Gripper3DLab.tsx 三维参数、诊断、回放与 GIF/CSV 导出
 src/engine/spatial-rod-geometry.ts   双边标架/积分曲率和材料转角梯度（非整杆求解器）
 src/engine/net-gravity.ts       原始柔性网伸长单元、隐式求解及应变监测

@@ -6,12 +6,12 @@
  * unsampled continuous collision detection. SI units throughout.
  */
 export type Vec3=[number,number,number]
-export interface Gripper3DParams {young:number;poisson:number;EA:number;bending:number;radius:number;contactPerLength:number;pull:number;step:number;samples:number;meshLevel:1|2}
-export const defaultGripper3DParams:Gripper3DParams={young:250000,poisson:.35,EA:30,bending:2e-8,radius:.0004,contactPerLength:4e6,pull:.003,step:.00025,samples:12,meshLevel:1}
+export interface Gripper3DParams {young:number;poisson:number;EA:number;bending:number;radius:number;contactPerLength:number;pull:number;step:number;samples:number;meshLevel:1|2|3;tendonResolution:1|2|3}
+export const defaultGripper3DParams:Gripper3DParams={young:250000,poisson:.35,EA:30,bending:2e-8,radius:.0004,contactPerLength:4e6,pull:.003,step:.00025,samples:12,meshLevel:1,tendonResolution:1}
 export interface Tet3D {nodes:[number,number,number,number];gradients:[Vec3,Vec3,Vec3,Vec3];volume:number}
 export interface Surface3D {nodes:[number,number,number];tet:number;wall:-1|0|1|2|3}
 export interface Mesh3D {reference:Vec3[];tets:Tet3D[];surface:Surface3D[];walls:Surface3D[];fixed:number[];anchor:number[];length:number;hole:{y0:number;y1:number;z0:number;z1:number}}
-export interface Contact3D {point:Vec3;wallPoint:Vec3;force:Vec3;penetration:number;gap:number;wall:0|1|2|3;triangle:[number,number,number]}
+export interface Contact3D {point:Vec3;wallPoint:Vec3;force:Vec3;penetration:number;gap:number;wall:-1|0|1|2|3;triangle:[number,number,number]}
 export interface Frame3D {pull:number;positions:Vec3[];tendon:Vec3[];stress:number[];contacts:Contact3D[];tip:Vec3;tipDeflection:number;tension:number;energy:number;minJ:number;maxStress:number;maxPenetration:number;checkPenetration:number;contactForce:number;anchorSlip:number;forceBalance:number;residual:number;iterations:number;linearIterations:number;converged:boolean;message?:string}
 const add=(a:Vec3,b:Vec3):Vec3=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]]
 const sub=(a:Vec3,b:Vec3):Vec3=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]]
@@ -33,8 +33,8 @@ function makeTet(reference:Vec3[],nodes0:[number,number,number,number]):Tet3D{
 }
 /** Three hollow pads connected by a continuous backbone. The rectangular
  * through-bores are actual missing volumes, not embedded guide points. */
-export function makeGripper3DMesh(level:1|2=1):Mesh3D {
-  if(level!==1&&level!==2)throw Error('Invalid 3D mesh level')
+export function makeGripper3DMesh(level:1|2|3=1):Mesh3D {
+  if(level!==1&&level!==2&&level!==3)throw Error('Invalid 3D mesh level')
   const baseX=Array.from({length:13},(_,i)=>.08*i/12),baseY=[0,.0035,.007,.0097,.0113,.014],baseZ=[0,.0032,.0048,.008]
   const subdivide=(a:number[])=>a.flatMap((v,i)=>i===a.length-1?[v]:Array.from({length:level},(_,j)=>v+(a[i+1]-v)*j/level))
   const X=subdivide(baseX),Y=subdivide(baseY),Z=subdivide(baseZ)
@@ -118,7 +118,7 @@ export class TendonGripper3D {
   q:Float64Array;pull=0;last:Frame3D
   constructor(params:Gripper3DParams=defaultGripper3DParams){
     this.params={...params};const p=this.params
-    if(!Object.values(p).every(Number.isFinite)||p.young<=0||p.poisson<0||p.poisson>=.49||p.EA<=0||p.bending<=0||p.radius<=0||p.radius>=.0008||p.contactPerLength<=0||p.pull<0||p.step<=0||!Number.isInteger(p.samples)||p.samples<1||p.samples>12||(p.meshLevel!==1&&p.meshLevel!==2))throw Error('Invalid 3D gripper parameters')
+    if(!Object.values(p).every(Number.isFinite)||p.young<=0||p.poisson<0||p.poisson>=.49||p.EA<=0||p.bending<=0||p.radius<=0||p.radius>=.0008||p.contactPerLength<=0||p.pull<0||p.step<=0||!Number.isInteger(p.samples)||p.samples<1||p.samples>12||(p.meshLevel!==1&&p.meshLevel!==2&&p.meshLevel!==3))throw Error('Invalid 3D gripper parameters')
     this.mesh=makeGripper3DMesh(p.meshLevel);this.tetDofs=this.mesh.tets.map(t=>Int32Array.from(t.nodes.flatMap(id=>[3*id,3*id+1,3*id+2])));this.cableStart=this.mesh.reference.length;this.cableCount=24
     this.q=new Float64Array(3*(this.cableStart+this.cableCount));this.mesh.reference.forEach((x,i)=>{this.q[3*i]=x[0];this.q[3*i+1]=x[1];this.q[3*i+2]=x[2]})
     for(let i=0;i<this.cableCount;i++){const j=this.cableStart+i;this.q[3*j]=-.012+i*.004;this.q[3*j+1]=.0105;this.q[3*j+2]=.004}

@@ -29,8 +29,9 @@ const checks={
   separateDenseCheckExposesMissedPenetration:coarseSamples.stats.checkPenetrationUm>coarseSamples.stats.sampledPenetrationUm*2,
   gridConverged:Math.abs(tipChangePercent)<5&&Math.abs(tensionChangePercent)<5,
 }
-for(const [key,value] of Object.entries(checks))if(key!=='gridConverged')assert(value,`Failed audit: ${key}`)
 const report={date:new Date().toISOString().slice(0,10),description:'3-D explicit-bore coupled quasi-static model; assumed parameters, not experimental validation',checks,tipChangePercent,tensionChangePercent,results:[base.stats,fine.stats,coarseSamples.stats,noContact.stats,soft.stats,stiff.stats,lowPenalty.stats,highPenalty.stats,unload.stats]}
 writeFileSync('docs/screenshots/gripper3d-numerical-audit.json',JSON.stringify(report,null,2)+'\n')
 const index=process.argv.indexOf('--snapshot');if(index>=0){const A=base.solver.evaluate();writeFileSync(process.argv[index+1],JSON.stringify({params:base.solver.params,mesh:base.solver.mesh,q:Array.from(base.solver.q),energy:A.energy,gradient:Array.from(A.gradient),frame:base.solver.last,fixed:Array.from(base.solver.fixedDofs)}))}
-console.log('PASS (gridConverged is deliberately reported separately)',JSON.stringify(checks))
+const failed=Object.entries(checks).filter(([,value])=>!value).map(([key])=>key)
+if(failed.length){console.error('FAIL: legacy sampled model did not meet every requirement:',failed.join(', '));process.exitCode=1}
+else console.log('PASS',JSON.stringify(checks))

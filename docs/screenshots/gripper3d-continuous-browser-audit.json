@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-28T14:30:20.834Z",
+  "base": "http://127.0.0.1:5173",
+  "default": {
+    "angle": 92.29,
+    "tip": 46.2,
+    "tension": 0.498,
+    "contacts": 32,
+    "penetration": 0.0022,
+    "complementarity": 0.003,
+    "interference": "0 / 0 / 0"
+  },
+  "unloaded": {
+    "angle": 0,
+    "tip": 0,
+    "tension": 0,
+    "contacts": 0,
+    "penetration": 0,
+    "complementarity": 0,
+    "interference": "0 / 0 / 0"
+  },
+  "fine": {
+    "angle": 3.28,
+    "tip": 2.14,
+    "tension": 0.012,
+    "contacts": 26,
+    "penetration": 0.0161,
+    "complementarity": 0.0161,
+    "interference": "0 / 0 / 0"
+  },
+  "fallback": {
+    "angle": 3.21,
+    "tip": 2.09,
+    "tension": 0.015,
+    "contacts": 6,
+    "penetration": 0,
+    "complementarity": 0,
+    "interference": "0 / 0 / 0"
+  },
+  "visiblePixels": {
+    "red": 114,
+    "teal": 2115,
+    "orange": 55,
+    "redMinY": 85,
+    "redMaxY": 186
+  },
+  "borePixels": {
+    "red": 174
+  },
+  "gif": {
+    "width": 520,
+    "height": 373,
+    "frames": 60,
+    "uniqueCompressedFrames": 60,
+    "bytes": 1866192
+  },
+  "checks": [
+    "worker and full 14.75mm large-curl solve",
+    "honest incomplete-acceptance banner",
+    "4 equations",
+    "3-D rendering",
+    "CSV PNG GIF",
+    "orbit and bore view",
+    "replay",
+    "validation caveats",
+    "actual unloading",
+    "mobile navigation"
+  ],
+  "errors": [],
+  "scope": "Browser behavior, not physical convergence validation"
+}

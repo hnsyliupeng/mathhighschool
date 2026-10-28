@@ -4,7 +4,7 @@
 
 ## 数值检查
 
-本轮 `npm test`：11 个测试文件、138/138 项通过；`npm run build` 成功，但 Vite 仍提示部分压缩后 chunk 超过 500 kB。依赖升级至 KaTeX 0.18.10、Vitest 4.1.12 后，`npm audit` 在 2026-10-28 报告 0 个已知漏洞；此结果不代表代码或未来依赖绝对安全。以下测试和浏览器检查的通过不等同于所有算例的原文对照通过。
+本轮 `npm test`：15 个测试文件、157/157 项通过；`npm run build` 成功，但 Vite 仍提示部分 chunk 超过 500 kB。依赖升级至 KaTeX 0.18.10、Vitest 4.1.12 后，`npm audit` 在 2026-10-28 报告 0 个已知漏洞；此结果不代表代码或未来依赖绝对安全。以下测试和浏览器检查的通过不等同于所有算例的原文对照通过。
 
 - 拉伸和转角弯曲的解析梯度与中心差分比较；新的弯曲解析 Hessian 与梯度中心差分、对称性和平移零模比较；检查平面刚体平移/旋转下的能量不变性。
 - 检查单自由度隐式残差、对解析振子的步长收敛、多自由度矩阵对称性与残差。
@@ -16,7 +16,7 @@
 - 每个算例各自测试初始状态、15 步有限值与运动，以及各自时长内至多 3 秒的有界性和载荷灵敏度；屈曲和跃迁还测试完整加载路径、两端约束、快照回放和跃迁前后符号；另测 0.5、1.5、2 倍加载的准静态正分支与自适应子步。约束近似的这些测试不证明原文物理结果正确。
 - 自动取景的正交投影包围测试 4/4，覆盖三个视口宽高比、初始/当前构型、重复更新与无效坐标。
 - **二维腱驱抓手（不计入原教程 21 案例）**：12 项专项测试覆盖 Neo-Hookean 导数、可滑动只受拉腱、变形截面接触导数、整体力平衡、罚刚度、无接触对照、卸载和回滚。默认 4 mm 牵引、140 单元：4 个接触、最大穿透 `3.870 μm`、最小 J `0.96278`，外力平衡误差 `7.95e-13 N`。从 140 到 560 单元，端点位移差约 7.98%、张力差约 31.13%，未网格收敛；此二维模型本身不含三维孔面。[完整模型及验证边界](TENDON_GRIPPER.md) · [力学记录](screenshots/gripper-numerical-audit.json) · [独立 NumPy/SciPy 局部复核](screenshots/gripper-independent-audit.json) · [浏览器截图](screenshots/55-gripper-viewport.jpg)。
-- **三维实体孔抓手（另一个自定义算例）**：真实挖空的三维四面体、可滑动腱与双向孔壁采样接触；10 项专项测试和独立 NumPy 末态重组通过。默认 3 mm 加载，816→6528 四面体时位移 10.4039→11.9380 mm、首段腱力 0.13861→0.09099 N，**网格未收敛**。默认接触点最大穿透 7.97 μm，64 等分事后复查为 10.14 μm；采样不是 CCD。GIF、加载/卸载、三维旋转、孔口、移动端及 Worker/回退经浏览器检查；没有实验验证、摩擦或物体抓取接触。[三维推导及限制](TENDON_GRIPPER_3D.md) · [数值记录](screenshots/gripper3d-numerical-audit.json) · [独立 NumPy](screenshots/gripper3d-independent-audit.json) · [GIF](media/tendon-gripper-3d.gif) · [截图](screenshots/60-gripper3d-viewport.jpg)。
+- **三维实体孔抓手（另一个自定义算例）**：当前 GUI 使用全积分六面体、真实挖空孔壁及完整腱段—三角形多特征接触；标准网格 14.75 mm 驱动时，背梁末段平面转角约 92.29°，指端横移 46.20 mm。该末态 NumPy/SciPy 独立重组及特征距离优化通过，但这不是独立全路径或实验验证。网格收敛、极细腱压力测试与连续体内部/曲面 CCD 仍有未通过或未覆盖项，**严格验收尚未通过**。[模型与公式](TENDON_GRIPPER_3D.md) · [逐案例数值报告](screenshots/gripper3d-continuous-audit.json) · [大卷曲独立重组](screenshots/gripper3d-continuous-independent-curl.json) · [GIF](media/tendon-gripper-3d-continuous.gif)。
 - 新增空间杆双边局部几何：测试标架正交性、平行运输及其逆、刚体旋转协变性、零长/反向平行奇异、自然曲率零能和转角梯度差分。斜杆、竖直参考轴回退及直杆三个样本与原 Octave 初始化、`bendingForce` 和 `twistingForce` 的材料转角分量对照：标架和曲率最大差 `3.33e-16`、标量能量/扭转差 `5.56e-17`、转角梯度最大差 `1.11e-16`；与中心差分最大差 `8.08e-11`。[局部记录](screenshots/spatial-rod-geometry-audit.json) · [桌面交互图](screenshots/52-spatial-rod-lab.jpg) · [移动交互图](screenshots/53-mobile-spatial-rod-lab.jpg)。这些不覆盖节点力、完整 Hessian、历史参考扭转或任何空间杆算例的时程。
 
 ## 本轮完整运行与基准复查

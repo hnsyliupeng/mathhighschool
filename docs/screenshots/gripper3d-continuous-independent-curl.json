@@ -1,0 +1,19 @@
+{
+  "case": "curl",
+  "codeHash": "65d0d0d5e5e28aefaa0275aaa1454adcb640710c462b7e0851214574e566cecd",
+  "pullMm": 14.75,
+  "tipAngleDeg": 92.29142105162836,
+  "hexes": 136,
+  "activeFeatures": 32,
+  "candidatePairs": 134,
+  "candidateFeatures": 670,
+  "energyDifferenceJ": 1.3010426069826053e-18,
+  "maxGradientDifferenceN": 2.0501890387204097e-14,
+  "maxIndependentFeatureDistanceDifferenceM": 3.0357660829594124e-18,
+  "maxForceLawDifferenceN": 1.942890293094024e-16,
+  "maxOmittedFeatureForceN": 0.0,
+  "contactResultantN": 2.5257955065251657e-17,
+  "contactTorqueNm": 9.545636662264015e-19,
+  "passed": true,
+  "scope": "independent reassembly and feature QPs of one given state, not an independent full trajectory or experiment"
+}

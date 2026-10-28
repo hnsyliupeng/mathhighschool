@@ -1,13 +1,14 @@
 import {useCallback,useEffect,useRef,useState} from 'react'
-import {TendonGripper3D,type Gripper3DParams,type Frame3D,type Mesh3D} from './gripper3d'
+import type {Gripper3DParams,Mesh3D} from './gripper3d'
+import {ContinuousGripper3D,type ContinuousFrame} from './continuous-gripper3d'
 
-type Reply={type:'ready';mesh:Mesh3D;frame:Frame3D}|{type:'step';frame:Frame3D}|{type:'error';message:string}
+type Reply={type:'ready';mesh:Mesh3D;frame:ContinuousFrame}|{type:'step';frame:ContinuousFrame}|{type:'error';message:string}
 /** The worker retains only the latest converged state. Recorded frames are
  * replayed without re-solving; failed trials are never appended. */
 export function useGripper3D(params:Gripper3DParams,revision:number,cycle:boolean){
-  const [mesh,setMesh]=useState<Mesh3D|null>(null),[history,setHistory]=useState<Frame3D[]>([]),[cursor,setCursor]=useState(0)
+  const [mesh,setMesh]=useState<Mesh3D|null>(null),[history,setHistory]=useState<ContinuousFrame[]>([]),[cursor,setCursor]=useState(0)
   const [playing,setPlaying]=useState(true),[busy,setBusy]=useState(false),[error,setError]=useState(''),[complete,setComplete]=useState(false),[backend,setBackend]=useState<'worker'|'main'|'loading'>('loading')
-  const historyRef=useRef<Frame3D[]>([]),cursorRef=useRef(0),playingRef=useRef(true),busyRef=useRef(false),errorRef=useRef(''),completeRef=useRef(false),phaseRef=useRef<'loading'|'unloading'>('loading')
+  const historyRef=useRef<ContinuousFrame[]>([]),cursorRef=useRef(0),playingRef=useRef(true),busyRef=useRef(false),errorRef=useRef(''),completeRef=useRef(false),phaseRef=useRef<'loading'|'unloading'>('loading')
   const sendRef=useRef<((target:number)=>void)|null>(null)
   const show=(index:number)=>{cursorRef.current=index;setCursor(index)}
   const requestNext=useCallback(()=>{
@@ -20,7 +21,7 @@ export function useGripper3D(params:Gripper3DParams,revision:number,cycle:boolea
     busyRef.current=true;setBusy(true);sendRef.current?.(target)
   },[params.pull,params.step,revision])
   useEffect(()=>{
-    let closed=false,worker:Worker|null=null,fallback:TendonGripper3D|null=null
+    let closed=false,worker:Worker|null=null,fallback:ContinuousGripper3D|null=null
     historyRef.current=[];cursorRef.current=0;busyRef.current=true;playingRef.current=true;errorRef.current='';completeRef.current=false;phaseRef.current='loading'
     setHistory([]);setCursor(0);setMesh(null);setPlaying(true);setBusy(true);setError('');setComplete(false);setBackend('loading')
     const receive=(reply:Reply)=>{
@@ -44,7 +45,7 @@ export function useGripper3D(params:Gripper3DParams,revision:number,cycle:boolea
     const setupFallback=()=>{
       worker?.terminate();worker=null
       try{
-        fallback=new TendonGripper3D(params);setBackend('main');receive({type:'ready',mesh:fallback.mesh,frame:fallback.last})
+        fallback=new ContinuousGripper3D(params);setBackend('main');receive({type:'ready',mesh:fallback.mesh,frame:fallback.last})
         sendRef.current=target=>{setTimeout(()=>{if(!closed&&fallback){try{receive({type:'step',frame:fallback.step(target)})}catch(e){receive({type:'error',message:String(e)})}}},0)}
       }catch(e){receive({type:'error',message:String(e)})}
     }

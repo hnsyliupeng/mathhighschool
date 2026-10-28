@@ -1,10 +1,11 @@
 import {forwardRef,useEffect,useImperativeHandle,useRef,useState} from 'react'
 import * as THREE from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
-import type {Frame3D,Mesh3D,Vec3} from '../engine/gripper3d'
+import type {Mesh3D,Vec3} from '../engine/gripper3d'
+import type {ContinuousFrame} from '../engine/continuous-gripper3d'
 
-export interface Gripper3DViewportHandle {reset:()=>void;bore:()=>void;save:()=>void;exportGif:(frames:Frame3D[])=>Promise<void>}
-interface Props {mesh:Mesh3D;frame:Frame3D;radius:number;showWire:boolean;showForces:boolean;xray:boolean}
+export interface Gripper3DViewportHandle {reset:()=>void;bore:()=>void;save:()=>void;exportGif:(frames:ContinuousFrame[])=>Promise<void>}
+interface Props {mesh:Mesh3D;frame:ContinuousFrame;radius:number;showWire:boolean;showForces:boolean;xray:boolean}
 // Put the length of the finger vertically while retaining all three coordinates.
 const world=(p:Vec3)=>new THREE.Vector3(p[1],p[0],p[2]-.004)
 const low=new THREE.Color('#276e7c'),mid=new THREE.Color('#73baa9'),high=new THREE.Color('#e5a15b')
@@ -20,8 +21,8 @@ export const Gripper3DViewport=forwardRef<Gripper3DViewportHandle,Props>(functio
     let renderer:THREE.WebGLRenderer
     try{renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true})}catch{setError(true);return}
     setError(false);renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));renderer.setClearColor('#f2f6f0');renderer.outputColorSpace=THREE.SRGBColorSpace;host.appendChild(renderer.domElement)
-    const scene=new THREE.Scene(),camera=new THREE.OrthographicCamera(-.05,.05,.055,-.055,.001,3),target=new THREE.Vector3(.007,.038,0)
-    camera.position.set(.11,.09,.14);camera.lookAt(target)
+    const scene=new THREE.Scene(),camera=new THREE.OrthographicCamera(-.05,.05,.055,-.055,.001,3),target=new THREE.Vector3(.020,.0295,0)
+    camera.position.set(.16,.1035,.20);camera.lookAt(target)
     const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.minZoom=.45;controls.maxZoom=10;controls.target.copy(target);controls.update()
     scene.add(new THREE.HemisphereLight(0xffffff,0x6b8a77,2.1));const light=new THREE.DirectionalLight(0xffffff,1.5);light.position.set(.05,.16,.12);scene.add(light)
     const grid:number[]=[];for(let i=-20;i<=24;i++){const x=i*.005;grid.push(x,-.04,-.045,x,.16,-.045);grid.push(-.12,x,-.045,.15,x,-.045)}
@@ -39,7 +40,7 @@ export const Gripper3DViewport=forwardRef<Gripper3DViewportHandle,Props>(functio
     const arrows=Array.from({length:48},()=>{const a=new THREE.ArrowHelper(new THREE.Vector3(1,0,0),new THREE.Vector3(),.004,0xe79539,.0018,.0011);a.traverse(o=>{const object=o as THREE.Mesh|THREE.Line;if(object.material){const mats=Array.isArray(object.material)?object.material:[object.material];mats.forEach(m=>{m.transparent=true;m.depthTest=false})}o.renderOrder=6});scene.add(a);return a})
     const sensor=new THREE.Mesh(new THREE.SphereGeometry(.0007,12,10),new THREE.MeshBasicMaterial({color:'#fff7e5',transparent:true,depthTest:false}));sensor.renderOrder=5;scene.add(sensor)
     const matrix=new THREE.Matrix4(),quat=new THREE.Quaternion(),unitY=new THREE.Vector3(0,1,0),offset=new THREE.Vector3(),size=new THREE.Vector3()
-    const update=(f:Frame3D)=>{
+    const update=(f:ContinuousFrame)=>{
       for(let i=0;i<mesh.surface.length;i++){
         const face=mesh.surface[i],color=stressColor(f.stress[face.tet]);if(face.wall!==-1)color.lerp(new THREE.Color('#b9d6ae'),.18)
         const points=face.nodes.map(id=>world(f.positions[id]))
@@ -57,14 +58,21 @@ export const Gripper3DViewport=forwardRef<Gripper3DViewportHandle,Props>(functio
         if(c){const direction=new THREE.Vector3(c.force[1],c.force[0],c.force[2]),length=Math.max(.0015,Math.min(.008,direction.length()*1.8));markers[i].position.copy(world(c.point));arrows[i].position.copy(world(c.point));arrows[i].setDirection(direction.normalize());arrows[i].setLength(length,Math.min(.0018,length*.5),Math.min(.0011,length*.35))}
       }
     }
-    let latest:Frame3D|null=null,raf=0,axialView=false
+    let latest:ContinuousFrame|null=null,raf=0,axialView=false
     const applyDisplay=(displayFrame=current.current.frame)=>{const state=current.current;wire.visible=state.showWire;bodyMat.opacity=state.xray?.55:1;bodyMat.depthWrite=!state.xray;cableMat.depthTest=!state.xray;sensor.visible=!axialView;for(let i=0;i<markers.length;i++){markers[i].visible=state.showForces&&i<displayFrame.contacts.length;arrows[i].visible=markers[i].visible}}
     const render=()=>{const state=current.current;if(latest!==state.frame){latest=state.frame;update(state.frame)}applyDisplay();controls.update();renderer.render(scene,camera);raf=requestAnimationFrame(render)}
-    const resize=()=>{const width=host.clientWidth,height=host.clientHeight;if(!width||!height)return;const h=.108,w=h*width/height;camera.left=-w/2;camera.right=w/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix();renderer.setSize(width,height,false)}
+    const resize=()=>{const width=host.clientWidth,height=host.clientHeight;if(!width||!height)return;const h=.120,w=h*width/height;camera.left=-w/2;camera.right=w/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix();renderer.setSize(width,height,false)}
     const observer=new ResizeObserver(resize);observer.observe(host);resize();render()
     api.current={
-      reset:()=>{axialView=false;camera.up.set(0,1,0);camera.position.set(.11,.09,.14);camera.zoom=1;camera.updateProjectionMatrix();controls.target.copy(target);controls.update()},
-      bore:()=>{axialView=true;camera.up.set(0,0,1);camera.position.set(.0105,.22,0);camera.zoom=4;camera.updateProjectionMatrix();controls.target.set(.0105,.04,0);controls.update()},
+      reset:()=>{axialView=false;camera.up.set(0,1,0);camera.position.set(.16,.1035,.20);camera.zoom=1;camera.updateProjectionMatrix();controls.target.copy(target);controls.update()},
+      bore:()=>{
+        // Follow the *deformed* distal bore instead of looking along the
+        // undeformed global axis, which misses the opening at large curl.
+        const f=current.current.frame,center=(ids:number[])=>ids.reduce((v,id)=>v.add(world(f.positions[id])),new THREE.Vector3()).multiplyScalar(1/ids.length)
+        const {y0,y1,z0,z1}=mesh.hole,previous=mesh.reference.map((p,i)=>Math.abs(p[0]-(mesh.length-mesh.length/12))<1e-10&&(Math.abs(p[1]-y0)<1e-10||Math.abs(p[1]-y1)<1e-10)&&(Math.abs(p[2]-z0)<1e-10||Math.abs(p[2]-z1)<1e-10)?i:-1).filter(i=>i>=0)
+        const mouth=center(mesh.anchor),direction=mouth.clone().sub(center(previous)).normalize()
+        axialView=true;camera.up.set(0,0,1);camera.position.copy(mouth).addScaledVector(direction,.18);camera.zoom=10;camera.updateProjectionMatrix();controls.target.copy(mouth);controls.update()
+      },
       save:()=>{renderer.render(scene,camera);const link=document.createElement('a');link.download='tendon-gripper-3d.png';link.href=renderer.domElement.toDataURL('image/png');link.click()},
       exportGif:async frames=>{
         if(frames.length<2)throw Error('至少需要两个收敛帧才能导出 GIF')
@@ -74,7 +82,7 @@ export const Gripper3DViewport=forwardRef<Gripper3DViewportHandle,Props>(functio
         const gif=GIFEncoder()
         for(let i=0;i<frames.length;i++){
           update(frames[i]);applyDisplay(frames[i]);renderer.render(scene,camera);ctx.drawImage(renderer.domElement,0,0,width,height)
-          ctx.fillStyle='rgba(247,250,244,.88)';ctx.fillRect(9,8,165,30);ctx.fillStyle='#315b4a';ctx.font='bold 12px sans-serif';ctx.fillText(`PULL ${(frames[i].pull*1000).toFixed(2)} mm`,17,28)
+          ctx.fillStyle='rgba(247,250,244,.88)';ctx.fillRect(9,8,215,30);ctx.fillStyle='#315b4a';ctx.font='bold 12px sans-serif';ctx.fillText(`PULL ${(frames[i].pull*1000).toFixed(2)} mm  ·  TIP ${frames[i].tipAngleDeg.toFixed(1)}°`,17,28)
           const rgba=ctx.getImageData(0,0,width,height).data,palette=quantize(rgba,256),index=applyPalette(rgba,palette)
           gif.writeFrame(index,width,height,{palette,delay:i===frames.length-1?650:180,repeat:0})
         }
