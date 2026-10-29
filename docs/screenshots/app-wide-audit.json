@@ -1,0 +1,394 @@
+{
+  "sourceHash": "84da76e4ea93ea49dbea13af434bd712411b8edefb827b7063f4dade7a33d126",
+  "sourceFiles": [
+    "index.html",
+    "package-lock.json",
+    "package.json",
+    "public/ddg_core.wasm",
+    "public/licenses/OFL-Inter.txt",
+    "public/licenses/OFL-NotoSansSC-fallback.txt",
+    "public/licenses/OFL-NotoSansSC-subset.txt",
+    "public/licenses/README.txt",
+    "public/licenses/gifenc.txt",
+    "public/licenses/katex.txt",
+    "public/licenses/lucide-react.txt",
+    "public/licenses/react-dom.txt",
+    "public/licenses/react.txt",
+    "public/licenses/scheduler.txt",
+    "public/licenses/three.txt",
+    "scripts/audit-app-wide.mjs",
+    "scripts/subset-ui-font.py",
+    "src/App.tsx",
+    "src/assets/ddg-cjk-subset.woff2",
+    "src/components/BionicHandLab.tsx",
+    "src/components/BionicHandViewport.tsx",
+    "src/components/CaseArt.tsx",
+    "src/components/CurvatureLab.tsx",
+    "src/components/Gripper3DLab.tsx",
+    "src/components/Gripper3DViewport.tsx",
+    "src/components/GripperChart.tsx",
+    "src/components/GripperLab.tsx",
+    "src/components/GripperViewport.tsx",
+    "src/components/LibraryPage.tsx",
+    "src/components/MaterialGraspLab.tsx",
+    "src/components/MaterialGraspViewport.tsx",
+    "src/components/MathBlock.tsx",
+    "src/components/MultiObjectComparison.tsx",
+    "src/components/MultiObjectLab.tsx",
+    "src/components/MultiObjectViewport.tsx",
+    "src/components/Pages.tsx",
+    "src/components/ResponseChart.tsx",
+    "src/components/SpatialRodLab.tsx",
+    "src/components/TendonDynamicLab.tsx",
+    "src/components/TendonDynamicViewport.tsx",
+    "src/components/TheoryPage.tsx",
+    "src/components/ThreeViewport.tsx",
+    "src/components/ValidationPage.tsx",
+    "src/components/Workspace.tsx",
+    "src/components/bionic-hand.css",
+    "src/components/gripper.css",
+    "src/components/gripper3d.css",
+    "src/components/material-grasp.css",
+    "src/components/multi-object.css",
+    "src/components/tendon-dynamic.css",
+    "src/data/cases.ts",
+    "src/data/material-grasp-convergence.json",
+    "src/data/material-grasp-validation.json",
+    "src/data/multi-object-comparison.json",
+    "src/data/references/axis-shell-1-reference.json",
+    "src/data/references/axis-shell-2-reference.json",
+    "src/data/references/axis-shell-cap-conditional.json",
+    "src/data/references/axis-shell-element-reference.json",
+    "src/data/references/bending-jacobian-reference.json",
+    "src/data/references/hyper-reference.json",
+    "src/data/references/membrane-reference.json",
+    "src/data/references/net-gravity-mesh.json",
+    "src/data/references/net-gravity-original-5.json",
+    "src/data/references/net-gravity-reference.json",
+    "src/data/references/net-gravity-vectorized-5.json",
+    "src/data/references/octave-reference.json",
+    "src/data/references/planar-reference.json",
+    "src/data/references/soft-1-reference.json",
+    "src/data/references/soft-2-reference.json",
+    "src/data/references/spatial-rod-geometry-reference.json",
+    "src/data/tendon-cap-recording.json",
+    "src/data/tendon-egg-recording.json",
+    "src/data/tendon-grasp-manifold.json",
+    "src/data/tendon-screwdriver-recording.json",
+    "src/data/theory.ts",
+    "src/engine/__tests__/axisymmetric-membrane.test.ts",
+    "src/engine/__tests__/axisymmetric-shell.test.ts",
+    "src/engine/__tests__/bionic-hand3d.test.ts",
+    "src/engine/__tests__/camera-fit.test.ts",
+    "src/engine/__tests__/continuous-collision.test.ts",
+    "src/engine/__tests__/continuous-gripper3d.test.ts",
+    "src/engine/__tests__/gripper.test.ts",
+    "src/engine/__tests__/gripper3d.test.ts",
+    "src/engine/__tests__/hex-jacobian-bound.test.ts",
+    "src/engine/__tests__/hexahedron.test.ts",
+    "src/engine/__tests__/material-grasp3d.test.ts",
+    "src/engine/__tests__/mechanics.test.ts",
+    "src/engine/__tests__/minres.test.ts",
+    "src/engine/__tests__/navigation.test.ts",
+    "src/engine/__tests__/net-gravity.test.ts",
+    "src/engine/__tests__/rounded-object-contact.test.ts",
+    "src/engine/__tests__/segment-triangle.test.ts",
+    "src/engine/__tests__/soft-robot.test.ts",
+    "src/engine/__tests__/spatial-rod-geometry.test.ts",
+    "src/engine/__tests__/tendon-dynamic-grasp.test.ts",
+    "src/engine/__tests__/tendon-recordings.test.ts",
+    "src/engine/__tests__/verification-cancel.test.ts",
+    "src/engine/__tests__/wasm-backend.test.ts",
+    "src/engine/axis-shell-guides.ts",
+    "src/engine/axis-shell-window.ts",
+    "src/engine/axisymmetric-membrane.ts",
+    "src/engine/axisymmetric-shell.ts",
+    "src/engine/bionic-hand3d.ts",
+    "src/engine/bionic-hand3d.worker.ts",
+    "src/engine/camera-fit.ts",
+    "src/engine/continuous-collision.ts",
+    "src/engine/continuous-gripper3d.ts",
+    "src/engine/gripper.ts",
+    "src/engine/gripper.worker.ts",
+    "src/engine/gripper3d-safety.ts",
+    "src/engine/gripper3d.ts",
+    "src/engine/gripper3d.worker.ts",
+    "src/engine/hand-object-contact.ts",
+    "src/engine/hex-jacobian-bound.ts",
+    "src/engine/hexahedron.ts",
+    "src/engine/kernels.ts",
+    "src/engine/linear.ts",
+    "src/engine/material-grasp-analysis.ts",
+    "src/engine/material-grasp3d.ts",
+    "src/engine/material-grasp3d.worker.ts",
+    "src/engine/minres.ts",
+    "src/engine/net-gravity.ts",
+    "src/engine/object-finger3d.ts",
+    "src/engine/object-hand3d.ts",
+    "src/engine/object-hand3d.worker.ts",
+    "src/engine/object-presets3d.ts",
+    "src/engine/planar-cases.ts",
+    "src/engine/planar.ts",
+    "src/engine/reference.ts",
+    "src/engine/reference.worker.ts",
+    "src/engine/rounded-object-contact.ts",
+    "src/engine/segment-triangle.ts",
+    "src/engine/simulation.ts",
+    "src/engine/soft-robot.ts",
+    "src/engine/spatial-rod-geometry.ts",
+    "src/engine/sphere-finger3d.ts",
+    "src/engine/tendon-dynamic-certification.ts",
+    "src/engine/tendon-dynamic-grasp.ts",
+    "src/engine/tendon-dynamic.worker.ts",
+    "src/engine/useBionicHand3D.ts",
+    "src/engine/useGripper.ts",
+    "src/engine/useGripper3D.ts",
+    "src/engine/useObjectHand3D.ts",
+    "src/engine/useSimulation.ts",
+    "src/engine/verification.ts",
+    "src/main.tsx",
+    "src/navigation.ts",
+    "src/styles.css",
+    "src/types/gifenc.d.ts",
+    "src/ui-font.css",
+    "vite.config.ts"
+  ],
+  "base": "http://127.0.0.1:5175",
+  "rows": [
+    {
+      "route": "workspace",
+      "viewport": "desktop",
+      "screenshot": "app-review/workspace-desktop.jpg",
+      "violations": []
+    },
+    {
+      "route": "library",
+      "viewport": "desktop",
+      "screenshot": "app-review/library-desktop.jpg",
+      "violations": []
+    },
+    {
+      "route": "theory",
+      "viewport": "desktop",
+      "screenshot": "app-review/theory-desktop.jpg",
+      "violations": []
+    },
+    {
+      "route": "validation",
+      "viewport": "desktop",
+      "screenshot": "app-review/validation-desktop.jpg",
+      "violations": []
+    },
+    {
+      "route": "gripper",
+      "viewport": "desktop",
+      "screenshot": "app-review/gripper-desktop.jpg",
+      "violations": []
+    },
+    {
+      "route": "gripper3d",
+      "viewport": "desktop",
+      "screenshot": "app-review/gripper3d-desktop.jpg",
+      "violations": []
+    },
+    {
+      "route": "hand3d",
+      "viewport": "desktop",
+      "screenshot": "app-review/hand3d-desktop.jpg",
+      "violations": []
+    },
+    {
+      "route": "objects3d",
+      "viewport": "desktop",
+      "screenshot": "app-review/objects3d-desktop.jpg",
+      "violations": []
+    },
+    {
+      "route": "materials3d",
+      "viewport": "desktop",
+      "screenshot": "app-review/materials3d-desktop.jpg",
+      "violations": []
+    },
+    {
+      "route": "tendon3d",
+      "viewport": "desktop",
+      "screenshot": "app-review/tendon3d-desktop.jpg",
+      "violations": []
+    },
+    {
+      "route": "workspace",
+      "viewport": "mobile",
+      "screenshot": "app-review/workspace-mobile.jpg",
+      "overflow": false
+    },
+    {
+      "route": "library",
+      "viewport": "mobile",
+      "screenshot": "app-review/library-mobile.jpg",
+      "overflow": false
+    },
+    {
+      "route": "theory",
+      "viewport": "mobile",
+      "screenshot": "app-review/theory-mobile.jpg",
+      "overflow": false
+    },
+    {
+      "route": "validation",
+      "viewport": "mobile",
+      "screenshot": "app-review/validation-mobile.jpg",
+      "overflow": false
+    },
+    {
+      "route": "gripper",
+      "viewport": "mobile",
+      "screenshot": "app-review/gripper-mobile.jpg",
+      "overflow": false
+    },
+    {
+      "route": "gripper3d",
+      "viewport": "mobile",
+      "screenshot": "app-review/gripper3d-mobile.jpg",
+      "overflow": false
+    },
+    {
+      "route": "hand3d",
+      "viewport": "mobile",
+      "screenshot": "app-review/hand3d-mobile.jpg",
+      "overflow": false
+    },
+    {
+      "route": "objects3d",
+      "viewport": "mobile",
+      "screenshot": "app-review/objects3d-mobile.jpg",
+      "overflow": false
+    },
+    {
+      "route": "materials3d",
+      "viewport": "mobile",
+      "screenshot": "app-review/materials3d-mobile.jpg",
+      "overflow": false
+    },
+    {
+      "route": "tendon3d",
+      "viewport": "mobile",
+      "screenshot": "app-review/tendon3d-mobile.jpg",
+      "overflow": false
+    }
+  ],
+  "workers": [
+    "http://127.0.0.1:5175/assets/gripper.worker-SMX-NRdv.js",
+    "http://127.0.0.1:5175/assets/gripper3d.worker-oLF7BbzC.js",
+    "http://127.0.0.1:5175/assets/bionic-hand3d.worker-D9gtsUTr.js",
+    "http://127.0.0.1:5175/assets/object-hand3d.worker-xZ_naygq.js",
+    "http://127.0.0.1:5175/assets/tendon-dynamic.worker-Cym3YH4o.js"
+  ],
+  "workspaceLoad": {
+    "resources": [
+      {
+        "path": "/assets/index-Clan64VL.js",
+        "encodedBytes": 86670,
+        "decodedBytes": 270292,
+        "transferBytes": 86970
+      },
+      {
+        "path": "/assets/index-C8Ti0b8K.css",
+        "encodedBytes": 55395,
+        "decodedBytes": 151121,
+        "transferBytes": 55695
+      },
+      {
+        "path": "/assets/Workspace-fZzuNw49.js",
+        "encodedBytes": 13382,
+        "decodedBytes": 35948,
+        "transferBytes": 13682
+      },
+      {
+        "path": "/assets/simulation-Byd64bbf.js",
+        "encodedBytes": 24579,
+        "decodedBytes": 77879,
+        "transferBytes": 24879
+      },
+      {
+        "path": "/assets/OrbitControls-WBVTNG_n.js",
+        "encodedBytes": 130123,
+        "decodedBytes": 520698,
+        "transferBytes": 130423
+      },
+      {
+        "path": "/assets/download-PdNSV4S-.js",
+        "encodedBytes": 431,
+        "decodedBytes": 431,
+        "transferBytes": 731
+      },
+      {
+        "path": "/assets/info-Ctxzqky2.js",
+        "encodedBytes": 368,
+        "decodedBytes": 368,
+        "transferBytes": 668
+      },
+      {
+        "path": "/assets/play-D6gAO2cp.js",
+        "encodedBytes": 629,
+        "decodedBytes": 629,
+        "transferBytes": 929
+      },
+      {
+        "path": "/assets/skip-forward-_pkgU8fE.js",
+        "encodedBytes": 365,
+        "decodedBytes": 365,
+        "transferBytes": 665
+      },
+      {
+        "path": "/assets/inter-latin-wght-normal-Dx4kXJAl.woff2",
+        "encodedBytes": 48256,
+        "decodedBytes": 48256,
+        "transferBytes": 48556
+      },
+      {
+        "path": "/assets/ddg-cjk-subset-BjkIo_VT.woff2",
+        "encodedBytes": 224860,
+        "decodedBytes": 224860,
+        "transferBytes": 225160
+      },
+      {
+        "path": "/assets/noto-sans-sc-90-wght-normal-BnOlPreP.woff2",
+        "encodedBytes": 9224,
+        "decodedBytes": 9224,
+        "transferBytes": 9524
+      },
+      {
+        "path": "/ddg_core.wasm",
+        "encodedBytes": 1224,
+        "decodedBytes": 1224,
+        "transferBytes": 1524
+      },
+      {
+        "path": "/assets/noto-sans-sc-91-wght-normal-DTr9RQcS.woff2",
+        "encodedBytes": 8616,
+        "decodedBytes": 8616,
+        "transferBytes": 8916
+      },
+      {
+        "path": "/assets/inter-greek-wght-normal-CkhJZR-_.woff2",
+        "encodedBytes": 18996,
+        "decodedBytes": 18996,
+        "transferBytes": 19296
+      }
+    ],
+    "encodedBytes": 623118,
+    "decodedBytes": 1368907,
+    "transferBytes": 627618
+  },
+  "idleWorkspaceClearsPerSecond": 0,
+  "redrawOnToggle": 1,
+  "historyAudit": true,
+  "guideAudit": true,
+  "cancelAudit": true,
+  "fontFallback": true,
+  "entryBytes": 270292,
+  "entryGzip": 86670,
+  "violations": [],
+  "errors": [],
+  "scope": "Default page states in one desktop Chromium and one mobile viewport; automated WCAG scan only on desktop default states. Cold workspace resource timing excludes HTML navigation and worker fetches; byte counts depend on compression, fonts and environment. Does not establish accessibility in every state, browser, assistive technology, or physical-model validity."
+}

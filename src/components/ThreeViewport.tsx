@@ -189,15 +189,25 @@ export const ThreeViewport=forwardRef<ViewportHandle,Props>(function ThreeViewpo
           pts.push([start,0,0]);for(let k=0;k<=14;k++){const x=start+(end-start)*(k+1)/16;pts.push([x,(k%2===0?1:-1)*.12,0])}pts.push([end,0,0])
           for(let k=0;k<pts.length-1;k++)positions.push(...pts[k],...pts[k+1])
         }
-        springLine.geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3))
+        const existing=springLine.geometry.getAttribute('position') as THREE.BufferAttribute|undefined
+        if(existing&&existing.array.length===positions.length){existing.array.set(positions);existing.needsUpdate=true}
+        else springLine.geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3))
         massBlocks.forEach((block,i)=>block.position.set(...current.positions[i+1]))
       }
     }
-    const resize=()=>{const w=host.clientWidth,h=host.clientHeight;if(!w||!h)return;const halfHeight=is3d?2.4:1.95;const aspect=w/h;camera.left=-halfHeight*aspect;camera.right=halfHeight*aspect;camera.top=halfHeight;camera.bottom=-halfHeight;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}
+    let latest:Frame|null=null,lastFlags='',dirty=true,raf=0
+    const resize=()=>{const w=host.clientWidth,h=host.clientHeight;if(!w||!h)return;const halfHeight=is3d?2.4:1.95;const aspect=w/h;camera.left=-halfHeight*aspect;camera.right=halfHeight*aspect;camera.top=halfHeight;camera.bottom=-halfHeight;camera.updateProjectionMatrix();renderer.setSize(w,h,false);dirty=true}
     const observer=new ResizeObserver(resize);observer.observe(host);resize()
-    let raf=0;const animate=()=>{update(frameRef.current);controls.update();renderer.render(scene,camera);raf=requestAnimationFrame(animate)};animate()
+    // Paused scenes need not upload geometry or redraw at display refresh rate.
+    // Invalidate on new simulation frames, display options, resize and camera movement.
+    const animate=()=>{
+      const current=frameRef.current,display=`${flags.current.showNodes}:${flags.current.showReference}`
+      if(dirty||current!==latest||display!==lastFlags){update(current);latest=current;lastFlags=display;dirty=true}
+      const moved=controls.update();if(dirty||moved){renderer.render(scene,camera);dirty=false}
+      raf=requestAnimationFrame(animate)
+    };animate()
     api.current={
-      resetCamera:()=>{camera.position.copy(defaultPos);camera.position.x+=followX;camera.zoom=1;autoFit=initialAutoFit;camera.updateProjectionMatrix();controls.target.copy(defaultTarget);controls.target.x+=followX;controls.update()},
+      resetCamera:()=>{camera.position.copy(defaultPos);camera.position.x+=followX;camera.zoom=1;autoFit=initialAutoFit;camera.updateProjectionMatrix();controls.target.copy(defaultTarget);controls.target.x+=followX;controls.update();dirty=true},
       savePng:()=>{renderer.render(scene,camera);const a=document.createElement('a');a.download=`ddg-${item.id}-${frameRef.current.time.toFixed(2)}s.png`;a.href=renderer.domElement.toDataURL('image/png');a.click()},
     }
     return ()=>{
@@ -206,7 +216,7 @@ export const ThreeViewport=forwardRef<ViewportHandle,Props>(function ThreeViewpo
       renderer.dispose();renderer.domElement.remove()
     }
   },[item.id,revision])
-  return <div className="three-mount" ref={mount} aria-label={`${item.title}三维交互视图`}>
+  return <div role="region" className="three-mount" ref={mount} aria-label={`${item.title}三维交互视图`}>
     {error&&<div className="viewport-error">WebGL 不可用。请启用浏览器硬件加速以查看三维视图。</div>}
   </div>
 })

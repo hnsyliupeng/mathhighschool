@@ -1,0 +1,18 @@
+{
+  "sourceHash": "5e0e64183f49103639a5f7be9043ed44450bf9db5989cf2aa33385628777d3e1",
+  "sourceFiles": [
+    "src/components/Gripper3DLab.tsx",
+    "src/components/Gripper3DViewport.tsx",
+    "src/engine/useGripper3D.ts",
+    "src/engine/gripper3d.worker.ts",
+    "scripts/audit-gripper3d-redraw.mjs"
+  ],
+  "targetMm": 0.5,
+  "idleClearsPerSecond": 0,
+  "gifFrames": 3,
+  "gifBytes": 88675,
+  "pngBytes": 82176,
+  "csvRows": 4,
+  "errors": [],
+  "scope": "Short-path production UI, idle redraw, display toggle, exports, GIF scene restoration and seek/step only; not large-curl or physical certification."
+}

@@ -67,5 +67,5 @@ export const MaterialGraspViewport=forwardRef<MaterialViewportHandle,{mesh:Objec
     }
     return()=>{api.current=null;cancelAnimationFrame(raf);observer.disconnect();controls.dispose();scene.traverse(o=>{if(o instanceof THREE.Mesh||o instanceof THREE.Line||o instanceof THREE.LineSegments){o.geometry.dispose();const mats=Array.isArray(o.material)?o.material:[o.material];mats.forEach(x=>x.dispose())}});materials[1].dispose();renderer.dispose();renderer.domElement.remove()}
   },[mesh,id])
-  return <div ref={host} className="material-three" data-testid="material-viewport" aria-label="自由物体弹簧网格与五个位移驱动指垫的三维动力学视图">{error&&<div className="gripper-render-error">{error}</div>}</div>
+  return <div role="region" ref={host} className="material-three" data-testid="material-viewport" aria-label="自由物体弹簧网格与五个位移驱动指垫的三维动力学视图">{error&&<div className="gripper-render-error">{error}</div>}</div>
 })

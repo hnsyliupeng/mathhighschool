@@ -1,0 +1,15 @@
+{
+  "cases": 240,
+  "intersections": 85,
+  "maxDistanceDifference_m": 2.3175905639050143e-15,
+  "maxBaryError": 1.1102230246251565e-16,
+  "maxReconstructionError_m": 3.492797979144564e-16,
+  "sourceFiles": [
+    "src/engine/tendon-dynamic-grasp.ts",
+    "src/engine/segment-triangle.ts",
+    "scripts/audit-tendon-triangle-cases.ts",
+    "scripts/audit-tendon-triangle-independent.py"
+  ],
+  "sourceHash": "f1f638b78a711d942b8e4d80cea35b44b7306d9afe8e695d56bc48a9682cc58b",
+  "scope": "Independent static triangle-distance QP on sampled cases only; not a dynamics, friction or continuous-collision proof."
+}

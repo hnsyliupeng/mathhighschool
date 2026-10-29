@@ -1,13 +1,13 @@
 {
-  "date": "2026-10-28",
-  "browserVersion": "153.0.8010.0",
+  "date": "2026-10-29",
+  "browserVersion": "132.0.6834.0",
   "results": [
     {
       "mode": "worker",
       "summary": "NUMERICAL CHECKS 15 / 15 已实现内核的局部检查 CASE SMOKE TESTS 21 / 21 初始化与有限数值 REFERENCE COMPARISON 10 / 21 独立时窗通过数；临界条件诊断另列",
       "wasmStatus": 200,
       "wasmMime": "application/wasm",
-      "loadedAssetCount": 11,
+      "loadedAssetCount": 27,
       "browserErrors": [],
       "requestFailures": []
     },
@@ -16,7 +16,7 @@
       "summary": "NUMERICAL CHECKS 15 / 15 已实现内核的局部检查 CASE SMOKE TESTS 21 / 21 初始化与有限数值 REFERENCE COMPARISON 10 / 21 独立时窗通过数；临界条件诊断另列",
       "wasmStatus": 200,
       "wasmMime": "application/wasm",
-      "loadedAssetCount": 10,
+      "loadedAssetCount": 27,
       "browserErrors": [],
       "requestFailures": []
     }

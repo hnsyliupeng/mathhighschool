@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-29T04:25:43.125Z",
-  "codeHash": "2cadd34a66bbbe2fe5c00dde50da3a7f9a54d02a7f5bbb9d040eb15063cf3892",
+  "date": "2026-10-29T07:51:01.320Z",
+  "codeHash": "109daceba63902d1a81398b5407daeeffbda8417496a9211c934e98724346db2",
   "sourceFiles": [
     "src/App.tsx",
     "src/engine/object-hand3d.ts",
@@ -16,12 +16,12 @@
     "src/data/multi-object-comparison.json"
   ],
   "presetSceneHashes": {
-    "ball60": "0aaacb61c57cd19529f026c16697b0c30fc0470da6d658cab22b7c1e944c8e7b",
-    "ball90": "61c929db45b594272ef9539826388dda0253219b668c169773d838f55bb8ea52",
-    "ball110": "15a7dc548ac294fc7200ad97e99f85bbc63c4d631f41bc224ee12b50253affdb",
-    "capsule": "121fed95ab98ab405ffd520d1da7bcd50b8f42cfea9d40442460241e9e352a68",
-    "rounded-box": "449acca9a2c10b7d38f9497bfd64b281789b88b168197eeda5e3c6a8edbfa48f",
-    "dumbbell": "716df583bf0a96fb095c18e38c462f447d336b9fd6998611ff3490a3a6eb9058"
+    "ball60": "a07926704788e7ec28ca6d9b87b64ef59faadb4595065b34c738ba6ecfcb556b",
+    "ball90": "25f5b0f4b805256550da5aa47d809132cf77f8b59d9f60fbaab5674a4c7c69dd",
+    "ball110": "f1a78b96b16ac97111a3cb3c391fb9111e282ce7fecce63a24edb3c208a6509d",
+    "capsule": "2abef3f70e05078cbb69641d3e635071df7b8775a90bb56665c8053d5a5dd8ad",
+    "rounded-box": "0cdb362c04c4c6e50706a2febdd4cca80fadb8b036f9988b84e42d87d58fe9a9",
+    "dumbbell": "fd3b68a3d064930ca1daf4b8d0e3d991c4d1c1bd63b62ffe88fe1f6f4ca08977"
   },
   "scale75DimensionsMm": [
     67.5,
@@ -35,11 +35,11 @@
       "frame": "13 / 13 帧",
       "csvRows": 71,
       "gif": {
-        "width": 452,
+        "width": 407,
         "height": 520,
         "frames": 14,
         "uniqueFrames": 14,
-        "bytes": 471009
+        "bytes": 463745
       }
     },
     "rounded-box": {
@@ -48,11 +48,11 @@
       "frame": "8 / 8 帧",
       "csvRows": 46,
       "gif": {
-        "width": 452,
+        "width": 407,
         "height": 520,
         "frames": 9,
         "uniqueFrames": 9,
-        "bytes": 306241
+        "bytes": 306359
       }
     }
   },

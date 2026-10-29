@@ -14,6 +14,7 @@ const waitDone=async page=>page.getByText('已完成',{exact:true}).waitFor({tim
 const readValues=async page=>({tip:parseFloat(await page.getByTestId('gripper-tip').innerText()),tension:parseFloat(await page.getByTestId('gripper-tension').innerText()),penetration:parseFloat(await page.getByTestId('gripper-penetration').innerText()),contacts:await page.getByTestId('gripper-active-count').innerText()})
 try{
   const page=await browser.newPage({viewport:{width:1440,height:1000},acceptDownloads:true});attach(page)
+  await page.addInitScript(()=>{window.__auditClears=0;for(const T of [window.WebGLRenderingContext,window.WebGL2RenderingContext])if(T&&Object.hasOwn(T.prototype,'clear')){const clear=T.prototype.clear;T.prototype.clear=function(...args){window.__auditClears++;return clear.apply(this,args)}}})
   await page.goto(`${base}/?page=gripper`,{waitUntil:'domcontentloaded'});await waitPull(page,4);await waitDone(page)
   const values=await readValues(page)
   assert(Math.abs(values.tip-17.71)<.05&&Math.abs(values.tension-.183)<.002&&values.contacts==='4 / 4'&&values.penetration>0&&values.penetration<5,`Unexpected default result: ${JSON.stringify(values)}`)
@@ -26,6 +27,10 @@ try{
     for(let i=0;i<data.length;i+=4){if(data[i]>170&&data[i+1]<145&&data[i+2]<145)red++;if(data[i]<130&&data[i+1]>75&&data[i+2]>70&&data[i+1]>data[i])teal++}return {red,teal}
   })
   assert(colored.red>3&&colored.teal>10,`WebGL tendon/solid not visible: ${JSON.stringify(colored)}`)
+  const canvas=page.locator('.gripper-three canvas');await page.waitForTimeout(500);const clears=await page.evaluate(()=>window.__auditClears);await page.waitForTimeout(1000);const idleClears=await page.evaluate(()=>window.__auditClears)-clears
+  assert(idleClears<=2,`paused 2-D gripper redraws ${idleClears} times/s`)
+  const forcesBefore=await canvas.evaluate(c=>c.toDataURL());await page.getByLabel('切换接触力箭头').click();await page.waitForTimeout(300)
+  assert(forcesBefore!==await canvas.evaluate(c=>c.toDataURL()),'force toggle did not redraw the paused scene');await page.getByLabel('切换接触力箭头').click();await page.waitForTimeout(300)
   assert(!(await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth)),'Desktop overflow')
   await page.screenshot({path:'docs/screenshots/54-gripper-desktop.jpg',type:'jpeg',quality:84,fullPage:true})
   await page.screenshot({path:'docs/screenshots/55-gripper-viewport.jpg',type:'jpeg',quality:85})
@@ -65,6 +70,6 @@ try{
   await mobile.screenshot({path:'docs/screenshots/56-gripper-mobile.jpg',fullPage:true,type:'jpeg',quality:82})
   await mobile.getByLabel('打开导航').click();assert(await mobile.getByTestId('nav-gripper').isVisible(),'Mobile gripper navigation missing');await mobile.close()
   assert(errors.length===0,`Browser errors: ${errors.join(' | ')}`)
-  const report={date:new Date().toISOString().slice(0,10),base,default:values,renderedPixels:colored,unloaded,fine,fallback:fallbackResult,checks:['default 4 mm equilibrium and four contacts','colored nonblank WebGL','4 KaTeX equations','CSV and PNG export','contact and energy charts','reference toggle','rewind, step and playback','parameter changes and computed unload','refined mesh','high penetration warning','worker and no-worker agreement','mobile canvas/navigation/overflow','honest bore limitation'],browserErrors:errors,scope:'Browser interactions and visualization; not an experimental or 3-D contact validation.'}
+  const report={date:new Date().toISOString().slice(0,10),base,default:values,renderedPixels:colored,idleClearsPerSecond:idleClears,unloaded,fine,fallback:fallbackResult,checks:['default 4 mm equilibrium and four contacts','colored nonblank WebGL','4 KaTeX equations','CSV and PNG export','contact and energy charts','reference toggle','paused force-toggle redraw and idle render rate','rewind, step and playback','parameter changes and computed unload','refined mesh','high penetration warning','worker and no-worker agreement','mobile canvas/navigation/overflow','honest bore limitation'],browserErrors:errors,scope:'Browser interactions and visualization; not an experimental or 3-D contact validation.'}
   await writeFile('docs/screenshots/gripper-browser-audit.json',JSON.stringify(report,null,2)+'\n');console.log('PASS',JSON.stringify(report))
 }finally{await browser.close()}

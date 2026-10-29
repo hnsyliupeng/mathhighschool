@@ -1,0 +1,54 @@
+{
+  "sourceHash": "1ce15c0a343c12d61070cc32ca0488269f3a6ae3943088423eb0bdc733488078",
+  "sourceFiles": [
+    "src/App.tsx",
+    "src/navigation.ts",
+    "src/styles.css",
+    "src/engine/tendon-dynamic-grasp.ts",
+    "src/engine/tendon-dynamic-certification.ts",
+    "src/engine/tendon-dynamic.worker.ts",
+    "src/components/TendonDynamicViewport.tsx",
+    "src/components/TendonDynamicLab.tsx",
+    "src/components/gripper.css",
+    "src/components/gripper3d.css",
+    "src/components/bionic-hand.css",
+    "src/components/multi-object.css",
+    "src/components/material-grasp.css",
+    "src/components/tendon-dynamic.css",
+    "src/data/tendon-grasp-manifold.json",
+    "src/data/tendon-egg-recording.json",
+    "src/data/tendon-screwdriver-recording.json",
+    "src/data/tendon-cap-recording.json",
+    "scripts/audit-tendon-dynamic-browser.mjs"
+  ],
+  "shapes": {
+    "egg": "4d017e6cd302a304572882e4cad1c267d6ddb1bcf3c7e6afb46f9bc94f71f295",
+    "screwdriver": "a0b4171cdb6389db4ab3997aa23ac5264b3678f58a959bee677a271430947292",
+    "bottle-cap": "5a8fe0acba74bcf3b0cce10b084b609bfb1645d6fabd63b5058d8b22f7081dc7",
+    "cloth": "70da6fa52eb20c118cc898a886a247842ce9c5c0c501b3f685985de17b9df55d"
+  },
+  "gif": {
+    "width": 520,
+    "height": 293,
+    "frames": 12,
+    "uniqueFrames": 12,
+    "bytes": 215528
+  },
+  "screwGif": {
+    "width": 520,
+    "height": 293,
+    "frames": 12,
+    "uniqueFrames": 12,
+    "bytes": 220628
+  },
+  "capGif": {
+    "width": 520,
+    "height": 293,
+    "frames": 12,
+    "uniqueFrames": 12,
+    "bytes": 211105
+  },
+  "csvRows": 13,
+  "errors": [],
+  "scope": "Browser rendering, sampled recording playback/export and a short live worker test only; not full-DOF or physical grasp certification."
+}

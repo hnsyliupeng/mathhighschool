@@ -1,0 +1,7561 @@
+{
+  "params": {
+    "id": "egg",
+    "scale": 1,
+    "stiffnessScale": 1,
+    "offsetX": -0.013,
+    "driveStiffness": 150,
+    "friction": 1.5,
+    "pull": 0.013,
+    "dt": 0.0020833333333333333,
+    "iterations": 40,
+    "duration": 2.15,
+    "lift": 0.05,
+    "verifyCCD": true
+  },
+  "requestedEnd": 0.6,
+  "sourceHash": "c56a46f8f27163f2b4f0d441521bd229b9792d35723bb95c4bd4f23df6975e16",
+  "sourceChanged": false,
+  "sourceFiles": [
+    "src/engine/tendon-dynamic-grasp.ts",
+    "src/engine/material-grasp3d.ts",
+    "src/engine/segment-triangle.ts",
+    "src/engine/continuous-collision.ts",
+    "src/engine/bionic-hand3d.ts",
+    "src/data/tendon-grasp-manifold.json",
+    "scripts/audit-tendon-dynamic.ts"
+  ],
+  "referenceHash": "eb57f6abe000498f77fe12284167fd83d91cfdef1a68205f652541c92562486d",
+  "steps": 288,
+  "elapsedSeconds": 169.671,
+  "error": "",
+  "summary": {
+    "retained": false,
+    "reason": "未满足持续抬升、双指接触、相对腕部漂移及逐步连续碰撞检查的全部条件",
+    "minFinalRise": -0.00014895740229309978,
+    "minFinalContacts": 2,
+    "thumbStayed": false,
+    "maxPenetration": 5.268657449664267e-9,
+    "maxStrain": 0.010112408459228672,
+    "lastRelativeRise": -0.00007372972049743409,
+    "tailRelativeDrift": 0.00007522768179566569,
+    "verifiedCCD": true
+  },
+  "certifiedEveryAcceptedStep": true,
+  "history": [
+    {
+      "time": 0,
+      "rise": 0,
+      "wristRise": 0,
+      "pulls": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 1.1102230246251565e-15,
+      "verifiedCCD": false,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.0020833333333333333,
+      "rise": -0.000030342174013549272,
+      "wristRise": 0,
+      "pulls": [
+        9.209548674703298e-9,
+        6.0652758010705325e-9,
+        4.44791036618878e-9,
+        5.686175101909651e-9,
+        9.209548674703298e-9
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0012194720828275774,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.004166666666666667,
+      "rise": -0.00007710614099176033,
+      "wristRise": 0,
+      "pulls": [
+        5.45024620979462e-8,
+        3.603934234446314e-8,
+        2.648412647212117e-8,
+        3.380320861375024e-8,
+        5.45024620979462e-8
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0029035197144079428,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.00625,
+      "rise": -0.00012624459224504225,
+      "wristRise": 0,
+      "pulls": [
+        1.786424064593289e-7,
+        1.1872208510027224e-7,
+        8.74727709085947e-8,
+        1.1142366030382302e-7,
+        1.786424064593289e-7
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.004711259001205836,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.008333333333333333,
+      "rise": -0.0001666283546540373,
+      "wristRise": 0,
+      "pulls": [
+        4.3796208697572916e-7,
+        2.9278521073479346e-7,
+        2.163833438076649e-7,
+        2.749834488467663e-7,
+        4.3796208697572916e-7
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006194506402447675,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.010416666666666666,
+      "rise": -0.0001917616278393694,
+      "wristRise": 0,
+      "pulls": [
+        8.996051516496614e-7,
+        6.054596525528349e-7,
+        4.490375947373442e-7,
+        5.691124613674755e-7,
+        8.996051516496614e-7
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007128263418466174,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.012499999999999999,
+      "rise": -0.00020012431816845977,
+      "wristRise": 0,
+      "pulls": [
+        0.0000016384527624147552,
+        0.000001111034593753682,
+        8.272387437246657e-7,
+        0.0000010452935979562847,
+        0.0000016384527624147552
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007458989237682068,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.014583333333333332,
+      "rise": -0.00019436914043565595,
+      "wristRise": 0,
+      "pulls": [
+        0.000002733864473954435,
+        0.0000018692116473320334,
+        0.000001397802118039856,
+        0.000001760386941844902,
+        0.000002733864473954435
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007279956034860535,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.016666666666666666,
+      "rise": -0.0001797867278762258,
+      "wristRise": 0,
+      "pulls": [
+        0.0000042663654840689376,
+        0.0000029433603841816436,
+        0.0000022115078052531504,
+        0.0000027750581559587344,
+        0.0000042663654840689376
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006780469589489857,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.01875,
+      "rise": -0.00016252360720301479,
+      "wristRise": 0,
+      "pulls": [
+        0.0000063144095772128445,
+        0.000004398722792718326,
+        0.000003321997029986245,
+        0.00000415215160826116,
+        0.0000063144095772128445
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006182967401841655,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.020833333333333332,
+      "rise": -0.00014799865538626944,
+      "wristRise": 0,
+      "pulls": [
+        0.000008951339468088333,
+        0.000006300614379785779,
+        0.000004784634628606603,
+        0.000005955049111513796,
+        0.000008951339468088333
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.00568498619462654,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.022916666666666665,
+      "rise": -0.00013983327042191296,
+      "wristRise": 0,
+      "pulls": [
+        0.000012242654234984815,
+        0.0000087126685122245,
+        0.000006655360218480954,
+        0.00000824605454264466,
+        0.000012242654234984815
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0054191219981510885,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.024999999999999998,
+      "rise": -0.00013942892868670786,
+      "wristRise": 0,
+      "pulls": [
+        0.00001624367773510036,
+        0.000011695168311019817,
+        0.00000898955044059857,
+        0.000011084843021755498,
+        0.00001624367773510036
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0054368323695040965,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.02708333333333333,
+      "rise": -0.00014614579162949143,
+      "wristRise": 0,
+      "pulls": [
+        0.00002099770306127248,
+        0.000015303507034085615,
+        0.000011840914009087456,
+        0.00001452701084236597,
+        0.00002099770306127248
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0057146448705754915,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.029166666666666664,
+      "rise": -0.00015790456638022782,
+      "wristRise": 0,
+      "pulls": [
+        0.00002653466706590089,
+        0.000019586813534089373,
+        0.00001526044024907109,
+        0.000018622759034755055,
+        0.00002653466706590089
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006176169984922653,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.031249999999999997,
+      "rise": -0.00017197557654968082,
+      "wristRise": 0,
+      "pulls": [
+        0.00003287038663213984,
+        0.000024586774191189304,
+        0.000019295420373590955,
+        0.00002341573941322123,
+        0.00003287038663213984
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006721099699900868,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.03333333333333333,
+      "rise": -0.0001857316852262661,
+      "wristRise": 0,
+      "pulls": [
+        0.00004000636562156399,
+        0.000030336676852247382,
+        0.000023988558975853365,
+        0.0000289420873209167,
+        0.00004000636562156399
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007252881987929838,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.035416666666666666,
+      "rise": -0.0001972037542338559,
+      "wristRise": 0,
+      "pulls": [
+        0.0000479301591609495,
+        0.00003686069592685139,
+        0.000029377191135707508,
+        0.000035229660169802564,
+        0.0000479301591609495
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.00769911233174414,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.0375,
+      "rise": -0.00020536051255570092,
+      "wristRise": 0,
+      "pulls": [
+        0.000056616260987061824,
+        0.00004417343107419921,
+        0.00003549261820494048,
+        0.00004229749541403789,
+        0.000056616260987061824
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.00802179035987538,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.03958333333333333,
+      "rise": -0.0002101144470783925,
+      "wristRise": 0,
+      "pulls": [
+        0.00006602746070454114,
+        0.00005227970504564281,
+        0.000042359572794668276,
+        0.000050155495933695725,
+        0.00006602746070454114
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008217531228174257,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.041666666666666664,
+      "rise": -0.00021211535983040736,
+      "wristRise": 0,
+      "pulls": [
+        0.0000761166016777496,
+        0.00006117461940691979,
+        0.00004999582079282539,
+        0.00005880434508460684,
+        0.0000761166016777496
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008310009324445589,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.04375,
+      "rise": -0.00021242595216270505,
+      "wristRise": 0,
+      "pulls": [
+        0.00008682865739383456,
+        0.00007084386022798651,
+        0.000058411905445469185,
+        0.00006823564802994898,
+        0.00008682865739383456
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.00833808961578808,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.04583333333333333,
+      "rise": -0.00021217873050460162,
+      "wristRise": 0,
+      "pulls": [
+        0.00009810303487837527,
+        0.00008126423956336701,
+        0.00006761103569813141,
+        0.00007843229054520371,
+        0.00009810303487837527
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.00834327104971766,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.04791666666666666,
+      "rise": -0.00021229562059666557,
+      "wristRise": 0,
+      "pulls": [
+        0.000109876008340726,
+        0.00009240445280473112,
+        0.00007758911816833459,
+        0.00008936900140710221,
+        0.000109876008340726
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008359412774983754,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.049999999999999996,
+      "rise": -0.0002133195179532324,
+      "wristRise": 0,
+      "pulls": [
+        0.00012208318474121727,
+        0.00010422602690532167,
+        0.00008833492936190415,
+        0.00010101309985463165,
+        0.00012208318474121727
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0084065456646083,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.05208333333333333,
+      "rise": -0.00021537069760334954,
+      "wristRise": 0,
+      "pulls": [
+        0.0001346619053212485,
+        0.00011668443016773631,
+        0.00009983042210577199,
+        0.00011332540554763693,
+        0.0001346619053212485
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008489249754602524,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.05416666666666666,
+      "rise": -0.0002182097378813086,
+      "wristRise": 0,
+      "pulls": [
+        0.00014755349309022206,
+        0.00012973031084440807,
+        0.00011205115769722255,
+        0.0001262612850315606,
+        0.00014755349309022206
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008598934540098857,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.056249999999999994,
+      "rise": -0.00022136855564231644,
+      "wristRise": 0,
+      "pulls": [
+        0.00016070526546024257,
+        0.00014331082929119665,
+        0.00012496685300845015,
+        0.00013977180601321268,
+        0.00016070526546024257
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008718620970141644,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.05833333333333333,
+      "rise": -0.000224304465143009,
+      "wristRise": 0,
+      "pulls": [
+        0.00017407224318891266,
+        0.00015737104688025546,
+        0.00013854202977541089,
+        0.00015380496881098872,
+        0.00017407224318891266
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008828574461428706,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.06041666666666666,
+      "rise": -0.0002265373176678423,
+      "wristRise": 0,
+      "pulls": [
+        0.00018761850097133475,
+        0.00017185533433399113,
+        0.00015273675157518766,
+        0.00016830698319279726,
+        0.00018761850097133475
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008911323765241619,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.06249999999999999,
+      "rise": -0.00022774277862347425,
+      "wristRise": 0,
+      "pulls": [
+        0.00020131812078890213,
+        0.00018670876257671643,
+        0.0001675074325842133,
+        0.00018322355846531118,
+        0.00020131812078890213
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.00895507611908719,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.06458333333333333,
+      "rise": -0.00022779083333213795,
+      "wristRise": 0,
+      "pulls": [
+        0.0002151557258107467,
+        0.0002018784405787037,
+        0.00018280770113191422,
+        0.0001985011751185301,
+        0.0002151557258107467
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008955127311943256,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.06666666666666667,
+      "rise": -0.0002267333661230969,
+      "wristRise": 0,
+      "pulls": [
+        0.00022912658957863056,
+        0.00021731476692946414,
+        0.00019858930033499,
+        0.00021408830753056932,
+        0.00022912658957863056
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008913406836429383,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.06875,
+      "rise": -0.00022475515187750372,
+      "wristRise": 0,
+      "pulls": [
+        0.00024323633172752736,
+        0.00023297256494253635,
+        0.00021480300772398192,
+        0.0002299365691518116,
+        0.00024323633172752736
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008836683522465139,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.07083333333333335,
+      "rise": -0.00022210749861036744,
+      "wristRise": 0,
+      "pulls": [
+        0.0002575002269819508,
+        0.00024881207486343934,
+        0.00023139955575634743,
+        0.00024600175415158014,
+        0.0002575002269819508
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008734136927787128,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.07291666666666669,
+      "rise": -0.00021904327501191118,
+      "wristRise": 0,
+      "pulls": [
+        0.00027194330451861483,
+        0.0002647997811105979,
+        0.0002483305354424148,
+        0.0002622447526465197,
+        0.00027194330451861483
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.00861498138714345,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.07500000000000002,
+      "rise": -0.0002157674773158938,
+      "wristRise": 0,
+      "pulls": [
+        0.0002865988477596211,
+        0.00028091076139019806,
+        0.0002655492659791927,
+        0.00027863367139527366,
+        0.0002865988477596211
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008486661702569731,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.07708333333333336,
+      "rise": -0.00021241077005850623,
+      "wristRise": 0,
+      "pulls": [
+        0.000301505696024746,
+        0.00029712749745308497,
+        0.0002830130731222598,
+        0.0002951434836097095,
+        0.000301505696024746
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008353892858617762,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.0791666666666667,
+      "rise": -0.000209026563166001,
+      "wristRise": 0,
+      "pulls": [
+        0.00031670645641772955,
+        0.0003134399385620667,
+        0.00030068270824761976,
+        0.0003117559699616242,
+        0.00031670645641772955
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008218563800708845,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.08125000000000004,
+      "rise": -0.00020560674817869662,
+      "wristRise": 0,
+      "pulls": [
+        0.00033224563646493566,
+        0.0003298455079162484,
+        0.00031852283145199976,
+        0.00032845993733523625,
+        0.00033224563646493566
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008080325514067344,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.08333333333333338,
+      "rise": -0.0002021081166865349,
+      "wristRise": 0,
+      "pulls": [
+        0.0003481677719038055,
+        0.0003463489165171553,
+        0.0003365025669334792,
+        0.00034525126225009483,
+        0.0003481677719038055
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007937569861457883,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.08541666666666672,
+      "rise": -0.0001984808946547123,
+      "wristRise": 0,
+      "pulls": [
+        0.0003645156214978595,
+        0.0003629617941002423,
+        0.00035459596196604917,
+        0.0003621327620641307,
+        0.0003645156214978595
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007788484210031643,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.08750000000000006,
+      "rise": -0.00019469230766333556,
+      "wristRise": 0,
+      "pulls": [
+        0.0003813284955733614,
+        0.0003797021512230655,
+        0.000372782342517291,
+        0.00037911390116302743,
+        0.0003813284955733614
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007631921590963264,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.0895833333333334,
+      "rise": -0.00019074083573425438,
+      "wristRise": 0,
+      "pulls": [
+        0.0003986407774253798,
+        0.00039659369059421787,
+        0.00039104656067647946,
+        0.00039621034316682214,
+        0.0003986407774253798
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0074679271558776295,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.09166666666666674,
+      "rise": -0.00018665991504877855,
+      "wristRise": 0,
+      "pulls": [
+        0.0004164806872029757,
+        0.00041366498915422907,
+        0.00040937913123044526,
+        0.0004134433636514933,
+        0.0004164806872029757
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007297875583246682,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.09375000000000008,
+      "rise": -0.00018251251917292266,
+      "wristRise": 0,
+      "pulls": [
+        0.0004348693267922977,
+        0.00043094857520698036,
+        0.0004277762569038121,
+        0.0004308391409168006,
+        0.0004348693267922977
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0071242722436666295,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.09583333333333342,
+      "rise": -0.00017837979941671273,
+      "wristRise": 0,
+      "pulls": [
+        0.0004538200320537267,
+        0.000448479926992088,
+        0.000446239743926746,
+        0.00044842794486863813,
+        0.0004538200320537267
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0069503348864181635,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.09791666666666676,
+      "rise": -0.00017434760052138787,
+      "wristRise": 0,
+      "pulls": [
+        0.0004733380460396568,
+        0.0004662964204487616,
+        0.0004647768116665445,
+        0.0004662432460749997,
+        0.0004733380460396568
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006779495790431467,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.1000000000000001,
+      "rise": -0.00017049430166553303,
+      "wristRise": 0,
+      "pulls": [
+        0.00049342051403116,
+        0.00048443625453320434,
+        0.0004833998020208708,
+        0.0004843207684640877,
+        0.00049342051403116
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006614950783919493,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.10208333333333344,
+      "rise": -0.00016688237199557338,
+      "wristRise": 0,
+      "pulls": [
+        0.0005140567888765504,
+        0.0005029373823177293,
+        0.0005021257960847018,
+        0.0005026975099407943,
+        0.0005140567888765504
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0064593426397737685,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.10416666666666678,
+      "rise": -0.000163554669491299,
+      "wristRise": 0,
+      "pulls": [
+        0.0005352287821787338,
+        0.000521836436898323,
+        0.0005209761246268897,
+        0.0005214107216528216,
+        0.0005352287821787338
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006314616586732935,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.10625000000000012,
+      "rise": -0.00016053522571511658,
+      "wristRise": 0,
+      "pulls": [
+        0.0005569119484013096,
+        0.0005411675865615731,
+        0.0005399756737632228,
+        0.0005404967724863319,
+        0.0005569119484013096
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006182038706867954,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.10833333333333346,
+      "rise": -0.00015783331985455562,
+      "wristRise": 0,
+      "pulls": [
+        0.0005790764746663294,
+        0.000560961854869041,
+        0.0005591524673603271,
+        0.0005599904241755428,
+        0.0005790764746663294
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006062333769587425,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.1104166666666668,
+      "rise": -0.00015544918654311624,
+      "wristRise": 0,
+      "pulls": [
+        0.0006016885160600957,
+        0.0005812463356299483,
+        0.0005785370206597139,
+        0.0005799239664074006,
+        0.0006016885160600957
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.005955882402190693,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.11250000000000014,
+      "rise": -0.00015337971777917847,
+      "wristRise": 0,
+      "pulls": [
+        0.0006247115404858757,
+        0.0006020435287859045,
+        0.0005981616585194187,
+        0.0006003264323441901,
+        0.0006247115404858757
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.005862918173548781,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.11458333333333348,
+      "rise": -0.00015162289847969052,
+      "wristRise": 0,
+      "pulls": [
+        0.0006481077275513625,
+        0.0006233708112780869,
+        0.0006180598120500338,
+        0.0006212229116611949,
+        0.0006481077275513625
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.005783679068439462,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.11666666666666682,
+      "rise": -0.00015018028979605497,
+      "wristRise": 0,
+      "pulls": [
+        0.0006718393659278207,
+        0.0006452400531376679,
+        0.0006382653075711533,
+        0.0006426339754282239,
+        0.0006718393659278207
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.005718488803664545,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.11875000000000016,
+      "rise": -0.00014905747054920482,
+      "wristRise": 0,
+      "pulls": [
+        0.0006958701956976763,
+        0.000667657385043013,
+        0.0006588116616931192,
+        0.0006645752241140771,
+        0.0006958701956976763
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.005667765142254422,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.1208333333333335,
+      "rise": -0.00014826282605047425,
+      "wristRise": 0,
+      "pulls": [
+        0.0007201666462606376,
+        0.0006906231195294003,
+        0.0006797313959450139,
+        0.0006870569667424061,
+        0.0007201666462606376
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0056319697426150395,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.12291666666666684,
+      "rise": -0.0001478053543761612,
+      "wristRise": 0,
+      "pulls": [
+        0.0007446989261681943,
+        0.0007141318240247784,
+        0.0007010553837355412,
+        0.0007100840358594417,
+        0.0007446989261681943
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.005611524208935514,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.12500000000000017,
+      "rise": -0.00014769222515687713,
+      "wristRise": 0,
+      "pulls": [
+        0.0007694419285167659,
+        0.0007381725400205621,
+        0.0007228122415657771,
+        0.0007336557395731056,
+        0.0007694419285167659
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0056067192618259876,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.1270833333333335,
+      "rise": -0.00014792671013309777,
+      "wristRise": 0,
+      "pulls": [
+        0.0007943758831520976,
+        0.000762729139065504,
+        0.0007450277753329313,
+        0.0007577659485722731,
+        0.0007943758831520976
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.005617639615072667,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.12916666666666682,
+      "rise": -0.00014850687592755235,
+      "wristRise": 0,
+      "pulls": [
+        0.0008194868506928648,
+        0.0007877807826973526,
+        0.000767724491297055,
+        0.0007824033009554946,
+        0.0008194868506928648
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.005644118705333656,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.13125000000000014,
+      "rise": -0.00014942516553134028,
+      "wristRise": 0,
+      "pulls": [
+        0.0008447669570744302,
+        0.0008133025130724048,
+        0.0007909211568431449,
+        0.0008075515269241177,
+        0.0008447669570744302
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.00568572771675524,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.13333333333333347,
+      "rise": -0.00015066876388802886,
+      "wristRise": 0,
+      "pulls": [
+        0.0008702143760435871,
+        0.0008392659531083936,
+        0.0008146324804481688,
+        0.0008331899235615549,
+        0.0008702143760435871
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.005741794849586368,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.1354166666666668,
+      "rise": -0.00015222048968372565,
+      "wristRise": 0,
+      "pulls": [
+        0.0008958330805597554,
+        0.0008656400582811207,
+        0.0008388688663080932,
+        0.0008592939007950079,
+        0.0008958330805597554
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.005811445140141869,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.13750000000000012,
+      "rise": -0.0001540598970633869,
+      "wristRise": 0,
+      "pulls": [
+        0.0009216323810347166,
+        0.0008923919182608711,
+        0.000863636249918663,
+        0.0008858356085805462,
+        0.0009216323810347166
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.005893648970199394,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.13958333333333345,
+      "rise": -0.0001561642991114373,
+      "wristRise": 0,
+      "pulls": [
+        0.0009476262758582257,
+        0.0009194875864901477,
+        0.0008889360226622723,
+        0.0009127846281878996,
+        0.0009476262758582257
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0059872684024284695,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.14166666666666677,
+      "rise": -0.00015850951343576725,
+      "wristRise": 0,
+      "pulls": [
+        0.000973832645923647,
+        0.0009468929156340987,
+        0.0009147650451325405,
+        0.0009401087093146753,
+        0.000973832645923647
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006091093694060246,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.1437500000000001,
+      "rise": -0.0001610702451848925,
+      "wristRise": 0,
+      "pulls": [
+        0.0010002723296914276,
+        0.0009745743772375379,
+        0.0009411157472289173,
+        0.0009677745340829349,
+        0.0010002723296914276
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006203866539121972,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.14583333333333343,
+      "rise": -0.0001638201320827426,
+      "wristRise": 0,
+      "pulls": [
+        0.0010269681173698303,
+        0.0010024998448729412,
+        0.0009679763114249266,
+        0.000995748488769429,
+        0.0010269681173698303
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006324290595377424,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.14791666666666675,
+      "rise": -0.00016673155593654315,
+      "wristRise": 0,
+      "pulls": [
+        0.001053943592242511,
+        0.0010306393131074142,
+        0.0009953309340854366,
+        0.0010239974243878712,
+        0.001053943592242511
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006451032801672141,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.15000000000000008,
+      "rise": -0.0001697753638846347,
+      "wristRise": 0,
+      "pulls": [
+        0.0010812222154562587,
+        0.001058965474305878,
+        0.0010231601583080385,
+        0.0010524893105310382,
+        0.0010812222154562587
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006582720455844848,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.1520833333333334,
+      "rise": -0.00017292064061073115,
+      "wristRise": 0,
+      "pulls": [
+        0.0011088263328453516,
+        0.0010874543750767334,
+        0.001051441206978528,
+        0.0010811939869491286,
+        0.0011088263328453516
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006717939006168128,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.15416666666666673,
+      "rise": -0.0001761346392112409,
+      "wristRise": 0,
+      "pulls": [
+        0.0011367762606251661,
+        0.0011160858842338517,
+        0.0010801484862018734,
+        0.0011100838028666553,
+        0.0011367762606251661
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0068552343472857435,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.15625000000000006,
+      "rise": -0.0001793829276771075,
+      "wristRise": 0,
+      "pulls": [
+        0.001165089482122926,
+        0.0011448440505539362,
+        0.0011092540965172534,
+        0.0011391341665988,
+        0.001165089482122926
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0069931216230531,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.15833333333333338,
+      "rise": -0.00018262975497575912,
+      "wristRise": 0,
+      "pulls": [
+        0.0011937799822882478,
+        0.001173717343878762,
+        0.0011387283657342665,
+        0.0011683240079955505,
+        0.0011937799822882478
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007130100665438954,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.1604166666666667,
+      "rise": -0.0001858385975528412,
+      "wristRise": 0,
+      "pulls": [
+        0.0012228577404734626,
+        0.0012026987762787508,
+        0.0011685404055461269,
+        0.001197636144576589,
+        0.0012228577404734626
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007264676678937154,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.16250000000000003,
+      "rise": -0.0001889728208664121,
+      "wristRise": 0,
+      "pulls": [
+        0.0012523283951632865,
+        0.0012317859031664054,
+        0.001198658680768278,
+        0.0012270575447705196,
+        0.0012523283951632865
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007395383873201711,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.16458333333333336,
+      "rise": -0.0001919963830655791,
+      "wristRise": 0,
+      "pulls": [
+        0.001282193003151252,
+        0.0012609807073434664,
+        0.0012290515800234272,
+        0.001256579484321707,
+        0.001282193003151252
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0075208095161911626,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.16666666666666669,
+      "rise": -0.00019487451634614406,
+      "wristRise": 0,
+      "pulls": [
+        0.001312447156708653,
+        0.0012902890705327366,
+        0.0012596879768818582,
+        0.0012861974215560882,
+        0.001312447156708653
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007639616223477308,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.16875,
+      "rise": -0.00019757434019772313,
+      "wristRise": 0,
+      "pulls": [
+        0.0013430822331751383,
+        0.0013197202574647474,
+        0.0012905375542050608,
+        0.0013159105144041506,
+        0.0013430822331751383
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0077505610094622535,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.17083333333333334,
+      "rise": -0.00020006538311113237,
+      "wristRise": 0,
+      "pulls": [
+        0.0013740857804594763,
+        0.0013492870270508314,
+        0.0013215710667526422,
+        0.001345722095599343,
+        0.0013740857804594763
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007852510461549445,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.17291666666666666,
+      "rise": -0.00020232000950916318,
+      "wristRise": 0,
+      "pulls": [
+        0.0014054420354019197,
+        0.0013790051507595032,
+        0.001352761303853166,
+        0.0013756394318905172,
+        0.0014054420354019197
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007944452145407843,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.175,
+      "rise": -0.0002043137627735156,
+      "wristRise": 0,
+      "pulls": [
+        0.0014371325502821602,
+        0.0014088928653913499,
+        0.0013840835258961753,
+        0.0014056733935366298,
+        0.0014371325502821602
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008025502864276945,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.17708333333333331,
+      "rise": -0.00020602564166762039,
+      "wristRise": 0,
+      "pulls": [
+        0.0014691368995078415,
+        0.001438970276010399,
+        0.0014155158448783452,
+        0.0014358380442305264,
+        0.0014691368995078415
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008094914619814708,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.17916666666666664,
+      "rise": -0.00020743832677066337,
+      "wristRise": 0,
+      "pulls": [
+        0.0015014334364604248,
+        0.0014692587256798571,
+        0.0014470395427638976,
+        0.0014661501632880557,
+        0.0015014334364604248
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0081520790773697,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.18124999999999997,
+      "rise": -0.0002085383678243069,
+      "wristRise": 0,
+      "pulls": [
+        0.00153400004756971,
+        0.001499780149088394,
+        0.0014786393227357933,
+        0.0014966287133009767,
+        0.00153400004756971
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008196531102303006,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.1833333333333333,
+      "rise": -0.00020931633493496277,
+      "wristRise": 0,
+      "pulls": [
+        0.0015668144615889543,
+        0.0015305564271398111,
+        0.0015103034897999104,
+        0.0015272942674618311,
+        0.0015668144615889543
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008227951609307449,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.18541666666666662,
+      "rise": -0.00020976692905002453,
+      "wristRise": 0,
+      "pulls": [
+        0.001599855486629949,
+        0.0015616084015556684,
+        0.0015420239603874618,
+        0.0015581681053229877,
+        0.001599855486629949
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008246169653459035,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.18749999999999994,
+      "rise": -0.00020988904201686698,
+      "wristRise": 0,
+      "pulls": [
+        0.0016331036855126463,
+        0.0015929556503449297,
+        0.0015737961945901432,
+        0.0015892718849130636,
+        0.0016331036855126463
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008251163464501832,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.18958333333333327,
+      "rise": -0.0002096857548338632,
+      "wristRise": 0,
+      "pulls": [
+        0.0016665419592147776,
+        0.0016246159520688752,
+        0.001605619371232146,
+        0.0016206270850733266,
+        0.0016665419592147776
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008243060022836923,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.1916666666666666,
+      "rise": -0.00020916426439476776,
+      "wristRise": 0,
+      "pulls": [
+        0.001700156019376258,
+        0.00165660480740204,
+        0.001637496284332672,
+        0.0016522544275715078,
+        0.001700156019376258
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008222132798103465,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.19374999999999992,
+      "rise": -0.00020833573331936056,
+      "wristRise": 0,
+      "pulls": [
+        0.001733934735763216,
+        0.0016889350314675906,
+        0.0016694331720000343,
+        0.0016841733313047252,
+        0.001733934735763216
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0081887973915441,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.19583333333333325,
+      "rise": -0.00020721506312205984,
+      "wristRise": 0,
+      "pulls": [
+        0.001767870349907335,
+        0.0017216164256886842,
+        0.0017014394823532454,
+        0.001716401411076153,
+        0.001767870349907335
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008143604997891796,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.19791666666666657,
+      "rise": -0.00020582059669435604,
+      "wristRise": 0,
+      "pulls": [
+        0.001801958336572652,
+        0.0017546555356265253,
+        0.0017335275821900964,
+        0.0017489540320519861,
+        0.001801958336572652
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008087233784576986,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.1999999999999999,
+      "rise": -0.00020417376079887029,
+      "wristRise": 0,
+      "pulls": [
+        0.0018361973810990908,
+        0.0017880554563281285,
+        0.0017657124151121124,
+        0.0017818439293903134,
+        0.0018361973810990908
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.008020478437472112,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.20208333333333323,
+      "rise": -0.0002022986623325812,
+      "wristRise": 0,
+      "pulls": [
+        0.0018705894078022763,
+        0.001821815553896039,
+        0.0017980109995999654,
+        0.0018150806217009626,
+        0.0018705894078022763
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.00794423821964152,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.20416666666666655,
+      "rise": -0.00020022165332202885,
+      "wristRise": 0,
+      "pulls": [
+        0.001905139289714913,
+        0.0018559317700263752,
+        0.0018304420073952758,
+        0.0018486704623374831,
+        0.001905139289714913
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.00785950392600121,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.20624999999999988,
+      "rise": -0.00019797087916843814,
+      "wristRise": 0,
+      "pulls": [
+        0.001939854455702469,
+        0.001890396747765055,
+        0.0018630254472949647,
+        0.0018826165085785809,
+        0.001939854455702469
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0077673440999744825,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2083333333333332,
+      "rise": -0.0001955758230320903,
+      "wristRise": 0,
+      "pulls": [
+        0.0019747444137670806,
+        0.0019252000392421516,
+        0.0018957822065847466,
+        0.0019169184647722633,
+        0.0019747444137670806
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007668890825367813,
+      "verifiedCCD": true,
+      "ccdChecks": 0,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.21041666666666653,
+      "rise": -0.00019306685700568038,
+      "wristRise": 0,
+      "pulls": [
+        0.002009820211886249,
+        0.0019603283879658633,
+        0.0019287335844073849,
+        0.0019515727082327254,
+        0.002009820211886249
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.00756532533804366,
+      "verifiedCCD": true,
+      "ccdChecks": 22,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.21249999999999986,
+      "rise": -0.00019047480839558956,
+      "wristRise": 0,
+      "pulls": [
+        0.0020450937910759816,
+        0.001995766076519458,
+        0.0019619008262039507,
+        0.0019865723952972266,
+        0.0020450937910759816
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007457863636258111,
+      "verifiedCCD": true,
+      "ccdChecks": 22,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.21458333333333318,
+      "rise": -0.00018783054739025112,
+      "wristRise": 0,
+      "pulls": [
+        0.0020805772872930627,
+        0.0020314953290463543,
+        0.001995304668169407,
+        0.002021907643065596,
+        0.0020805772872930627
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0073477422185797,
+      "verifiedCCD": true,
+      "ccdChecks": 66,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2166666666666665,
+      "rise": -0.00018516460083067843,
+      "wristRise": 0,
+      "pulls": [
+        0.002116282635457171,
+        0.0020674965903557845,
+        0.002028964900298577,
+        0.002057565669688398,
+        0.002116282635457171
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007236204049885342,
+      "verifiedCCD": true,
+      "ccdChecks": 46,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.21874999999999983,
+      "rise": -0.0001825067957214599,
+      "wristRise": 0,
+      "pulls": [
+        0.0021522210199986006,
+        0.002103749152950017,
+        0.0020628998313784253,
+        0.002093531153935276,
+        0.0021522210199986006
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007124484848164969,
+      "verifiedCCD": true,
+      "ccdChecks": 29,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.22083333333333316,
+      "rise": -0.00017988593540459175,
+      "wristRise": 0,
+      "pulls": [
+        0.002188402374206136,
+        0.0021402316779376815,
+        0.0020971260208110408,
+        0.00212978667464424,
+        0.002188402374206136
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007013799791808717,
+      "verifiedCCD": true,
+      "ccdChecks": 29,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.22291666666666649,
+      "rise": -0.00017732951078103937,
+      "wristRise": 0,
+      "pulls": [
+        0.0022248349458205414,
+        0.0021769226968041773,
+        0.0021316579661276452,
+        0.002166313122746312,
+        0.0022248349458205414
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006905330760460737,
+      "verifiedCCD": true,
+      "ccdChecks": 29,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2249999999999998,
+      "rise": -0.0001748634484184039,
+      "wristRise": 0,
+      "pulls": [
+        0.0022615249431412374,
+        0.002213801103936723,
+        0.0021665078160164634,
+        0.0022030901444993504,
+        0.0022615249431412374
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006800214234480517,
+      "verifiedCCD": true,
+      "ccdChecks": 58,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.22708333333333314,
+      "rise": -0.00017251189670113715,
+      "wristRise": 0,
+      "pulls": [
+        0.002298476273251087,
+        0.002250846627422014,
+        0.002201685134111628,
+        0.0022400966044271607,
+        0.002298476273251087
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006699529982322594,
+      "verifiedCCD": true,
+      "ccdChecks": 58,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.22916666666666646,
+      "rise": -0.0001702970503091178,
+      "wristRise": 0,
+      "pulls": [
+        0.0023356903783061087,
+        0.002288040266561442,
+        0.0022371967171120346,
+        0.0022773110562545025,
+        0.0023356903783061087
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006604290658872358,
+      "verifiedCCD": true,
+      "ccdChecks": 58,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2312499999999998,
+      "rise": -0.00016823901228254362,
+      "wristRise": 0,
+      "pulls": [
+        0.0023731661692011834,
+        0.0023253646877568683,
+        0.0022730464696841235,
+        0.002314712211847291,
+        0.0023731661692011834
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006515432421000722,
+      "verifiedCCD": true,
+      "ccdChecks": 58,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.23333333333333311,
+      "rise": -0.0001663556918368933,
+      "wristRise": 0,
+      "pulls": [
+        0.0024109000608957608,
+        0.002362804562947644,
+        0.002309235338634943,
+        0.002352279392517135,
+        0.0024109000608957608
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006433806641926165,
+      "verifiedCCD": true,
+      "ccdChecks": 29,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.23541666666666644,
+      "rise": -0.0001646627350570945,
+      "wristRise": 0,
+      "pulls": [
+        0.002448886102276574,
+        0.002400346850045305,
+        0.0023457613036294393,
+        0.002389992955252246,
+        0.002448886102276574
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0063601727773181516,
+      "verifiedCCD": true,
+      "ccdChecks": 29,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.23749999999999977,
+      "rise": -0.0001631734847468841,
+      "wristRise": 0,
+      "pulls": [
+        0.0024871161921327157,
+        0.0024379810073211264,
+        0.0023826194250694504,
+        0.002427834684275592,
+        0.0024871161921327157
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006295192407779204,
+      "verifiedCCD": true,
+      "ccdChecks": 29,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2395833333333331,
+      "rise": -0.00016189896513679747,
+      "wristRise": 0,
+      "pulls": [
+        0.0025255803698189475,
+        0.002475699137869742,
+        0.0024198019479090877,
+        0.00246578813865205,
+        0.0025255803698189475
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006239424457745502,
+      "verifiedCCD": true,
+      "ccdChecks": 102,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.24166666666666642,
+      "rise": -0.00016084788691424906,
+      "wristRise": 0,
+      "pulls": [
+        0.0025642673335179124,
+        0.002513496062174331,
+        0.0024572984576769295,
+        0.0025038389485466193,
+        0.0025642673335179124
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0061933215722451695,
+      "verifiedCCD": true,
+      "ccdChecks": 201,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.24374999999999974,
+      "rise": -0.00016002666814116107,
+      "wristRise": 0,
+      "pulls": [
+        0.0026031647430215027,
+        0.0025513693855728926,
+        0.002495096084693873,
+        0.0025419750723864013,
+        0.0026031647430215027
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006157227621006012,
+      "verifiedCCD": true,
+      "ccdChecks": 67,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.24583333333333307,
+      "rise": -0.00015943946702751816,
+      "wristRise": 0,
+      "pulls": [
+        0.0026422595486089145,
+        0.002589319479187733,
+        0.0025331797516248912,
+        0.0025801871177751593,
+        0.0026422595486089145
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.00613137629343119,
+      "verifiedCCD": true,
+      "ccdChecks": 134,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2479166666666664,
+      "rise": -0.00015908822317144133,
+      "wristRise": 0,
+      "pulls": [
+        0.002681538419199018,
+        0.0026273492156242283,
+        0.002571532592714769,
+        0.0026184682833493445,
+        0.002681538419199018
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0061158907465387324,
+      "verifiedCCD": true,
+      "ccdChecks": 71,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.24999999999999972,
+      "rise": -0.00015897270467203628,
+      "wristRise": 0,
+      "pulls": [
+        0.0027209881657274245,
+        0.0026654637671439645,
+        0.0026101361523514096,
+        0.0026568144015525585,
+        0.0027209881657274245
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0061107842690723,
+      "verifiedCCD": true,
+      "ccdChecks": 75,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.25208333333333305,
+      "rise": -0.00015909055939247047,
+      "wristRise": 0,
+      "pulls": [
+        0.002760596143670747,
+        0.0027036703495507885,
+        0.002648970703605708,
+        0.0026952239164498787,
+        0.002760596143670747
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006115961926902114,
+      "verifiedCCD": true,
+      "ccdChecks": 190,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2541666666666664,
+      "rise": -0.00015943736952159226,
+      "wristRise": 0,
+      "pulls": [
+        0.0028003507915983525,
+        0.002741977919762086,
+        0.0026880156048979384,
+        0.0027336977986624172,
+        0.0028003507915983525
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006131223156169208,
+      "verifiedCCD": true,
+      "ccdChecks": 95,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2562499999999997,
+      "rise": -0.0001600067093989882,
+      "wristRise": 0,
+      "pulls": [
+        0.002840242237547349,
+        0.0027803968360328867,
+        0.0027272496673913385,
+        0.002772239400979742,
+        0.002840242237547349
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006156265270465866,
+      "verifiedCCD": true,
+      "ccdChecks": 287,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.258333333333333,
+      "rise": -0.0001607902072904635,
+      "wristRise": 0,
+      "pulls": [
+        0.0028802620480091823,
+        0.002818938864553657,
+        0.00276665152583355,
+        0.0028108545218030524,
+        0.0028802620480091823
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006190687846625242,
+      "verifiedCCD": true,
+      "ccdChecks": 196,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.26041666666666635,
+      "rise": -0.00016177761240301902,
+      "wristRise": 0,
+      "pulls": [
+        0.0029204034006150665,
+        0.0028576165017379553,
+        0.0028062001725869747,
+        0.002849551076324797,
+        0.0029204034006150665
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006233997950438219,
+      "verifiedCCD": true,
+      "ccdChecks": 99,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2624999999999997,
+      "rise": -0.0001629568688972377,
+      "wristRise": 0,
+      "pulls": [
+        0.0029606611887224286,
+        0.002896442469910136,
+        0.00284587537014488,
+        0.0028883386011256717,
+        0.0029606611887224286
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006285616159433127,
+      "verifiedCCD": true,
+      "ccdChecks": 99,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.264583333333333,
+      "rise": -0.00016431419897961624,
+      "wristRise": 0,
+      "pulls": [
+        0.00300103205636682,
+        0.0029354293185273215,
+        0.00288565774995206,
+        0.002927227923413526,
+        0.00300103205636682
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006344883335025031,
+      "verifiedCCD": true,
+      "ccdChecks": 198,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.26666666666666633,
+      "rise": -0.00016583419733470772,
+      "wristRise": 0,
+      "pulls": [
+        0.0030415143913310383,
+        0.002974589039867728,
+        0.002925529120692769,
+        0.0029662308067931126,
+        0.0030415143913310383
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006411068091462302,
+      "verifiedCCD": true,
+      "ccdChecks": 101,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.26874999999999966,
+      "rise": -0.0001674999391789722,
+      "wristRise": 0,
+      "pulls": [
+        0.003082109213682317,
+        0.0030139327087362836,
+        0.0029654727479814904,
+        0.0030053595827197023,
+        0.003082109213682317
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006483374903962558,
+      "verifiedCCD": true,
+      "ccdChecks": 303,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.270833333333333,
+      "rise": -0.00016929310408390907,
+      "wristRise": 0,
+      "pulls": [
+        0.003122818929963557,
+        0.003053470427346556,
+        0.003005473600626862,
+        0.00304462687736394,
+        0.003122818929963557
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0065609527935189815,
+      "verifiedCCD": true,
+      "ccdChecks": 210,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2729166666666663,
+      "rise": -0.00017119411742196056,
+      "wristRise": 0,
+      "pulls": [
+        0.0031636470919146576,
+        0.0030932112524710165,
+        0.0030455186465951642,
+        0.0030840457723850484,
+        0.0031636470919146576
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006642904520616111,
+      "verifiedCCD": true,
+      "ccdChecks": 131,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.27499999999999963,
+      "rise": -0.00017318231084320623,
+      "wristRise": 0,
+      "pulls": [
+        0.0032045981200609776,
+        0.0031331624263670845,
+        0.0030855974812439508,
+        0.0031236287831883616,
+        0.0032045981200609776
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006728296214591589,
+      "verifiedCCD": true,
+      "ccdChecks": 131,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.27708333333333296,
+      "rise": -0.0001752361025999724,
+      "wristRise": 0,
+      "pulls": [
+        0.0032456770040453714,
+        0.003173329170710702,
+        0.003125701878877777,
+        0.003163387508033041,
+        0.0032456770040453714
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0068161673592164185,
+      "verifiedCCD": true,
+      "ccdChecks": 131,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2791666666666663,
+      "rise": -0.00017733319782812368,
+      "wristRise": 0,
+      "pulls": [
+        0.003286888992039932,
+        0.0032137145377856857,
+        0.0031658258612444665,
+        0.003203332307706671,
+        0.003286888992039932
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.0069055410484308855,
+      "verifiedCCD": true,
+      "ccdChecks": 298,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2812499999999996,
+      "rise": -0.00017945080808837166,
+      "wristRise": 0,
+      "pulls": [
+        0.003328240536002749,
+        0.0032543193213279867,
+        0.003205965721504629,
+        0.0032434720228085244,
+        0.003328240536002749
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.006995434419053925,
+      "verifiedCCD": true,
+      "ccdChecks": 434,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.28333333333333294,
+      "rise": -0.00018156588861356626,
+      "wristRise": 0,
+      "pulls": [
+        0.00336973779922832,
+        0.003295142139444347,
+        0.003246120004072539,
+        0.0032838137346042208,
+        0.00336973779922832
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007084869160049467,
+      "verifiedCCD": true,
+      "ccdChecks": 505,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.28541666666666626,
+      "rise": -0.00018365539083308596,
+      "wristRise": 0,
+      "pulls": [
+        0.003411386185162763,
+        0.0033361802916048143,
+        0.0032862894415671678,
+        0.0033243634116069272,
+        0.003411386185162763
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007172881991040048,
+      "verifiedCCD": true,
+      "ccdChecks": 534,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2874999999999996,
+      "rise": -0.00018569652690417215,
+      "wristRise": 0,
+      "pulls": [
+        0.0034531900594777956,
+        0.0033774288586837574,
+        0.0033264776150355073,
+        0.003365125059828239,
+        0.0034531900594777956
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007258534996701926,
+      "verifiedCCD": true,
+      "ccdChecks": 269,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2895833333333329,
+      "rise": -0.000187667042210439,
+      "wristRise": 0,
+      "pulls": [
+        0.0034951525220109463,
+        0.0034188808203915707,
+        0.0033666901005288516,
+        0.0034061004497946937,
+        0.0034951525220109463
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007340925699002909,
+      "verifiedCCD": true,
+      "ccdChecks": 269,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.29166666666666624,
+      "rise": -0.00018954549113490982,
+      "wristRise": 0,
+      "pulls": [
+        0.0035372752354946584,
+        0.00346052722386716,
+        0.00340693419423762,
+        0.0034472890658578817,
+        0.0035372752354946584
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007419196746500822,
+      "verifiedCCD": true,
+      "ccdChecks": 536,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.29374999999999957,
+      "rise": -0.000191311510910043,
+      "wristRise": 0,
+      "pulls": [
+        0.003579559997848001,
+        0.003502357397805918,
+        0.0034472186915945903,
+        0.0034886881120861457,
+        0.003579559997848001
+      ],
+      "contactFingers": 0,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007492545099397674,
+      "verifiedCCD": true,
+      "ccdChecks": 542,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2958333333333329,
+      "rise": -0.00019291197864759052,
+      "wristRise": 0,
+      "pulls": [
+        0.003622007113622518,
+        0.003544359286314663,
+        0.003478380635357633,
+        0.003530292573252259,
+        0.003622007113622518
+      ],
+      "contactFingers": 1,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0.029281632491144897,
+        0,
+        0
+      ],
+      "maxPenetration": 0,
+      "maxStructuralStrain": 0.007552874710868185,
+      "verifiedCCD": true,
+      "ccdChecks": 548,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.2979166666666662,
+      "rise": -0.00019390042143055397,
+      "wristRise": 0,
+      "pulls": [
+        0.003664615119333489,
+        0.003586521007976288,
+        0.0034787277035533415,
+        0.003572096323740979,
+        0.003664615119333489
+      ],
+      "contactFingers": 1,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0.10598496407230969,
+        0,
+        0
+      ],
+      "maxPenetration": 1.0690287630815698e-13,
+      "maxStructuralStrain": 0.007588640910972444,
+      "verifiedCCD": true,
+      "ccdChecks": 282,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.29999999999999954,
+      "rise": -0.0001949529452128576,
+      "wristRise": 0,
+      "pulls": [
+        0.0037073808052073684,
+        0.0036288297383699347,
+        0.0034784763812376117,
+        0.003614091624149097,
+        0.0037073808052073684
+      ],
+      "contactFingers": 1,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0.007782601385159884,
+        0,
+        0
+      ],
+      "maxPenetration": 2.3870337130527108e-14,
+      "maxStructuralStrain": 0.007639835902230274,
+      "verifiedCCD": true,
+      "ccdChecks": 282,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.30208333333333287,
+      "rise": -0.00019601727463158802,
+      "wristRise": 0,
+      "pulls": [
+        0.0037502993029575166,
+        0.0036712719986244265,
+        0.003478329389972225,
+        0.003656268914165843,
+        0.0037502993029575166
+      ],
+      "contactFingers": 1,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0.008328118277988801,
+        0,
+        0
+      ],
+      "maxPenetration": 4.784833553678203e-14,
+      "maxStructuralStrain": 0.0076901230228881845,
+      "verifiedCCD": true,
+      "ccdChecks": 564,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3041666666666662,
+      "rise": -0.00019702572900226478,
+      "wristRise": 0,
+      "pulls": [
+        0.003793364251245711,
+        0.0037138341876794315,
+        0.0034783287833636467,
+        0.0036986170261988026,
+        0.003793364251245711
+      ],
+      "contactFingers": 1,
+      "thumb": false,
+      "forces": [
+        0,
+        0,
+        0.01092672541068061,
+        0,
+        0
+      ],
+      "maxPenetration": 6.753701330824979e-14,
+      "maxStructuralStrain": 0.007732463762221697,
+      "verifiedCCD": true,
+      "ccdChecks": 282,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3062499999999995,
+      "rise": -0.00019649071485237923,
+      "wristRise": 0,
+      "pulls": [
+        0.003836570466186234,
+        0.003736809187367865,
+        0.0034784504434276506,
+        0.0037411234328104345,
+        0.003836570466186234
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.0182269585910421,
+        0.01364823901735323,
+        0,
+        0
+      ],
+      "maxPenetration": 7.297038407544365e-14,
+      "maxStructuralStrain": 0.007678798678232068,
+      "verifiedCCD": true,
+      "ccdChecks": 282,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.30833333333333285,
+      "rise": -0.00019495669658172593,
+      "wristRise": 0,
+      "pulls": [
+        0.0038799115177518967,
+        0.0037398112885346294,
+        0.003478631295847076,
+        0.003783774521177181,
+        0.0038799115177518967
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.021213452229156424,
+        0.016247638823557075,
+        0,
+        0
+      ],
+      "maxPenetration": 6.66026196867453e-12,
+      "maxStructuralStrain": 0.007589654531001577,
+      "verifiedCCD": true,
+      "ccdChecks": 564,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3104166666666662,
+      "rise": -0.000193754831321169,
+      "wristRise": 0,
+      "pulls": [
+        0.003923379922200005,
+        0.003737187075185031,
+        0.0034787855031836114,
+        0.0038265573186665692,
+        0.003923379922200005
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.009156523897292863,
+        0.018936829964952114,
+        0,
+        0
+      ],
+      "maxPenetration": 8.524495670979293e-12,
+      "maxStructuralStrain": 0.007566619688524012,
+      "verifiedCCD": true,
+      "ccdChecks": 282,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3124999999999995,
+      "rise": -0.00019328887402851602,
+      "wristRise": 0,
+      "pulls": [
+        0.0039669673677559854,
+        0.0037349790943575576,
+        0.003478899175543338,
+        0.0038694586809955977,
+        0.0039669673677559854
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.004192980001628496,
+        0.021666129589664383,
+        0,
+        0
+      ],
+      "maxPenetration": 8.232451851296341e-11,
+      "maxStructuralStrain": 0.007578678818754736,
+      "verifiedCCD": true,
+      "ccdChecks": 282,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3145833333333328,
+      "rise": -0.0001934510964058181,
+      "wristRise": 0,
+      "pulls": [
+        0.004010664963722481,
+        0.003734809442420855,
+        0.003478985698504533,
+        0.003912465176662359,
+        0.004010664963722481
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.0030738318459925646,
+        0.02455528219186124,
+        0,
+        0
+      ],
+      "maxPenetration": 9.164218862933726e-15,
+      "maxStructuralStrain": 0.0075969915630104135,
+      "verifiedCCD": true,
+      "ccdChecks": 568,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.31666666666666615,
+      "rise": -0.00019383167247882804,
+      "wristRise": 0,
+      "pulls": [
+        0.004054465321585465,
+        0.00373608481379587,
+        0.0034790597577894593,
+        0.003955563357248292,
+        0.004054465321585465
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.00436743193657246,
+        0.02751814235431151,
+        0,
+        0
+      ],
+      "maxPenetration": 2.110421212786484e-14,
+      "maxStructuralStrain": 0.007605669250744906,
+      "verifiedCCD": true,
+      "ccdChecks": 284,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3187499999999995,
+      "rise": -0.00019400967033719047,
+      "wristRise": 0,
+      "pulls": [
+        0.004098366516479854,
+        0.003737882130553113,
+        0.0034791331655309376,
+        0.003998740021713695,
+        0.004098366516479854
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.006157765907426002,
+        0.030518719420302442,
+        0,
+        0
+      ],
+      "maxPenetration": 3.458323037663913e-14,
+      "maxStructuralStrain": 0.007598705632466007,
+      "verifiedCCD": true,
+      "ccdChecks": 284,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3208333333333328,
+      "rise": -0.00019368592931683082,
+      "wristRise": 0,
+      "pulls": [
+        0.00414236622926495,
+        0.0037397513606758095,
+        0.003479215317339708,
+        0.004041982468446857,
+        0.00414236622926495
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.00759390319714091,
+        0.03345742035615579,
+        0,
+        0
+      ],
+      "maxPenetration": 5.125782610859719e-14,
+      "maxStructuralStrain": 0.007572797967857592,
+      "verifiedCCD": true,
+      "ccdChecks": 570,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.32291666666666613,
+      "rise": -0.00019274163432685815,
+      "wristRise": 0,
+      "pulls": [
+        0.004186461750507514,
+        0.0037416498797310533,
+        0.0034793110854226257,
+        0.004085283943646665,
+        0.004186461750507514
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.0084572446927678,
+        0.03631471329037118,
+        0,
+        0
+      ],
+      "maxPenetration": 5.412890188155606e-14,
+      "maxStructuralStrain": 0.007526603362306705,
+      "verifiedCCD": true,
+      "ccdChecks": 286,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.32499999999999946,
+      "rise": -0.0001911929472659321,
+      "wristRise": 0,
+      "pulls": [
+        0.0042306499991646915,
+        0.0037437887127948666,
+        0.0034794209116469545,
+        0.004128638551842043,
+        0.0042306499991646915
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.009342850193829312,
+        0.03912133653207561,
+        0,
+        0
+      ],
+      "maxPenetration": 9.277008414937393e-14,
+      "maxStructuralStrain": 0.007459281899993897,
+      "verifiedCCD": true,
+      "ccdChecks": 288,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3270833333333328,
+      "rise": -0.0001891577482550505,
+      "wristRise": 0,
+      "pulls": [
+        0.0042749275547214315,
+        0.003746241526616498,
+        0.0034795415556945946,
+        0.004172041159800179,
+        0.0042749275547214315
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.010387881493737306,
+        0.04191396427174209,
+        0,
+        0
+      ],
+      "maxPenetration": 1.4341609497203756e-13,
+      "maxStructuralStrain": 0.007373289543131212,
+      "verifiedCCD": true,
+      "ccdChecks": 576,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3291666666666661,
+      "rise": -0.00018681651140699945,
+      "wristRise": 0,
+      "pulls": [
+        0.004319259727091682,
+        0.003748922495642362,
+        0.0034796676183325723,
+        0.004215487440897402,
+        0.004319259727091682
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.01145132586202225,
+        0.044716541031864364,
+        0,
+        0
+      ],
+      "maxPenetration": 1.7445777895225278e-13,
+      "maxStructuralStrain": 0.007274667417060177,
+      "verifiedCCD": true,
+      "ccdChecks": 288,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.33124999999999943,
+      "rise": -0.00018435108111743842,
+      "wristRise": 0,
+      "pulls": [
+        0.004363589777583111,
+        0.0037517355798871517,
+        0.0034797943978524064,
+        0.004258973899059193,
+        0.004363589777583111
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.012966823591317412,
+        0.047542405872732375,
+        0,
+        0
+      ],
+      "maxPenetration": 2.097756647209681e-13,
+      "maxStructuralStrain": 0.007169217464784383,
+      "verifiedCCD": true,
+      "ccdChecks": 864,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.33333333333333276,
+      "rise": -0.00018191041075533293,
+      "wristRise": 0,
+      "pulls": [
+        0.004407865894495861,
+        0.00375461424410542,
+        0.0034799193073317644,
+        0.0043024897518504175,
+        0.004407865894495861
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.014457480388257771,
+        0.05038575106737345,
+        0,
+        0
+      ],
+      "maxPenetration": 2.575681638458671e-13,
+      "maxStructuralStrain": 0.007062832377130568,
+      "verifiedCCD": true,
+      "ccdChecks": 288,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3354166666666661,
+      "rise": -0.0001795922499355021,
+      "wristRise": 0,
+      "pulls": [
+        0.004452042950353981,
+        0.003757493030705447,
+        0.0034800399897499355,
+        0.004345994165485607,
+        0.004452042950353981
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.015748394191520167,
+        0.053238221385373985,
+        0,
+        0
+      ],
+      "maxPenetration": 3.115338933004641e-13,
+      "maxStructuralStrain": 0.00696065017616776,
+      "verifiedCCD": true,
+      "ccdChecks": 288,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3374999999999994,
+      "rise": -0.00017743281198299293,
+      "wristRise": 0,
+      "pulls": [
+        0.0044960839326732,
+        0.003760365009338475,
+        0.0034801558179571603,
+        0.004389449154956444,
+        0.0044960839326732
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.01698614356702722,
+        0.05608469501274966,
+        0,
+        0
+      ],
+      "maxPenetration": 8.401157922544727e-10,
+      "maxStructuralStrain": 0.0068643712736755624,
+      "verifiedCCD": true,
+      "ccdChecks": 290,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.33958333333333274,
+      "rise": -0.00017541520665146498,
+      "wristRise": 0,
+      "pulls": [
+        0.004539961003944112,
+        0.0037632385520739455,
+        0.0034802680781599346,
+        0.004432820402477237,
+        0.004539961003944112
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.01820432753441519,
+        0.0589183750403483,
+        0,
+        0
+      ],
+      "maxPenetration": 4.113403411290517e-13,
+      "maxStructuralStrain": 0.006773223236304471,
+      "verifiedCCD": true,
+      "ccdChecks": 580,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.34166666666666606,
+      "rise": -0.000173490803383608,
+      "wristRise": 0,
+      "pulls": [
+        0.004583691195260809,
+        0.0037661272025799773,
+        0.0034803791228601184,
+        0.004476077965086811,
+        0.004583691195260809
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.019411578912115455,
+        0.061737333964563046,
+        0,
+        0
+      ],
+      "maxPenetration": 4.436968370838401e-13,
+      "maxStructuralStrain": 0.006685265164576348,
+      "verifiedCCD": true,
+      "ccdChecks": 290,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3437499999999994,
+      "rise": -0.00017160204331011925,
+      "wristRise": 0,
+      "pulls": [
+        0.004627302278347687,
+        0.0037690285329953113,
+        0.0034804915488256855,
+        0.004519196856397961,
+        0.004627302278347687
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.020633831869931212,
+        0.06454163614510278,
+        0,
+        0
+      ],
+      "maxPenetration": 4.588962673399144e-13,
+      "maxStructuralStrain": 0.006598366042738335,
+      "verifiedCCD": true,
+      "ccdChecks": 580,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3458333333333327,
+      "rise": -0.00016970031655241108,
+      "wristRise": 0,
+      "pulls": [
+        0.00467082777671913,
+        0.0037719391690734507,
+        0.003480609068895435,
+        0.00456216974675742,
+        0.00467082777671913
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.021855567835264676,
+        0.06768703085345962,
+        0,
+        0
+      ],
+      "maxPenetration": 4.242389859548945e-13,
+      "maxStructuralStrain": 0.006510840565120524,
+      "verifiedCCD": true,
+      "ccdChecks": 292,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.34791666666666604,
+      "rise": -0.00016776160617466146,
+      "wristRise": 0,
+      "pulls": [
+        0.004714305370543904,
+        0.0037748490924796397,
+        0.003480730965437934,
+        0.004605009589516021,
+        0.004714305370543904
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.023080241827179753,
+        0.0704956878698886,
+        0,
+        0
+      ],
+      "maxPenetration": 4.1656955662716655e-13,
+      "maxStructuralStrain": 0.006422034191593595,
+      "verifiedCCD": true,
+      "ccdChecks": 292,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.34999999999999937,
+      "rise": -0.00016578723156034786,
+      "wristRise": 0,
+      "pulls": [
+        0.004757775199918204,
+        0.0037777421489594426,
+        0.0034808578170037272,
+        0.00464773349168575,
+        0.004757775199918204
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.024304442642028037,
+        0.07329284846414558,
+        0,
+        0
+      ],
+      "maxPenetration": 4.0338663399169805e-13,
+      "maxStructuralStrain": 0.006332180609195381,
+      "verifiedCCD": true,
+      "ccdChecks": 584,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3520833333333327,
+      "rise": -0.0001638006977206785,
+      "wristRise": 0,
+      "pulls": [
+        0.004801278193823583,
+        0.0037805966081374005,
+        0.0034809895462154642,
+        0.004690362138967095,
+        0.004801278193823583
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.02552507126514149,
+        0.07608818048238758,
+        0,
+        0
+      ],
+      "maxPenetration": 3.8827654199463657e-13,
+      "maxStructuralStrain": 0.006242283462500664,
+      "verifiedCCD": true,
+      "ccdChecks": 292,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.354166666666666,
+      "rise": -0.00016184024855376428,
+      "wristRise": 0,
+      "pulls": [
+        0.004844854581198068,
+        0.0037833866407766775,
+        0.0034811250799674206,
+        0.00473291914749539,
+        0.004844854581198068
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.026739078334958023,
+        0.07888558853787321,
+        0,
+        0
+      ],
+      "maxPenetration": 3.735773626209471e-13,
+      "maxStructuralStrain": 0.006153865923505641,
+      "verifiedCCD": true,
+      "ccdChecks": 292,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.35624999999999934,
+      "rise": -0.0001599495992453681,
+      "wristRise": 0,
+      "pulls": [
+        0.004888542005094024,
+        0.003786084626216017,
+        0.003481262811739931,
+        0.004775430359791597,
+        0.004888542005094024
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.027942633821227674,
+        0.08168536604758699,
+        0,
+        0
+      ],
+      "maxPenetration": 3.603676601918182e-13,
+      "maxStructuralStrain": 0.0060686558179204875,
+      "verifiedCCD": true,
+      "ccdChecks": 584,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.35833333333333267,
+      "rise": -0.00015816937833458555,
+      "wristRise": 0,
+      "pulls": [
+        0.004932374072938191,
+        0.003788664100627292,
+        0.003481401083726732,
+        0.0048179232425030775,
+        0.004932374072938191
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.02913189743742448,
+        0.08448666715532001,
+        0,
+        0
+      ],
+      "maxPenetration": 3.4903471172326173e-13,
+      "maxStructuralStrain": 0.005988260393878009,
+      "verifiedCCD": true,
+      "ccdChecks": 292,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.360416666666666,
+      "rise": -0.00015653087238878816,
+      "wristRise": 0,
+      "pulls": [
+        0.0049763791144710285,
+        0.003791101969440033,
+        0.00348153846927341,
+        0.004860426074037528,
+        0.0049763791144710285
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.0303038227527859,
+        0.08728882387385194,
+        0,
+        0
+      ],
+      "maxPenetration": 3.3922235680161617e-13,
+      "maxStructuralStrain": 0.005913934654417585,
+      "verifiedCCD": true,
+      "ccdChecks": 292,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3624999999999993,
+      "rise": -0.00015505287824991304,
+      "wristRise": 0,
+      "pulls": [
+        0.00502057918749726,
+        0.003793379862523512,
+        0.0034816738874862765,
+        0.004902967084234881,
+        0.00502057918749726
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.0314560104710003,
+        0.09009103927848246,
+        0,
+        0
+      ],
+      "maxPenetration": 3.303018665870572e-13,
+      "maxStructuralStrain": 0.005846461906069411,
+      "verifiedCCD": true,
+      "ccdChecks": 584,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.36458333333333265,
+      "rise": -0.00015374190477495525,
+      "wristRise": 0,
+      "pulls": [
+        0.0050649775523331575,
+        0.003795484868354219,
+        0.0034818066224560932,
+        0.004945573709107028,
+        0.0050649775523331575
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.03258866043051386,
+        0.09289278230623545,
+        0,
+        0
+      ],
+      "maxPenetration": 3.2194852252892536e-13,
+      "maxStructuralStrain": 0.00578613387793625,
+      "verifiedCCD": true,
+      "ccdChecks": 292,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.366666666666666,
+      "rise": -0.00015259480781176088,
+      "wristRise": 0,
+      "pulls": [
+        0.005109557272779732,
+        0.0037974094486248424,
+        0.0034819362508667897,
+        0.00498827188254317,
+        0.005109557272779732
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.03370483728489659,
+        0.09569359320203602,
+        0,
+        0
+      ],
+      "maxPenetration": 3.1417620241502853e-13,
+      "maxStructuralStrain": 0.0057328504512631495,
+      "verifiedCCD": true,
+      "ccdChecks": 292,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3687499999999993,
+      "rise": -0.00015160165828788374,
+      "wristRise": 0,
+      "pulls": [
+        0.005154296065802675,
+        0.0037991496730495414,
+        0.003482062581297527,
+        0.005031085381304216,
+        0.005154296065802675
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.03480233017714508,
+        0.09849421946867264,
+        0,
+        0
+      ],
+      "maxPenetration": 3.055508320318201e-13,
+      "maxStructuralStrain": 0.005686318437841287,
+      "verifiedCCD": true,
+      "ccdChecks": 598,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3708333333333326,
+      "rise": -0.000150750437829604,
+      "wristRise": 0,
+      "pulls": [
+        0.0051991672657753524,
+        0.0038007056157576794,
+        0.0034821855072089424,
+        0.005074022248537885,
+        0.0051991672657753524
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.03588687643361791,
+        0.10129485392105168,
+        0,
+        0
+      ],
+      "maxPenetration": 2.9549312215854107e-13,
+      "maxStructuralStrain": 0.005646062895454995,
+      "verifiedCCD": true,
+      "ccdChecks": 300,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.37291666666666595,
+      "rise": -0.00015002965871470375,
+      "wristRise": 0,
+      "pulls": [
+        0.005244140924421609,
+        0.003802078700896182,
+        0.0034823048793652923,
+        0.005117082948130352,
+        0.005244140924421609
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.03695939489261376,
+        0.10409447707000474,
+        0,
+        0
+      ],
+      "maxPenetration": 2.8239704411708866e-13,
+      "maxStructuralStrain": 0.005611682940339424,
+      "verifiedCCD": true,
+      "ccdChecks": 300,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3749999999999993,
+      "rise": -0.00014943071225719667,
+      "wristRise": 0,
+      "pulls": [
+        0.005289184998660367,
+        0.003803272723944469,
+        0.0034824204912221593,
+        0.00516026537301064,
+        0.005289184998660367
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.03802347720482327,
+        0.10689195333728861,
+        0,
+        0
+      ],
+      "maxPenetration": 2.6494496700724124e-13,
+      "maxStructuralStrain": 0.005582823992081987,
+      "verifiedCCD": true,
+      "ccdChecks": 596,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3770833333333326,
+      "rise": -0.00014894868341186474,
+      "wristRise": 0,
+      "pulls": [
+        0.005334269819267784,
+        0.0038042936967409725,
+        0.0034825320665344845,
+        0.005203564897360728,
+        0.005334269819267784
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.039085650332860676,
+        0.10968607788741293,
+        0,
+        0
+      ],
+      "maxPenetration": 2.410818940312698e-13,
+      "maxStructuralStrain": 0.005559252585459973,
+      "verifiedCCD": true,
+      "ccdChecks": 297,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.37916666666666593,
+      "rise": -0.00014858076958536304,
+      "wristRise": 0,
+      "pulls": [
+        0.005379366307862802,
+        0.003805156325324005,
+        0.003482639240297535,
+        0.0052469744898061815,
+        0.005379366307862802
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.04015308451450419,
+        0.11247653319502135,
+        0,
+        0
+      ],
+      "maxPenetration": 1.979011572672551e-13,
+      "maxStructuralStrain": 0.005540828526049646,
+      "verifiedCCD": true,
+      "ccdChecks": 304,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.38124999999999926,
+      "rise": -0.00014832242021237813,
+      "wristRise": 0,
+      "pulls": [
+        0.005424446502724358,
+        0.003805881612635627,
+        0.003482741291915682,
+        0.0052904848833439135,
+        0.005424446502724358
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.041269340495029075,
+        0.11526472038469615,
+        0,
+        0
+      ],
+      "maxPenetration": 2.8212229102354824e-10,
+      "maxStructuralStrain": 0.0055791897751992225,
+      "verifiedCCD": true,
+      "ccdChecks": 608,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3833333333333326,
+      "rise": -0.00014816418794692116,
+      "wristRise": 0,
+      "pulls": [
+        0.005469484506874752,
+        0.003806498141250758,
+        0.003482838369172419,
+        0.005334087236041317,
+        0.005469484506874752
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.04248696600806435,
+        0.11804403328566838,
+        0,
+        0
+      ],
+      "maxPenetration": 7.387008793286604e-10,
+      "maxStructuralStrain": 0.005620464050276608,
+      "verifiedCCD": true,
+      "ccdChecks": 304,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3854166666666659,
+      "rise": -0.00014808489540907993,
+      "wristRise": 0,
+      "pulls": [
+        0.005514457321387636,
+        0.003807037018932183,
+        0.0034829318442128705,
+        0.005377771026785733,
+        0.005514457321387636
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.0440230701618305,
+        0.12080616818106309,
+        0,
+        0
+      ],
+      "maxPenetration": 7.639211275275309e-10,
+      "maxStructuralStrain": 0.005662917229060205,
+      "verifiedCCD": true,
+      "ccdChecks": 608,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.38749999999999923,
+      "rise": -0.00014806552757164887,
+      "wristRise": 0,
+      "pulls": [
+        0.005559334740597704,
+        0.0038074956461719043,
+        0.0034830224650818442,
+        0.005421524111230174,
+        0.005559334740597704
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.045642715207008897,
+        0.1235767988475506,
+        0,
+        0
+      ],
+      "maxPenetration": 7.989304037130454e-10,
+      "maxStructuralStrain": 0.005705804977010898,
+      "verifiedCCD": true,
+      "ccdChecks": 304,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.38958333333333256,
+      "rise": -0.00014809124176944077,
+      "wristRise": 0,
+      "pulls": [
+        0.005604068771025937,
+        0.0038078739037214543,
+        0.003483110647688831,
+        0.0054653329987257955,
+        0.005604068771025937
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.04730315261074083,
+        0.12635793626480135,
+        0,
+        0
+      ],
+      "maxPenetration": 8.40614313617552e-10,
+      "maxStructuralStrain": 0.005748879281747943,
+      "verifiedCCD": true,
+      "ccdChecks": 308,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3916666666666659,
+      "rise": -0.00014815156432507193,
+      "wristRise": 0,
+      "pulls": [
+        0.005648618867449566,
+        0.0038081818853792112,
+        0.0034831968470365087,
+        0.005509183155857827,
+        0.005648618867449566
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.04898137909026111,
+        0.12914847661842246,
+        0,
+        0
+      ],
+      "maxPenetration": 8.882198123706664e-10,
+      "maxStructuralStrain": 0.005792109209832419,
+      "verifiedCCD": true,
+      "ccdChecks": 616,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3937499999999992,
+      "rise": -0.00014823898014183073,
+      "wristRise": 0,
+      "pulls": [
+        0.00569295317023164,
+        0.003808435694918649,
+        0.0034832816058719186,
+        0.005553054334966098,
+        0.00569295317023164
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.050666587408232495,
+        0.13194889123606932,
+        0,
+        0
+      ],
+      "maxPenetration": 9.428575265370623e-10,
+      "maxStructuralStrain": 0.005835560114735183,
+      "verifiedCCD": true,
+      "ccdChecks": 309,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.39583333333333254,
+      "rise": -0.0001483470654817451,
+      "wristRise": 0,
+      "pulls": [
+        0.00573704935342054,
+        0.0038086527227817997,
+        0.003483365465588476,
+        0.005596907279122237,
+        0.00573704935342054
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.05235101317172681,
+        0.13475947005355257,
+        0,
+        0
+      ],
+      "maxPenetration": 1.001958446875291e-9,
+      "maxStructuralStrain": 0.005879298301836533,
+      "verifiedCCD": true,
+      "ccdChecks": 309,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.39791666666666586,
+      "rise": -0.00014846903133891587,
+      "wristRise": 0,
+      "pulls": [
+        0.005780895064167734,
+        0.003808849536608503,
+        0.0034834489479316612,
+        0.0056407039519707465,
+        0.005780895064167734
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.05402762150689022,
+        0.1375798681033595,
+        0,
+        0
+      ],
+      "maxPenetration": 1.0652589804184542e-9,
+      "maxStructuralStrain": 0.00592333462487904,
+      "verifiedCCD": true,
+      "ccdChecks": 618,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.3999999999999992,
+      "rise": -0.00014859688590618952,
+      "wristRise": 0,
+      "pulls": [
+        0.0058245146949885826,
+        0.0038090419699594725,
+        0.003483532566191679,
+        0.005684408405890951,
+        0.0058245146949885826
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.05568984254190126,
+        0.14040820082043326,
+        0,
+        0
+      ],
+      "maxPenetration": 1.1338909566057515e-9,
+      "maxStructuralStrain": 0.00596760734879298,
+      "verifiedCCD": true,
+      "ccdChecks": 311,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4020833333333325,
+      "rise": -0.00014872108887119262,
+      "wristRise": 0,
+      "pulls": [
+        0.005867951252627813,
+        0.003809245888302456,
+        0.0034836168478679847,
+        0.005727987576947206,
+        0.005867951252627813
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.057332992631055804,
+        0.14324194758140482,
+        0,
+        0
+      ],
+      "maxPenetration": 1.2057742911769642e-9,
+      "maxStructuralStrain": 0.0060119895396291145,
+      "verifiedCCD": true,
+      "ccdChecks": 311,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.40416666666666584,
+      "rise": -0.0001488306364573061,
+      "wristRise": 0,
+      "pulls": [
+        0.005911252704546734,
+        0.0038094773565148397,
+        0.0034837023376378556,
+        0.005771411988343207,
+        0.005911252704546734
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.058955212535293455,
+        0.1460788743448171,
+        0,
+        0
+      ],
+      "maxPenetration": 1.2795482982625589e-9,
+      "maxStructuralStrain": 0.006056310734928294,
+      "verifiedCCD": true,
+      "ccdChecks": 622,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.40624999999999917,
+      "rise": -0.0001489135204573444,
+      "wristRise": 0,
+      "pulls": [
+        0.005954469840417889,
+        0.003809752173896545,
+        0.0034837895679393454,
+        0.005814669844869461,
+        0.005954469840417889
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.06055581439746001,
+        0.14891725780586976,
+        0,
+        0
+      ],
+      "maxPenetration": 1.3548368366870372e-9,
+      "maxStructuralStrain": 0.0061003626500117925,
+      "verifiedCCD": true,
+      "ccdChecks": 318,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4083333333333325,
+      "rise": -0.00014895740229309978,
+      "wristRise": 0,
+      "pulls": [
+        0.0059976541020097425,
+        0.0038100852552325846,
+        0.0034838790297345218,
+        0.005857767122989587,
+        0.0059976541020097425
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.062134574054511,
+        0.1517558260812385,
+        0,
+        0
+      ],
+      "maxPenetration": 1.432150961949534e-9,
+      "maxStructuralStrain": 0.006143917502278384,
+      "verifiedCCD": true,
+      "ccdChecks": 318,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4104166666666658,
+      "rise": -0.00014895034099803028,
+      "wristRise": 0,
+      "pulls": [
+        0.006040855466736642,
+        0.0038104900219616644,
+        0.0034839711431051165,
+        0.005900713064893726,
+        0.006040855466736642
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.06369044901017853,
+        0.1545937953106654,
+        0,
+        0
+      ],
+      "maxPenetration": 1.5033803521741565e-9,
+      "maxStructuralStrain": 0.0061867304170309945,
+      "verifiedCCD": true,
+      "ccdChecks": 636,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.41249999999999915,
+      "rise": -0.00014888146564117494,
+      "wristRise": 0,
+      "pulls": [
+        0.006084121993939093,
+        0.00381097800268844,
+        0.0034840662339938487,
+        0.00594351981318427,
+        0.006084121993939093
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.06522079866438106,
+        0.1574307832416627,
+        0,
+        0
+      ],
+      "maxPenetration": 1.5696504308999881e-9,
+      "maxStructuralStrain": 0.006228543634496209,
+      "verifiedCCD": true,
+      "ccdChecks": 320,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.41458333333333247,
+      "rise": -0.000148741602469582,
+      "wristRise": 0,
+      "pulls": [
+        0.006127496494311127,
+        0.0038115583666364326,
+        0.0034841645097212944,
+        0.005986201983010062,
+        0.006127496494311127
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.06672082159622802,
+        0.16026682904901593,
+        0,
+        0
+      ],
+      "maxPenetration": 1.6357755829119608e-9,
+      "maxStructuralStrain": 0.006269096016499387,
+      "verifiedCCD": true,
+      "ccdChecks": 321,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4166666666666658,
+      "rise": -0.00014852365288407776,
+      "wristRise": 0,
+      "pulls": [
+        0.0061710148765027045,
+        0.0038122378770516344,
+        0.0034842660523239344,
+        0.006028776183640188,
+        0.0061710148765027045
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.06818443503027219,
+        0.16310231561272528,
+        0,
+        0
+      ],
+      "maxPenetration": 1.7012794168227985e-9,
+      "maxStructuralStrain": 0.0063081335016156315,
+      "verifiedCCD": true,
+      "ccdChecks": 643,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4187499999999991,
+      "rise": -0.00014822272675422965,
+      "wristRise": 0,
+      "pulls": [
+        0.006214704908963932,
+        0.0038130209402003784,
+        0.003484370821379618,
+        0.006071261286681226,
+        0.006214704908963932
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.06960453294536181,
+        0.16593787494434376,
+        0,
+        0
+      ],
+      "maxPenetration": 1.7659732514220886e-9,
+      "maxStructuralStrain": 0.006345419026493437,
+      "verifiedCCD": true,
+      "ccdChecks": 322,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.42083333333333245,
+      "rise": -0.00014783603574725773,
+      "wristRise": 0,
+      "pulls": [
+        0.006258585342084042,
+        0.003813909756055218,
+        0.003484478667423862,
+        0.006113677437481803,
+        0.006258585342084042
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.07097339473871807,
+        0.16877440515991177,
+        0,
+        0
+      ],
+      "maxPenetration": 1.828962706978965e-9,
+      "maxStructuralStrain": 0.00638073499554459,
+      "verifiedCCD": true,
+      "ccdChecks": 640,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4229166666666658,
+      "rise": -0.00014736268879748937,
+      "wristRise": 0,
+      "pulls": [
+        0.006302665806758073,
+        0.0038149045172587203,
+        0.003484589332944482,
+        0.006156045093863024,
+        0.006302665806758073
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.07228429577772896,
+        0.17161225865616897,
+        0,
+        0
+      ],
+      "maxPenetration": 1.8896426793105214e-9,
+      "maxStructuralStrain": 0.006413889446655885,
+      "verifiedCCD": true,
+      "ccdChecks": 326,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4249999999999991,
+      "rise": -0.0001468033629322546,
+      "wristRise": 0,
+      "pulls": [
+        0.006346947913421915,
+        0.0038160036611168072,
+        0.0034847024821960753,
+        0.006198384456045009,
+        0.006346947913421915
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.07353137445347183,
+        0.1744518703331254,
+        0,
+        0
+      ],
+      "maxPenetration": 1.9462414672499068e-9,
+      "maxStructuralStrain": 0.0064447121901751725,
+      "verifiedCCD": true,
+      "ccdChecks": 326,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4270833333333324,
+      "rise": -0.00014616003020495594,
+      "wristRise": 0,
+      "pulls": [
+        0.006391423758082128,
+        0.003817204001074446,
+        0.0034848177221979484,
+        0.006240714916421881,
+        0.006391423758082128
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.07471008142437668,
+        0.1772934796999004,
+        0,
+        0
+      ],
+      "maxPenetration": 1.998999185365974e-9,
+      "maxStructuralStrain": 0.006473058471530013,
+      "verifiedCCD": true,
+      "ccdChecks": 326,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.42916666666666575,
+      "rise": -0.00014543572248117143,
+      "wristRise": 0,
+      "pulls": [
+        0.006436076475603597,
+        0.003818500984537687,
+        0.003484934621607471,
+        0.006283054542210298,
+        0.006436076475603597
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.07581783137533217,
+        0.18013693618906715,
+        0,
+        0
+      ],
+      "maxPenetration": 2.0474536349115655e-9,
+      "maxStructuralStrain": 0.006498810177456127,
+      "verifiedCCD": true,
+      "ccdChecks": 642,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4312499999999991,
+      "rise": -0.00014463437541918645,
+      "wristRise": 0,
+      "pulls": [
+        0.006480881119504013,
+        0.0038198888776400223,
+        0.0034850527277610842,
+        0.006325420711064593,
+        0.006480881119504013
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.07685410726804644,
+        0.1829817943266793,
+        0,
+        0
+      ],
+      "maxPenetration": 2.0911215281062268e-9,
+      "maxStructuralStrain": 0.00652187853774977,
+      "verifiedCCD": true,
+      "ccdChecks": 321,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4333333333333324,
+      "rise": -0.00014376075077032063,
+      "wristRise": 0,
+      "pulls": [
+        0.006525805822345441,
+        0.003821360892335296,
+        0.0034851715815498586,
+        0.0063678288443342924,
+        0.006525805822345441
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.07782048552663717,
+        0.18582735251641225,
+        0,
+        0
+      ],
+      "maxPenetration": 2.1298572863053325e-9,
+      "maxStructuralStrain": 0.006542209141196631,
+      "verifiedCCD": true,
+      "ccdChecks": 642,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.43541666666666573,
+      "rise": -0.00014282040776059102,
+      "wristRise": 0,
+      "pulls": [
+        0.00657081524142755,
+        0.003822909300087388,
+        0.0034852907256438873,
+        0.0064102917036000726,
+        0.00657081524142755
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.07872049251407076,
+        0.18867277129959653,
+        0,
+        0
+      ],
+      "maxPenetration": 2.163471340445311e-9,
+      "maxStructuralStrain": 0.006559786974460913,
+      "verifiedCCD": true,
+      "ccdChecks": 326,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.43749999999999906,
+      "rise": -0.00014181970035706537,
+      "wristRise": 0,
+      "pulls": [
+        0.006615871426781761,
+        0.00382452553132343,
+        0.0034854097173398634,
+        0.006452819080347162,
+        0.006615871426781761
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.07955940653010955,
+        0.19151706207470778,
+        0,
+        0
+      ],
+      "maxPenetration": 2.1922202459367587e-9,
+      "maxStructuralStrain": 0.006574641837130635,
+      "verifiedCCD": true,
+      "ccdChecks": 328,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4395833333333324,
+      "rise": -0.00014076577030155274,
+      "wristRise": 0,
+      "pulls": [
+        0.0066609337563461974,
+        0.003826200287042473,
+        0.003485528153693732,
+        0.006495417565756271,
+        0.0066609337563461974
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.08034393508018385,
+        0.19435887693382,
+        0,
+        0
+      ],
+      "maxPenetration": 2.2166067200051626e-9,
+      "maxStructuralStrain": 0.006586851159063212,
+      "verifiedCCD": true,
+      "ccdChecks": 328,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4416666666666657,
+      "rise": -0.00013966650409311804,
+      "wristRise": 0,
+      "pulls": [
+        0.006705960502699657,
+        0.0038279236457452116,
+        0.00348564566265077,
+        0.006538090404349514,
+        0.006705960502699657
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.08108168022302736,
+        0.19719711177729995,
+        0,
+        0
+      ],
+      "maxPenetration": 2.2370640187291055e-9,
+      "maxStructuralStrain": 0.006596544771290125,
+      "verifiedCCD": true,
+      "ccdChecks": 644,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.44374999999999903,
+      "rise": -0.00013853044058179803,
+      "wristRise": 0,
+      "pulls": [
+        0.0067509103854704305,
+        0.0038296852075990857,
+        0.0034857619128538693,
+        0.006580839647188358,
+        0.0067509103854704305
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.08178078966169865,
+        0.20003054366543008,
+        0,
+        0
+      ],
+      "maxPenetration": 2.253264324908119e-9,
+      "maxStructuralStrain": 0.006603905250921027,
+      "verifiedCCD": true,
+      "ccdChecks": 646,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.44583333333333236,
+      "rise": -0.0001373666422629788,
+      "wristRise": 0,
+      "pulls": [
+        0.006795744117442084,
+        0.0038314741679210088,
+        0.0034858766201179368,
+        0.00662366412580462,
+        0.006795744117442084
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.08244960985359664,
+        0.20285840354301482,
+        0,
+        0
+      ],
+      "maxPenetration": 2.2665115849678646e-9,
+      "maxStructuralStrain": 0.006609167090009582,
+      "verifiedCCD": true,
+      "ccdChecks": 326,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4479166666666657,
+      "rise": -0.00013618453832740796,
+      "wristRise": 0,
+      "pulls": [
+        0.006840428902867354,
+        0.0038332795030209866,
+        0.0034859895650871755,
+        0.006666559229941279,
+        0.006840428935781095
+      ],
+      "contactFingers": 2,
+      "thumb": false,
+      "forces": [
+        0,
+        0.08309649153583162,
+        0.2056795862579663,
+        0,
+        0
+      ],
+      "maxPenetration": 2.277790874319341e-9,
+      "maxStructuralStrain": 0.006612613336316131,
+      "verifiedCCD": true,
+      "ccdChecks": 326,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.449999999999999,
+      "rise": -0.00013428023231285696,
+      "wristRise": 0,
+      "pulls": [
+        0.006857853198469727,
+        0.003835786747921706,
+        0.00348613753042376,
+        0.00670951704104043,
+        0.00688493626665092
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.013285692870972317,
+        0.084594784544166,
+        0.20838743886695346,
+        0,
+        0
+      ],
+      "maxPenetration": 2.3717874707415362e-9,
+      "maxStructuralStrain": 0.006611794133096871,
+      "verifiedCCD": true,
+      "ccdChecks": 326,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.45208333333333234,
+      "rise": -0.00013241237833277325,
+      "wristRise": 0,
+      "pulls": [
+        0.006862469519705689,
+        0.003838410257849016,
+        0.003486308531943001,
+        0.0067525265434074475,
+        0.006929242575151346
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.00772194689799986,
+        0.08592610506028282,
+        0.21119994735858622,
+        0,
+        0
+      ],
+      "maxPenetration": 2.5924315005896453e-9,
+      "maxStructuralStrain": 0.006629421034507144,
+      "verifiedCCD": true,
+      "ccdChecks": 664,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.45416666666666566,
+      "rise": -0.00013086942058955497,
+      "wristRise": 0,
+      "pulls": [
+        0.006865887371756777,
+        0.003840663537404435,
+        0.0034864751009205178,
+        0.00679557404232134,
+        0.0069733299901985546
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.0031416736804131713,
+        0.0865509263155412,
+        0.21400565797891863,
+        0,
+        0
+      ],
+      "maxPenetration": 2.6045405835317323e-9,
+      "maxStructuralStrain": 0.006651602475624241,
+      "verifiedCCD": true,
+      "ccdChecks": 338,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.456249999999999,
+      "rise": -0.00012965827371373,
+      "wristRise": 0,
+      "pulls": [
+        0.006869916013642931,
+        0.0038426356712675243,
+        0.0034866250163342514,
+        0.006838645550711937,
+        0.007017186688457655
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.0030421814599996193,
+        0.0868235543272082,
+        0.2167525625786064,
+        0,
+        0
+      ],
+      "maxPenetration": 2.6426067677425696e-9,
+      "maxStructuralStrain": 0.006672260875297709,
+      "verifiedCCD": true,
+      "ccdChecks": 676,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4583333333333323,
+      "rise": -0.0001287028014127084,
+      "wristRise": 0,
+      "pulls": [
+        0.0068744026816901236,
+        0.0038445586867311885,
+        0.0034867626207995403,
+        0.006881724892764381,
+        0.00706080835233312
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.003911419311802171,
+        0.08718886385577652,
+        0.21947352940555842,
+        0,
+        0
+      ],
+      "maxPenetration": 2.664865476182353e-9,
+      "maxStructuralStrain": 0.006691625892446651,
+      "verifiedCCD": true,
+      "ccdChecks": 338,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.46041666666666564,
+      "rise": -0.00012787854979789265,
+      "wristRise": 0,
+      "pulls": [
+        0.006878919314033459,
+        0.003846550420322662,
+        0.0034868962345898165,
+        0.006924794089420919,
+        0.007104198675564365
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.0049570385290591415,
+        0.08782832357304506,
+        0.22221713747199964,
+        0,
+        0
+      ],
+      "maxPenetration": 2.681124015944253e-9,
+      "maxStructuralStrain": 0.0067139559630611245,
+      "verifiedCCD": true,
+      "ccdChecks": 340,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.46249999999999897,
+      "rise": -0.0001270572984720525,
+      "wristRise": 0,
+      "pulls": [
+        0.006883293259612646,
+        0.003848607800030984,
+        0.0034870323431026905,
+        0.006967833778701613,
+        0.007147366781238569
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.005912108041694141,
+        0.08866345237983085,
+        0.22498760040468374,
+        0,
+        0
+      ],
+      "maxPenetration": 2.7084161527022796e-9,
+      "maxStructuralStrain": 0.006741045494745523,
+      "verifiedCCD": true,
+      "ccdChecks": 340,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4645833333333323,
+      "rise": -0.00012614253672155878,
+      "wristRise": 0,
+      "pulls": [
+        0.006887521575274197,
+        0.003850686780359102,
+        0.0034871748026848765,
+        0.007010823659768987,
+        0.007190326574921321
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.006800158426607468,
+        0.08954603438914702,
+        0.22776814078552673,
+        0,
+        0
+      ],
+      "maxPenetration": 2.748919629685237e-9,
+      "maxStructuralStrain": 0.006771330862954117,
+      "verifiedCCD": true,
+      "ccdChecks": 680,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4666666666666656,
+      "rise": -0.00012508815428051434,
+      "wristRise": 0,
+      "pulls": [
+        0.006891626813506173,
+        0.003852754944246273,
+        0.00348732504691195,
+        0.007053743555203024,
+        0.007233095937427008
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.0076685381046400925,
+        0.09039109780014724,
+        0.23054356453135086,
+        0,
+        0
+      ],
+      "maxPenetration": 2.8081259067190556e-9,
+      "maxStructuralStrain": 0.006802123745703326,
+      "verifiedCCD": true,
+      "ccdChecks": 340,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.46874999999999895,
+      "rise": -0.00012390424732534877,
+      "wristRise": 0,
+      "pulls": [
+        0.0068956023588890684,
+        0.0038547982496152373,
+        0.0034874825061307624,
+        0.007096575029936455,
+        0.007275695794101456
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.00855497382630077,
+        0.09119360894003575,
+        0.23330461000279012,
+        0,
+        0
+      ],
+      "maxPenetration": 2.8710123757547112e-9,
+      "maxStructuralStrain": 0.006831797216860003,
+      "verifiedCCD": true,
+      "ccdChecks": 680,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.47083333333333227,
+      "rise": -0.0001226417237624594,
+      "wristRise": 0,
+      "pulls": [
+        0.006899422047138332,
+        0.0038568098579086635,
+        0.003487645249113256,
+        0.007139299936998991,
+        0.0073181515507294605
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.009442042894826159,
+        0.0919947925581893,
+        0.23604758536516085,
+        0,
+        0
+      ],
+      "maxPenetration": 2.938231933474235e-9,
+      "maxStructuralStrain": 0.006860527960608098,
+      "verifiedCCD": true,
+      "ccdChecks": 340,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4729166666666656,
+      "rise": -0.0001213696971756259,
+      "wristRise": 0,
+      "pulls": [
+        0.006903030569699146,
+        0.0038587825047738584,
+        0.0034878109086077017,
+        0.007181900791281454,
+        0.007360491003154841
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.010331889585363466,
+        0.09284141047756596,
+        0.23877189624336886,
+        0,
+        0
+      ],
+      "maxPenetration": 3.0133267944678493e-9,
+      "maxStructuralStrain": 0.00688973191083897,
+      "verifiedCCD": true,
+      "ccdChecks": 340,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4749999999999989,
+      "rise": -0.00012015278310664734,
+      "wristRise": 0,
+      "pulls": [
+        0.006906447631734914,
+        0.0038607052067563615,
+        0.0034879771919387615,
+        0.00722436111832811,
+        0.007402741474003425
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.011160173085033646,
+        0.09376567614506649,
+        0.24147995846409762,
+        0,
+        0
+      ],
+      "maxPenetration": 3.075281691301314e-9,
+      "maxStructuralStrain": 0.0069212601217440994,
+      "verifiedCCD": true,
+      "ccdChecks": 340,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.47708333333333225,
+      "rise": -0.00011903550211496416,
+      "wristRise": 0,
+      "pulls": [
+        0.006909647991231627,
+        0.0038625694944441186,
+        0.0034881424749451627,
+        0.007266665770264829,
+        0.007444928683347298
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.01199378193953306,
+        0.09478160289437908,
+        0.2441747282863481,
+        0,
+        0
+      ],
+      "maxPenetration": 3.142767807931199e-9,
+      "maxStructuralStrain": 0.006956403457193838,
+      "verifiedCCD": true,
+      "ccdChecks": 684,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4791666666666656,
+      "rise": -0.00011803472411733157,
+      "wristRise": 0,
+      "pulls": [
+        0.00691262981141847,
+        0.003864370765933136,
+        0.0034883059671609483,
+        0.00730880235906839,
+        0.007487075721919113
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.012791627039860911,
+        0.09588621497350777,
+        0.2468592177916605,
+        0,
+        0
+      ],
+      "maxPenetration": 3.2135246870197004e-9,
+      "maxStructuralStrain": 0.0069955887403002626,
+      "verifiedCCD": true,
+      "ccdChecks": 342,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4812499999999989,
+      "rise": -0.0001171423988994072,
+      "wristRise": 0,
+      "pulls": [
+        0.0069154007557634695,
+        0.003866108429778363,
+        0.0034884675530233895,
+        0.00735076204290753,
+        0.007529202162529136
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.013566810385947077,
+        0.0970652655564456,
+        0.24953639024436777,
+        0,
+        0
+      ],
+      "maxPenetration": 3.2898450439550198e-9,
+      "maxStructuralStrain": 0.007038460989788664,
+      "verifiedCCD": true,
+      "ccdChecks": 684,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4833333333333322,
+      "rise": -0.00011633412608624133,
+      "wristRise": 0,
+      "pulls": [
+        0.006917975350563228,
+        0.0038677851171182564,
+        0.0034886275690882602,
+        0.007392537815484087,
+        0.007571326252782177
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.014327709215419522,
+        0.0982983477780049,
+        0.25220859694513525,
+        0,
+        0
+      ],
+      "maxPenetration": 3.373193341619715e-9,
+      "maxStructuralStrain": 0.007084114285334064,
+      "verifiedCCD": true,
+      "ccdChecks": 342,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.48541666666666555,
+      "rise": -0.00011557931713698094,
+      "wristRise": 0,
+      "pulls": [
+        0.0069203722510973635,
+        0.0038694056092995455,
+        0.0034887865218078164,
+        0.007434124571566291,
+        0.0076134625402338235
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.015080580613787585,
+        0.09956423088398718,
+        0.2548780278374462,
+        0,
+        0
+      ],
+      "maxPenetration": 3.4661902135416783e-9,
+      "maxStructuralStrain": 0.007131460506065057,
+      "verifiedCCD": true,
+      "ccdChecks": 342,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4874999999999989,
+      "rise": -0.00011485006307274115,
+      "wristRise": 0,
+      "pulls": [
+        0.006922611492463279,
+        0.0038709758220785927,
+        0.0034889448615127564,
+        0.007475519124851627,
+        0.00765562006219461
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.015831542272684105,
+        0.10084527660077733,
+        0.2575459772376526,
+        0,
+        0
+      ],
+      "maxPenetration": 3.5475450578439233e-9,
+      "maxStructuralStrain": 0.00717947695544896,
+      "verifiedCCD": true,
+      "ccdChecks": 343,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4895833333333322,
+      "rise": -0.00011412695114989407,
+      "wristRise": 0,
+      "pulls": [
+        0.006924712784109022,
+        0.00387250151366502,
+        0.0034891027801900315,
+        0.007516720178857348,
+        0.007697802101880712
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.01658703893433169,
+        0.10213014381465736,
+        0.2602137270325398,
+        0,
+        0
+      ],
+      "maxPenetration": 3.6014540821154364e-9,
+      "maxStructuralStrain": 0.007227379671097767,
+      "verifiedCCD": true,
+      "ccdChecks": 686,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.49166666666666553,
+      "rise": -0.00011340015682434479,
+      "wristRise": 0,
+      "pulls": [
+        0.006926710133382327,
+        0.00387398685627455,
+        0.0034892601520232413,
+        0.007557729467717191,
+        0.007740006173564277
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.017366122235536748,
+        0.10341003318452238,
+        0.262881815712878,
+        0,
+        0
+      ],
+      "maxPenetration": 3.6383835087545197e-9,
+      "maxStructuralStrain": 0.007274668096024728,
+      "verifiedCCD": true,
+      "ccdChecks": 343,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.49374999999999886,
+      "rise": -0.0001126702138154953,
+      "wristRise": 0,
+      "pulls": [
+        0.006928631823308799,
+        0.0038754379340932774,
+        0.0034894166813863015,
+        0.007598552131365382,
+        0.007782224228960962
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.018190113424161544,
+        0.10466546652279057,
+        0.26554997842213524,
+        0,
+        0
+      ],
+      "maxPenetration": 3.7205375568588606e-9,
+      "maxStructuralStrain": 0.007321578805300488,
+      "verifiedCCD": true,
+      "ccdChecks": 686,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4958333333333322,
+      "rise": -0.00011194199181183834,
+      "wristRise": 0,
+      "pulls": [
+        0.006930468142409174,
+        0.003876848863582526,
+        0.0034895713393722056,
+        0.007639194670509895,
+        0.007824444433414101
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.019251363103092015,
+        0.1058935937252161,
+        0.26821900730105097,
+        0,
+        0
+      ],
+      "maxPenetration": 3.810339888445438e-9,
+      "maxStructuralStrain": 0.007367260972409584,
+      "verifiedCCD": true,
+      "ccdChecks": 343,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.4979166666666655,
+      "rise": -0.00011122319773025635,
+      "wristRise": 0,
+      "pulls": [
+        0.00693223731462933,
+        0.0038782287113542035,
+        0.0034897234273051823,
+        0.007679664696259898,
+        0.00786665071658032
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.020182879970008394,
+        0.10711410603516618,
+        0.27088517632625575,
+        0,
+        0
+      ],
+      "maxPenetration": 3.86501974630922e-9,
+      "maxStructuralStrain": 0.007412280590140097,
+      "verifiedCCD": true,
+      "ccdChecks": 345,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.49999999999999883,
+      "rise": -0.00011052051054075834,
+      "wristRise": 0,
+      "pulls": [
+        0.0069339671706965455,
+        0.003879584506990104,
+        0.0034898725204431536,
+        0.007719970658840582,
+        0.007908823018875105
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.02109040664104117,
+        0.10832648513600147,
+        0.27354691126286024,
+        0,
+        0
+      ],
+      "maxPenetration": 3.919041369638415e-9,
+      "maxStructuralStrain": 0.007456484186545098,
+      "verifiedCCD": true,
+      "ccdChecks": 347,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5020833333333322,
+      "rise": -0.00010983584976401173,
+      "wristRise": 0,
+      "pulls": [
+        0.006935678007281778,
+        0.003880924151305974,
+        0.0034900184411468197,
+        0.0077601215624527025,
+        0.007950938104575605
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.021983142943992107,
+        0.10953968956373275,
+        0.27620201990129317,
+        0,
+        0
+      ],
+      "maxPenetration": 3.972319211195327e-9,
+      "maxStructuralStrain": 0.0074997431116540225,
+      "verifiedCCD": true,
+      "ccdChecks": 694,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5041666666666655,
+      "rise": -0.00010916670638208559,
+      "wristRise": 0,
+      "pulls": [
+        0.006937387443607887,
+        0.00388225629600564,
+        0.0034901612641432002,
+        0.0078001269856167324,
+        0.007992970466716553
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.022826132157049754,
+        0.11076135105977507,
+        0.2788483146677454,
+        0,
+        0
+      ],
+      "maxPenetration": 4.02589541695017e-9,
+      "maxStructuralStrain": 0.007541967767151103,
+      "verifiedCCD": true,
+      "ccdChecks": 347,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5062499999999989,
+      "rise": -0.00010850719518117058,
+      "wristRise": 0,
+      "pulls": [
+        0.006939112312763181,
+        0.0038835899961330678,
+        0.003490301344002562,
+        0.007839997384432307,
+        0.008034893285860663
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.023600744064577316,
+        0.11199664227788313,
+        0.2814843687523257,
+        0,
+        0
+      ],
+      "maxPenetration": 4.080872678083498e-9,
+      "maxStructuralStrain": 0.007583110919805236,
+      "verifiedCCD": true,
+      "ccdChecks": 694,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5083333333333322,
+      "rise": -0.00010784968704306147,
+      "wristRise": 0,
+      "pulls": [
+        0.006940868719799662,
+        0.003884934378586941,
+        0.003490439246624405,
+        0.00787974283233153,
+        0.008076679848024975
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.02429323108042632,
+        0.11325043476332514,
+        0.2841088497895476,
+        0,
+        0
+      ],
+      "maxPenetration": 4.1378711377465516e-9,
+      "maxStructuralStrain": 0.007623190268740032,
+      "verifiedCCD": true,
+      "ccdChecks": 348,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5104166666666655,
+      "rise": -0.00010718648724905577,
+      "wristRise": 0,
+      "pulls": [
+        0.0069426712116942525,
+        0.0038862981315998606,
+        0.0034905756880264293,
+        0.007919372724989491,
+        0.008118304106927108
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.024894537343294387,
+        0.11452610451685277,
+        0.2867209162221171,
+        0,
+        0
+      ],
+      "maxPenetration": 4.1974311800830125e-9,
+      "maxStructuralStrain": 0.007662301742165201,
+      "verifiedCCD": true,
+      "ccdChecks": 348,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5124999999999988,
+      "rise": -0.00010651125444544052,
+      "wristRise": 0,
+      "pulls": [
+        0.0069445319054780965,
+        0.0038876889202893485,
+        0.003490711475485002,
+        0.007958895508608834,
+        0.008159741466698211
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.025399871644223287,
+        0.11582532190652738,
+        0.28932018239610574,
+        0,
+        0
+      ],
+      "maxPenetration": 4.26000882117715e-9,
+      "maxStructuralStrain": 0.007700632908702376,
+      "verifiedCCD": true,
+      "ccdChecks": 348,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5145833333333322,
+      "rise": -0.00010581306978320326,
+      "wristRise": 0,
+      "pulls": [
+        0.006946468238419726,
+        0.003889107683425768,
+        0.003490847355985947,
+        0.007998318437586655,
+        0.008200969570138416
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.02594299863025446,
+        0.11714577609887993,
+        0.291906882477521,
+        0,
+        0
+      ],
+      "maxPenetration": 4.179378498662956e-9,
+      "maxStructuralStrain": 0.007738188214247432,
+      "verifiedCCD": true,
+      "ccdChecks": 348,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5166666666666655,
+      "rise": -0.00010508331528481796,
+      "wristRise": 0,
+      "pulls": [
+        0.006948524437984275,
+        0.0038905461752086158,
+        0.003490983791957146,
+        0.008037647366719667,
+        0.008241968972777907
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.026582954845187554,
+        0.11841832467506684,
+        0.2944842953937712,
+        0,
+        0
+      ],
+      "maxPenetration": 4.244837514258068e-9,
+      "maxStructuralStrain": 0.0077977386366179235,
+      "verifiedCCD": true,
+      "ccdChecks": 696,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5187499999999988,
+      "rise": -0.00010456972678751092,
+      "wristRise": 0,
+      "pulls": [
+        0.006950669121017782,
+        0.0038906413446098027,
+        0.0034911027851229496,
+        0.008076886930912044,
+        0.008282723681147982
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.02731797845605967,
+        0.11461492675253436,
+        0.2971149325850712,
+        0,
+        0
+      ],
+      "maxPenetration": 4.244672257777693e-9,
+      "maxStructuralStrain": 0.007886815061705299,
+      "verifiedCCD": true,
+      "ccdChecks": 696,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5208333333333321,
+      "rise": -0.0001042184434537144,
+      "wristRise": 0,
+      "pulls": [
+        0.00695278826388807,
+        0.00389105914323706,
+        0.003491204121478726,
+        0.008116040067303444,
+        0.008323221514640565
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.028029557483955168,
+        0.11400455657916508,
+        0.2997101734852871,
+        0,
+        0
+      ],
+      "maxPenetration": 4.276401075918243e-9,
+      "maxStructuralStrain": 0.007963733781382154,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5229166666666655,
+      "rise": -0.00010391268990794095,
+      "wristRise": 0,
+      "pulls": [
+        0.006954854863583136,
+        0.003892047819830032,
+        0.0034912950327394797,
+        0.008155107908210564,
+        0.008363454352607626
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.028780376518784342,
+        0.11452220049212723,
+        0.3022919640226747,
+        0,
+        0
+      ],
+      "maxPenetration": 4.305971459494899e-9,
+      "maxStructuralStrain": 0.008036806035247368,
+      "verifiedCCD": true,
+      "ccdChecks": 350,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5249999999999988,
+      "rise": -0.00010353851580477413,
+      "wristRise": 0,
+      "pulls": [
+        0.006956940789755296,
+        0.003893310021689172,
+        0.0034913814619992553,
+        0.008194089735764503,
+        0.008403418204458763
+      ],
+      "contactFingers": 3,
+      "thumb": true,
+      "forces": [
+        0.02953029050921634,
+        0.11559212598487653,
+        0.30487536943474364,
+        0,
+        0
+      ],
+      "maxPenetration": 4.334241074659302e-9,
+      "maxStructuralStrain": 0.008111975465811327,
+      "verifiedCCD": true,
+      "ccdChecks": 351,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5270833333333321,
+      "rise": -0.00010235416927195651,
+      "wristRise": 0,
+      "pulls": [
+        0.0069589128073831745,
+        0.003894674636636723,
+        0.0034914949423223178,
+        0.008221845619791428,
+        0.008443113113298168
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.030494616454632605,
+        0.11666030139789187,
+        0.30741224566539704,
+        0.01109105669143029,
+        0
+      ],
+      "maxPenetration": 4.481937507651128e-9,
+      "maxStructuralStrain": 0.008181009930485428,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5291666666666655,
+      "rise": -0.00010010691886893491,
+      "wristRise": 0,
+      "pulls": [
+        0.00696081381049318,
+        0.0038961900728153157,
+        0.0034916831324418034,
+        0.008226846727808866,
+        0.008482542908972872
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.03228980956842538,
+        0.1173328634164985,
+        0.3099866547796244,
+        0.023297609501300377,
+        0
+      ],
+      "maxPenetration": 4.684814874358553e-9,
+      "maxStructuralStrain": 0.008236316130633248,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5312499999999988,
+      "rise": -0.00009827157720582874,
+      "wristRise": 0,
+      "pulls": [
+        0.006962566561699466,
+        0.003897774367051648,
+        0.003491910042521702,
+        0.008226400266916933,
+        0.008521714825444364
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.034149814411700515,
+        0.11759474129095816,
+        0.3127024202663736,
+        0.015022607759097008,
+        0
+      ],
+      "maxPenetration": 4.684625210210451e-9,
+      "maxStructuralStrain": 0.008287890024768929,
+      "verifiedCCD": true,
+      "ccdChecks": 698,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5333333333333321,
+      "rise": -0.0000970820279775006,
+      "wristRise": 0,
+      "pulls": [
+        0.006964028487589835,
+        0.003899158683046863,
+        0.0034921298125906246,
+        0.008225097785043201,
+        0.008560483133373641
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.035958127870789884,
+        0.11821726376868988,
+        0.31515218806904693,
+        0.013061563441056774,
+        0
+      ],
+      "maxPenetration": 4.632964092227132e-9,
+      "maxStructuralStrain": 0.00833763336083948,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5354166666666654,
+      "rise": -0.00009657444191782383,
+      "wristRise": 0,
+      "pulls": [
+        0.006965192187565754,
+        0.0039002246964015426,
+        0.003492311297638088,
+        0.0082244224034388,
+        0.008598593632182067
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.03807013559156896,
+        0.11907088664561376,
+        0.31743722117279977,
+        0.011102700959318477,
+        0
+      ],
+      "maxPenetration": 4.5507134291324774e-9,
+      "maxStructuralStrain": 0.008389873371204004,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5374999999999988,
+      "rise": -0.00009659321753957562,
+      "wristRise": 0,
+      "pulls": [
+        0.0069662101950888665,
+        0.0039010438109735057,
+        0.0034924495386445147,
+        0.008224452925554897,
+        0.008635824339698117
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.04027862755862327,
+        0.12007321301247072,
+        0.3197228463520381,
+        0.010351605441274348,
+        0
+      ],
+      "maxPenetration": 4.504102192885891e-9,
+      "maxStructuralStrain": 0.008449587982673257,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5395833333333321,
+      "rise": -0.00009683324071359939,
+      "wristRise": 0,
+      "pulls": [
+        0.006967248571266446,
+        0.0039017781514973215,
+        0.0034925585065391567,
+        0.008224885424917318,
+        0.008671994295046007
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.0423450653980902,
+        0.12112059404116307,
+        0.3221153685189072,
+        0.010905514155038725,
+        0
+      ],
+      "maxPenetration": 4.509419129121797e-9,
+      "maxStructuralStrain": 0.008515627901799827,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5416666666666654,
+      "rise": -0.00009695350823735877,
+      "wristRise": 0,
+      "pulls": [
+        0.0069683917049431525,
+        0.0039025645854745437,
+        0.0034926571959435783,
+        0.008225457179457009,
+        0.008706970179769064
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.04414370781888349,
+        0.12215663110804535,
+        0.32461020725630896,
+        0.012433603220191885,
+        0
+      ],
+      "maxPenetration": 4.554669301871234e-9,
+      "maxStructuralStrain": 0.008582061602198876,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5437499999999987,
+      "rise": -0.00009670392634417158,
+      "wristRise": 0,
+      "pulls": [
+        0.006969641717473297,
+        0.003903466213564883,
+        0.0034927602920462805,
+        0.008226037522758438,
+        0.008740670536090856
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.04568078732401798,
+        0.12315561404488816,
+        0.32714085231143714,
+        0.014511458140499593,
+        0
+      ],
+      "maxPenetration": 4.616718476155128e-9,
+      "maxStructuralStrain": 0.00864395847491628,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5458333333333321,
+      "rise": -0.00009599907453298334,
+      "wristRise": 0,
+      "pulls": [
+        0.006970961785855275,
+        0.0039044808187136035,
+        0.0034928748957141847,
+        0.008226593646197645,
+        0.008773067478301392
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.047036356267882204,
+        0.12410923053167496,
+        0.32964928958475004,
+        0.016798776812547187,
+        0
+      ],
+      "maxPenetration": 4.677622363340357e-9,
+      "maxStructuralStrain": 0.008700308415719449,
+      "verifiedCCD": true,
+      "ccdChecks": 698,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5479166666666654,
+      "rise": -0.00009491213150759209,
+      "wristRise": 0,
+      "pulls": [
+        0.006972312359720778,
+        0.003905572328394309,
+        0.0034930013205454647,
+        0.008227138095808596,
+        0.008804331498146686
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.04830518266826102,
+        0.12501769961838116,
+        0.33211439636414636,
+        0.019092442433356373,
+        0
+      ],
+      "maxPenetration": 4.727252013989915e-9,
+      "maxStructuralStrain": 0.00875295593790304,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5499999999999987,
+      "rise": -0.0000936130257795792,
+      "wristRise": 0,
+      "pulls": [
+        0.006973663629474854,
+        0.0039066962560303144,
+        0.003493135741890769,
+        0.008227689076767204,
+        0.008834722556898274
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.04957065499501628,
+        0.12589025213319643,
+        0.33454348263384837,
+        0.02126780406019586,
+        0
+      ],
+      "maxPenetration": 4.7620926482737705e-9,
+      "maxStructuralStrain": 0.008804367130689772,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.552083333333332,
+      "rise": -0.00009229497716402302,
+      "wristRise": 0,
+      "pulls": [
+        0.006974997068033984,
+        0.003907812304580412,
+        0.0034932736092863083,
+        0.008228254598561874,
+        0.008864517694137332
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.050901079465106684,
+        0.12674955311529335,
+        0.33695021920554297,
+        0.023395056872235514,
+        0
+      ],
+      "maxPenetration": 4.7915829075751565e-9,
+      "maxStructuralStrain": 0.008855936259892339,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5541666666666654,
+      "rise": -0.00009110429272222997,
+      "wristRise": 0,
+      "pulls": [
+        0.006976306188421341,
+        0.003908896115217117,
+        0.0034934113290946006,
+        0.008228835774305325,
+        0.008893999484431495
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.0523671707024975,
+        0.1275987227308895,
+        0.339415216464696,
+        0.025373907894059085,
+        0
+      ],
+      "maxPenetration": 4.819601008760645e-9,
+      "maxStructuralStrain": 0.008908168269887162,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5562499999999987,
+      "rise": -0.00009011541886806695,
+      "wristRise": 0,
+      "pulls": [
+        0.006977572798359063,
+        0.003909935968406217,
+        0.00349354690672719,
+        0.008229431537792771,
+        0.008923444697689593
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.05391828908357987,
+        0.1284371916643248,
+        0.3418028186568606,
+        0.027168144048304636,
+        0
+      ],
+      "maxPenetration": 4.847747570990019e-9,
+      "maxStructuralStrain": 0.008960720283430534,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.558333333333332,
+      "rise": -0.00008933012768987808,
+      "wristRise": 0,
+      "pulls": [
+        0.006978795215331645,
+        0.003910933426630062,
+        0.0034936811673601203,
+        0.008230042712036098,
+        0.00895311359880636
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.055571992903562385,
+        0.12925981476386966,
+        0.3441744781060382,
+        0.028790640317672155,
+        0
+      ],
+      "maxPenetration": 4.876980473546982e-9,
+      "maxStructuralStrain": 0.009012843174269314,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5604166666666653,
+      "rise": -0.00008869796901613686,
+      "wristRise": 0,
+      "pulls": [
+        0.006979981464895705,
+        0.0039119011360327464,
+        0.0034938164607156174,
+        0.008230675131483341,
+        0.00898324028138653
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.05731498228491993,
+        0.13005727770553777,
+        0.34652910253331726,
+        0.030272815262155514,
+        0
+      ],
+      "maxPenetration": 4.9064994633385775e-9,
+      "maxStructuralStrain": 0.009063866120856079,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5624999999999987,
+      "rise": -0.00008814408205784496,
+      "wristRise": 0,
+      "pulls": [
+        0.006981145734426849,
+        0.003912857787701555,
+        0.003493955432289265,
+        0.00823133946037101,
+        0.009014024375576378
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.05912922635374667,
+        0.13081988969071878,
+        0.34885377490318453,
+        0.03166679594651943,
+        0
+      ],
+      "maxPenetration": 4.934915935964068e-9,
+      "maxStructuralStrain": 0.009113380536016069,
+      "verifiedCCD": true,
+      "ccdChecks": 698,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.564583333333332,
+      "rise": -0.00008759508730460386,
+      "wristRise": 0,
+      "pulls": [
+        0.006982304535785579,
+        0.003913822016202875,
+        0.0034941003629703855,
+        0.008232047686733426,
+        0.009045626730042073
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.06100018831240253,
+        0.13154076167993975,
+        0.35117694570498814,
+        0.03303576201436774,
+        0
+      ],
+      "maxPenetration": 4.962313853557575e-9,
+      "maxStructuralStrain": 0.009161393240117777,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5666666666666653,
+      "rise": -0.00008699934176830543,
+      "wristRise": 0,
+      "pulls": [
+        0.006983469767247352,
+        0.003914795131317107,
+        0.003494252144146771,
+        0.00823280816339207,
+        0.009078165029488397
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.06288704261912302,
+        0.1321645076080363,
+        0.35349104327000175,
+        0.03443117140246624,
+        0
+      ],
+      "maxPenetration": 4.979885327997986e-9,
+      "maxStructuralStrain": 0.009208007554042386,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5687499999999986,
+      "rise": -0.0000863129943701399,
+      "wristRise": 0,
+      "pulls": [
+        0.00698466261867106,
+        0.003915826554082169,
+        0.003494411963591022,
+        0.00823364766278253,
+        0.009111707908325507
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.06483874556036978,
+        0.13299085621652848,
+        0.3557907929601065,
+        0.035967153405637636,
+        0
+      ],
+      "maxPenetration": 5.014505901333212e-9,
+      "maxStructuralStrain": 0.009254046851232767,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.570833333333332,
+      "rise": -0.00008552755517857863,
+      "wristRise": 0,
+      "pulls": [
+        0.006985896366222972,
+        0.003916916741560457,
+        0.003494579880048361,
+        0.008234537621021594,
+        0.009146273966392409
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.06683260939518655,
+        0.1338151482518599,
+        0.35808262120354645,
+        0.03756160848617416,
+        0
+      ],
+      "maxPenetration": 5.046481996499007e-9,
+      "maxStructuralStrain": 0.0093003621624963,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5729166666666653,
+      "rise": -0.00008465969134215795,
+      "wristRise": 0,
+      "pulls": [
+        0.006987172771101298,
+        0.0039180489452955835,
+        0.0034947546293314074,
+        0.008235459733510178,
+        0.009181832766956478
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.06884846714665716,
+        0.13462111502319457,
+        0.3603652354029899,
+        0.03922573126735832,
+        0
+      ],
+      "maxPenetration": 5.076901695593751e-9,
+      "maxStructuralStrain": 0.009347667546268701,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5749999999999986,
+      "rise": -0.00008374182270010772,
+      "wristRise": 0,
+      "pulls": [
+        0.006988490767508064,
+        0.0039191982830535915,
+        0.0034949341042471763,
+        0.008236396650663154,
+        0.009218307706053515
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.07088715991333835,
+        0.13536933701096335,
+        0.3626353344903718,
+        0.04094111710318664,
+        0
+      ],
+      "maxPenetration": 5.1047260286006535e-9,
+      "maxStructuralStrain": 0.00939649847379731,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.577083333333332,
+      "rise": -0.00008281669143257037,
+      "wristRise": 0,
+      "pulls": [
+        0.006989828486152534,
+        0.003920331460757945,
+        0.0034951156169730924,
+        0.008237329019073045,
+        0.009255580573468519
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.07286628517087358,
+        0.13600830079988135,
+        0.36489137264734955,
+        0.042683377334612534,
+        0
+      ],
+      "maxPenetration": 5.126576657112081e-9,
+      "maxStructuralStrain": 0.009446985910750327,
+      "verifiedCCD": true,
+      "ccdChecks": 698,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5791666666666653,
+      "rise": -0.00008188085613937413,
+      "wristRise": 0,
+      "pulls": [
+        0.0069912154833812,
+        0.00392165529588282,
+        0.0034952984088325698,
+        0.008238240816489354,
+        0.009293499021555757
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.07493177732040966,
+        0.13746047867482755,
+        0.36712547891795877,
+        0.04445934484219147,
+        0
+      ],
+      "maxPenetration": 5.032500234895473e-9,
+      "maxStructuralStrain": 0.00950146204146951,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5812499999999986,
+      "rise": -0.00008095507298298138,
+      "wristRise": 0,
+      "pulls": [
+        0.0069926473660975276,
+        0.003922941558150828,
+        0.003495482016610394,
+        0.008239122965085366,
+        0.009331890612358682
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.07701102658118833,
+        0.1384056583351826,
+        0.36933889201419434,
+        0.04627357312237204,
+        0
+      ],
+      "maxPenetration": 5.04630676785231e-9,
+      "maxStructuralStrain": 0.009558913453332929,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5833333333333319,
+      "rise": -0.0000800591829017705,
+      "wristRise": 0,
+      "pulls": [
+        0.0069940976850562855,
+        0.003924151440641537,
+        0.0034956642717158823,
+        0.008239965606517309,
+        0.009370561849218863
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.07898075816299926,
+        0.13920454385732653,
+        0.37154080141320617,
+        0.048114696452826615,
+        0
+      ],
+      "maxPenetration": 5.066137019225578e-9,
+      "maxStructuralStrain": 0.009618637940763008,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5854166666666653,
+      "rise": -0.00007920241697501051,
+      "wristRise": 0,
+      "pulls": [
+        0.006995556490118948,
+        0.003925321580922501,
+        0.0034958432945186206,
+        0.008240760254874843,
+        0.009409306321326832
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.08088543559823239,
+        0.13994994526093885,
+        0.3737252325683843,
+        0.049986944500537756,
+        0
+      ],
+      "maxPenetration": 5.0891290487298235e-9,
+      "maxStructuralStrain": 0.009680060024666814,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5874999999999986,
+      "rise": -0.00007838112743199788,
+      "wristRise": 0,
+      "pulls": [
+        0.006997013241659048,
+        0.003926481863482297,
+        0.0034960181162003445,
+        0.008241515023896867,
+        0.00944791305101741
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.082710735861883,
+        0.14071635969817253,
+        0.37589208449276373,
+        0.05191446980283096,
+        0
+      ],
+      "maxPenetration": 5.1117985164867916e-9,
+      "maxStructuralStrain": 0.009742694891754833,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5895833333333319,
+      "rise": -0.0000775858125057205,
+      "wristRise": 0,
+      "pulls": [
+        0.006998466065688321,
+        0.003927639053073098,
+        0.003496188421279008,
+        0.00824222079967628,
+        0.00948617471388003
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.08448315771348333,
+        0.14152409400766647,
+        0.3780745924877521,
+        0.05384675556596189,
+        0
+      ],
+      "maxPenetration": 5.135594465964163e-9,
+      "maxStructuralStrain": 0.009806027816347651,
+      "verifiedCCD": true,
+      "ccdChecks": 349,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5916666666666652,
+      "rise": -0.00007680859659876804,
+      "wristRise": 0,
+      "pulls": [
+        0.006999893338655554,
+        0.003928783323204545,
+        0.0034963536063511253,
+        0.0082428814136494,
+        0.009523895418671317
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.0861147729740726,
+        0.1423605064592947,
+        0.3802146857118285,
+        0.055773708315048375,
+        0
+      ],
+      "maxPenetration": 5.152805862334783e-9,
+      "maxStructuralStrain": 0.009869286639283548,
+      "verifiedCCD": true,
+      "ccdChecks": 696,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5937499999999986,
+      "rise": -0.00007604145801667905,
+      "wristRise": 0,
+      "pulls": [
+        0.007001309767131719,
+        0.003929911061821167,
+        0.00349651346807427,
+        0.008243506514919542,
+        0.009560903984546348
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.08764761150003508,
+        0.14322585027440657,
+        0.38234134240821605,
+        0.05767402783458158,
+        0
+      ],
+      "maxPenetration": 5.183788214868992e-9,
+      "maxStructuralStrain": 0.009931952964848834,
+      "verifiedCCD": true,
+      "ccdChecks": 696,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5958333333333319,
+      "rise": -0.00007527468206012383,
+      "wristRise": 0,
+      "pulls": [
+        0.007002706422306933,
+        0.003931019392826543,
+        0.0034966682344849914,
+        0.008244106093460208,
+        0.009597056750710216
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.08919584802062759,
+        0.1441088712002186,
+        0.3844548684738726,
+        0.05953629638338187,
+        0
+      ],
+      "maxPenetration": 5.2120026444680764e-9,
+      "maxStructuralStrain": 0.00999371101841584,
+      "verifiedCCD": true,
+      "ccdChecks": 348,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5979166666666652,
+      "rise": -0.00007450311752341815,
+      "wristRise": 0,
+      "pulls": [
+        0.007004072692564445,
+        0.0039321049564110975,
+        0.003496818188475873,
+        0.008244696502621862,
+        0.009632238390658729
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.09069800992139597,
+        0.1450001059916006,
+        0.38655820733427315,
+        0.06136811209826245,
+        0
+      ],
+      "maxPenetration": 5.240175488191792e-9,
+      "maxStructuralStrain": 0.010054031064524627,
+      "verifiedCCD": true,
+      "ccdChecks": 348,
+      "interFingerChecks": 0
+    },
+    {
+      "time": 0.5999999999999985,
+      "rise": -0.00007372972049743409,
+      "wristRise": 0,
+      "pulls": [
+        0.007005399651782453,
+        0.0039331637500294074,
+        0.0034969634823863397,
+        0.00824527572356599,
+        0.009666365209258987
+      ],
+      "contactFingers": 4,
+      "thumb": true,
+      "forces": [
+        0.09217652805913809,
+        0.14589090801426188,
+        0.38865250280471086,
+        0.06312768612961463,
+        0
+      ],
+      "maxPenetration": 5.268657449664267e-9,
+      "maxStructuralStrain": 0.010112408459228672,
+      "verifiedCCD": true,
+      "ccdChecks": 348,
+      "interFingerChecks": 0
+    }
+  ]
+}

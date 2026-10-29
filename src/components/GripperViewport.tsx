@@ -65,12 +65,16 @@ export const GripperViewport=forwardRef<GripperViewportHandle,Props>(function Gr
         if(arrows[i].visible){arrows[i].position.copy(world(c.point,.006));arrows[i].setDirection(direction.normalize());arrows[i].setLength(length,Math.min(.0022,length*.55),Math.min(.0014,length*.4))}
       })
     }
-    let latest:GripperFrame|null=null,raf=0
-    const render=()=>{const state=current.current;if(latest!==state.frame){latest=state.frame;update(state.frame)}lines.visible=state.showMesh;reference.visible=state.showReference;controls.update();renderer.render(scene,camera);raf=requestAnimationFrame(render)}
-    const resize=()=>{const width=host.clientWidth,height=host.clientHeight;if(!width||!height)return;const h=.12,w=h*width/height;camera.left=-w/2;camera.right=w/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix();renderer.setSize(width,height,false)}
+    let latest:GripperFrame|null=null,raf=0,dirty=true,display=''
+    const render=()=>{
+      const state=current.current,key=`${state.showMesh}:${state.showReference}:${state.showForces}`
+      if(latest!==state.frame||key!==display){latest=state.frame;display=key;update(state.frame);lines.visible=state.showMesh;reference.visible=state.showReference;dirty=true}
+      const moved=controls.update();if(dirty||moved){renderer.render(scene,camera);dirty=false}raf=requestAnimationFrame(render)
+    }
+    const resize=()=>{const width=host.clientWidth,height=host.clientHeight;if(!width||!height)return;const h=.12,w=h*width/height;camera.left=-w/2;camera.right=w/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix();renderer.setSize(width,height,false);dirty=true}
     const observer=new ResizeObserver(resize);observer.observe(host);resize();render()
-    api.current={reset:()=>{camera.position.set(target.x,target.y,1);camera.zoom=1;camera.updateProjectionMatrix();controls.target.copy(target);controls.update()},save:()=>{renderer.render(scene,camera);const link=document.createElement('a');link.download='tendon-gripper.png';link.href=renderer.domElement.toDataURL('image/png');link.click()}}
+    api.current={reset:()=>{camera.position.set(target.x,target.y,1);camera.zoom=1;camera.updateProjectionMatrix();controls.target.copy(target);controls.update();dirty=true},save:()=>{renderer.render(scene,camera);const link=document.createElement('a');link.download='tendon-gripper.png';link.href=renderer.domElement.toDataURL('image/png');link.click()}}
     return ()=>{cancelAnimationFrame(raf);observer.disconnect();controls.dispose();scene.traverse(obj=>{if(obj instanceof THREE.Mesh||obj instanceof THREE.Line){obj.geometry.dispose();const mats=Array.isArray(obj.material)?obj.material:[obj.material];mats.forEach(m=>m.dispose())}});renderer.dispose();renderer.domElement.remove()}
   },[mesh])
-  return <div className="gripper-three" ref={mount} aria-label="超弹性指体与牵引腱接触的三维渲染视图">{error&&<div className="gripper-render-error">无法初始化 WebGL。请检查浏览器的硬件加速。</div>}</div>
+  return <div role="region" className="gripper-three" ref={mount} aria-label="超弹性指体与牵引腱接触的三维渲染视图">{error&&<div className="gripper-render-error">无法初始化 WebGL。请检查浏览器的硬件加速。</div>}</div>
 })

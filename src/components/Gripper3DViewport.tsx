@@ -58,20 +58,25 @@ export const Gripper3DViewport=forwardRef<Gripper3DViewportHandle,Props>(functio
         if(c){const direction=new THREE.Vector3(c.force[1],c.force[0],c.force[2]),length=Math.max(.0015,Math.min(.008,direction.length()*1.8));markers[i].position.copy(world(c.point));arrows[i].position.copy(world(c.point));arrows[i].setDirection(direction.normalize());arrows[i].setLength(length,Math.min(.0018,length*.5),Math.min(.0011,length*.35))}
       }
     }
-    let latest:ContinuousFrame|null=null,raf=0,axialView=false
+    let latest:ContinuousFrame|null=null,raf=0,axialView=false,dirty=true,display=''
     const applyDisplay=(displayFrame=current.current.frame)=>{const state=current.current;wire.visible=state.showWire;bodyMat.opacity=state.xray?.55:1;bodyMat.depthWrite=!state.xray;cableMat.depthTest=!state.xray;sensor.visible=!axialView;for(let i=0;i<markers.length;i++){markers[i].visible=state.showForces&&i<displayFrame.contacts.length;arrows[i].visible=markers[i].visible}}
-    const render=()=>{const state=current.current;if(latest!==state.frame){latest=state.frame;update(state.frame)}applyDisplay();controls.update();renderer.render(scene,camera);raf=requestAnimationFrame(render)}
-    const resize=()=>{const width=host.clientWidth,height=host.clientHeight;if(!width||!height)return;const h=.120,w=h*width/height;camera.left=-w/2;camera.right=w/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix();renderer.setSize(width,height,false)}
+    const render=()=>{
+      const state=current.current,key=`${state.showWire}:${state.xray}:${state.showForces}:${axialView}`
+      if(latest!==state.frame){latest=state.frame;update(state.frame);dirty=true}
+      if(key!==display||dirty){applyDisplay();display=key;dirty=true}
+      const moved=controls.update();if(dirty||moved){renderer.render(scene,camera);dirty=false}raf=requestAnimationFrame(render)
+    }
+    const resize=()=>{const width=host.clientWidth,height=host.clientHeight;if(!width||!height)return;const h=.120,w=h*width/height;camera.left=-w/2;camera.right=w/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix();renderer.setSize(width,height,false);dirty=true}
     const observer=new ResizeObserver(resize);observer.observe(host);resize();render()
     api.current={
-      reset:()=>{axialView=false;camera.up.set(0,1,0);camera.position.set(.16,.1035,.20);camera.zoom=1;camera.updateProjectionMatrix();controls.target.copy(target);controls.update()},
+      reset:()=>{axialView=false;camera.up.set(0,1,0);camera.position.set(.16,.1035,.20);camera.zoom=1;camera.updateProjectionMatrix();controls.target.copy(target);controls.update();dirty=true},
       bore:()=>{
         // Follow the *deformed* distal bore instead of looking along the
         // undeformed global axis, which misses the opening at large curl.
         const f=current.current.frame,center=(ids:number[])=>ids.reduce((v,id)=>v.add(world(f.positions[id])),new THREE.Vector3()).multiplyScalar(1/ids.length)
         const {y0,y1,z0,z1}=mesh.hole,previous=mesh.reference.map((p,i)=>Math.abs(p[0]-(mesh.length-mesh.length/12))<1e-10&&(Math.abs(p[1]-y0)<1e-10||Math.abs(p[1]-y1)<1e-10)&&(Math.abs(p[2]-z0)<1e-10||Math.abs(p[2]-z1)<1e-10)?i:-1).filter(i=>i>=0)
         const mouth=center(mesh.anchor),direction=mouth.clone().sub(center(previous)).normalize()
-        axialView=true;camera.up.set(0,0,1);camera.position.copy(mouth).addScaledVector(direction,.18);camera.zoom=10;camera.updateProjectionMatrix();controls.target.copy(mouth);controls.update()
+        axialView=true;camera.up.set(0,0,1);camera.position.copy(mouth).addScaledVector(direction,.18);camera.zoom=10;camera.updateProjectionMatrix();controls.target.copy(mouth);controls.update();dirty=true
       },
       save:()=>{renderer.render(scene,camera);const link=document.createElement('a');link.download='tendon-gripper-3d.png';link.href=renderer.domElement.toDataURL('image/png');link.click()},
       exportGif:async frames=>{
@@ -92,5 +97,5 @@ export const Gripper3DViewport=forwardRef<Gripper3DViewportHandle,Props>(functio
     }
     return ()=>{cancelAnimationFrame(raf);observer.disconnect();controls.dispose();scene.traverse(obj=>{if(obj instanceof THREE.Mesh||obj instanceof THREE.Line){obj.geometry.dispose();const mats=Array.isArray(obj.material)?obj.material:[obj.material];mats.forEach(m=>m.dispose())}});renderer.dispose();renderer.domElement.remove()}
   },[mesh])
-  return <div className="gripper-three" ref={mount} aria-label="可旋转的真实三维孔壁与腱接触视图">{error&&<div className="gripper-render-error">无法初始化 WebGL。请检查浏览器硬件加速。</div>}</div>
+  return <div role="region" className="gripper-three" ref={mount} aria-label="可旋转的真实三维孔壁与腱接触视图">{error&&<div className="gripper-render-error">无法初始化 WebGL。请检查浏览器硬件加速。</div>}</div>
 })

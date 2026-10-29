@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-28",
-  "base": "http://127.0.0.1:4173",
+  "date": "2026-10-29",
+  "base": "http://127.0.0.1:5175",
   "default": {
     "tip": 17.71,
     "tension": 0.183,
@@ -11,6 +11,7 @@
     "red": 192,
     "teal": 1863
   },
+  "idleClearsPerSecond": 0,
   "unloaded": {
     "tip": 0,
     "tension": 0,
@@ -36,6 +37,7 @@
     "CSV and PNG export",
     "contact and energy charts",
     "reference toggle",
+    "paused force-toggle redraw and idle render rate",
     "rewind, step and playback",
     "parameter changes and computed unload",
     "refined mesh",

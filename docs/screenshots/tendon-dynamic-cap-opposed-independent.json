@@ -1,0 +1,101 @@
+{
+  "id": "bottle-cap",
+  "frames": 12,
+  "contactPairs": 234,
+  "candidatePairs": 6645,
+  "maxFingerPositionError_m": 1.3877787807814457e-17,
+  "maxTendonPositionError_m": 1.3877787807814457e-17,
+  "maxContactReconstructionError": 2.6594795261641608e-14,
+  "maxFrictionCapExcess_N": 2.168404344971009e-19,
+  "maxModalForceError_N": 8.047382205056408e-15,
+  "maxSamplePenetration_m": 6.606445139766774e-07,
+  "maxUnreportedPenetration_m": 2.3310346708438345e-17,
+  "sampleFrames": [
+    {
+      "time": 0,
+      "contacts": 0,
+      "maxSamplePenetration_m": 0.0,
+      "recordedMaxPenetration_m": 0,
+      "fixtureActive": true
+    },
+    {
+      "time": 0.2000000000000002,
+      "contacts": 11,
+      "maxSamplePenetration_m": 5.6576888941796064e-08,
+      "recordedMaxPenetration_m": 5.6576888937676095e-08,
+      "fixtureActive": true
+    },
+    {
+      "time": 0.3999999999999998,
+      "contacts": 15,
+      "maxSamplePenetration_m": 9.094087979866737e-08,
+      "recordedMaxPenetration_m": 9.094087979270426e-08,
+      "fixtureActive": true
+    },
+    {
+      "time": 0.5999999999999991,
+      "contacts": 16,
+      "maxSamplePenetration_m": 6.606445139766774e-07,
+      "recordedMaxPenetration_m": 6.606445139849173e-07,
+      "fixtureActive": true
+    },
+    {
+      "time": 0.7999999999999984,
+      "contacts": 24,
+      "maxSamplePenetration_m": 6.332407300078599e-07,
+      "recordedMaxPenetration_m": 1.281377008234422e-06,
+      "fixtureActive": true
+    },
+    {
+      "time": 0.9999999999999977,
+      "contacts": 24,
+      "maxSamplePenetration_m": 3.9825774773610996e-08,
+      "recordedMaxPenetration_m": 3.9825774783368816e-08,
+      "fixtureActive": false
+    },
+    {
+      "time": 1.199999999999997,
+      "contacts": 24,
+      "maxSamplePenetration_m": 4.781471819317266e-08,
+      "recordedMaxPenetration_m": 4.781471816986231e-08,
+      "fixtureActive": false
+    },
+    {
+      "time": 1.3999999999999964,
+      "contacts": 24,
+      "maxSamplePenetration_m": 4.6187747423584447e-08,
+      "recordedMaxPenetration_m": 4.618774741556135e-08,
+      "fixtureActive": false
+    },
+    {
+      "time": 1.5999999999999956,
+      "contacts": 24,
+      "maxSamplePenetration_m": 4.465758766795426e-08,
+      "recordedMaxPenetration_m": 4.4665826288785813e-08,
+      "fixtureActive": false
+    },
+    {
+      "time": 1.799999999999995,
+      "contacts": 24,
+      "maxSamplePenetration_m": 4.8178689186057465e-08,
+      "recordedMaxPenetration_m": 4.817868925978321e-08,
+      "fixtureActive": false
+    },
+    {
+      "time": 1.9999999999999942,
+      "contacts": 24,
+      "maxSamplePenetration_m": 6.778210707362835e-08,
+      "recordedMaxPenetration_m": 6.778210714605305e-08,
+      "fixtureActive": false
+    },
+    {
+      "time": 2.15,
+      "contacts": 24,
+      "maxSamplePenetration_m": 7.910382384692348e-08,
+      "recordedMaxPenetration_m": 7.910382391923976e-08,
+      "fixtureActive": false
+    }
+  ],
+  "sourceHash": "c56a46f8f27163f2b4f0d441521bd229b9792d35723bb95c4bd4f23df6975e16",
+  "scope": "Independent QP and manifold reconstruction at recorded samples only. Not a proof of CCD, object self-collision, physical accuracy, or full-DOF finger equilibrium."
+}

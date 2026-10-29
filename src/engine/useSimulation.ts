@@ -18,7 +18,9 @@ export function useSimulation(item:CaseDefinition, params:SimulationParams, revi
   const playingRef=useRef(true)
   const [speed,setSpeed]=useState(1)
   const speedRef=useRef(1)
-  const initial:Sample={time:0,displacement:frame.displacement,energy:frame.energy,loadCurve:frame.loadCurve,snapshot:simRef.current.snapshot()}
+  // Taking solver snapshots can be expensive; initialize only when the solver
+  // instance changes, not on every unrelated React render while paused.
+  const initial=useMemo<Sample>(()=>({time:0,displacement:frameRef.current.displacement,energy:frameRef.current.energy,loadCurve:frameRef.current.loadCurve,snapshot:instance.snapshot()}),[instance])
   const historyRef=useRef<Sample[]>([initial])
   const [history,setHistory]=useState<Sample[]>([initial])
   const cursorRef=useRef(0)
@@ -40,6 +42,7 @@ export function useSimulation(item:CaseDefinition, params:SimulationParams, revi
     historyRef.current=[firstSample];cursorRef.current=0;setHistory([firstSample]);setCursor(0)
     setPlaying(true);playingRef.current=true
     let last=performance.now(), lastUi=last, accumulator=0, raf=0
+    let reportedFrame=frameRef.current,reportedLength=historyRef.current.length,reportedCursor=cursorRef.current
     const tick=(now:number)=>{
       const elapsed=Math.min((now-last)/1000,.06);last=now
       if(playingRef.current) {
@@ -60,8 +63,9 @@ export function useSimulation(item:CaseDefinition, params:SimulationParams, revi
           if(current.time>=duration-1e-9) {playingRef.current=false;setPlaying(false);accumulator=0;break}
         }
       }
-      if(now-lastUi>100) {
-        setFrame({...frameRef.current});setHistory([...historyRef.current]);setCursor(cursorRef.current);lastUi=now
+      if(now-lastUi>100&&(reportedFrame!==frameRef.current||reportedLength!==historyRef.current.length||reportedCursor!==cursorRef.current)) {
+        reportedFrame=frameRef.current;reportedLength=historyRef.current.length;reportedCursor=cursorRef.current
+        setFrame({...reportedFrame});setHistory([...historyRef.current]);setCursor(reportedCursor);lastUi=now
       }
       raf=requestAnimationFrame(tick)
     }

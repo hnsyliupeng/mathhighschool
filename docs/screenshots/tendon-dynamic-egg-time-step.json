@@ -1,0 +1,66 @@
+{
+  "sourceFiles": [
+    "docs/screenshots/tendon-dynamic-egg-ccd.json",
+    "docs/screenshots/tendon-dynamic-egg-halfstep-ccd.json",
+    "scripts/compare-tendon-time-steps.mjs"
+  ],
+  "sourceHash": "264408e89b75e0dbbe629be866deb359307b2cdecc909afa9ea92f2554c4cac3",
+  "solverHash": "c56a46f8f27163f2b4f0d441521bd229b9792d35723bb95c4bd4f23df6975e16",
+  "coarseDt": 0.004166666666666667,
+  "fineDt": 0.0020833333333333333,
+  "end": 0.6,
+  "pairedFrames": 145,
+  "maxPullDifference_m": [
+    0.00007924559585736467,
+    0.000045483611206028306,
+    0.000010723274818945621,
+    0.00011021258994715726,
+    0.000013161390960851616
+  ],
+  "maxRiseDifference_m": 0.00005617223235281771,
+  "force": [
+    {
+      "maxAbsDifference_N": 0.051925178524752966,
+      "peakEither_N": 0.13421296774544003,
+      "ratioToPeak": 0.38688644917858284
+    },
+    {
+      "maxAbsDifference_N": 0.14067384339423403,
+      "peakEither_N": 0.2764530354565695,
+      "ratioToPeak": 0.5088525910446505
+    },
+    {
+      "maxAbsDifference_N": 6.450586413077877,
+      "peakEither_N": 6.613688728690603,
+      "ratioToPeak": 0.9753386767500597
+    },
+    {
+      "maxAbsDifference_N": 0.023297609501300377,
+      "peakEither_N": 0.06312768612961463,
+      "ratioToPeak": 0.36905533735967144
+    },
+    {
+      "maxAbsDifference_N": 0,
+      "peakEither_N": 0,
+      "ratioToPeak": 0
+    }
+  ],
+  "lastAtEnd": {
+    "time": 0.5999999999999991,
+    "coarseForces_N": [
+      0.13421296774544003,
+      0.2764530354565695,
+      5.179459574352328,
+      0.056379667133132694,
+      0
+    ],
+    "fineForces_N": [
+      0.09217652805913809,
+      0.14589090801426188,
+      0.38865250280471086,
+      0.06312768612961463,
+      0
+    ]
+  },
+  "scope": "Only the first 0.6 s (closure while fixture remains active). Does not establish time-step convergence during release or lift."
+}

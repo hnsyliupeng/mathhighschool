@@ -1,0 +1,21 @@
+{
+  "sourceHash": "eb57f6abe000498f77fe12284167fd83d91cfdef1a68205f652541c92562486d",
+  "sourceFiles": [
+    "src/engine/continuous-gripper3d.ts",
+    "src/engine/gripper3d.ts",
+    "src/engine/hexahedron.ts",
+    "src/engine/gripper3d-safety.ts",
+    "src/engine/hex-jacobian-bound.ts",
+    "src/engine/continuous-collision.ts",
+    "src/engine/segment-triangle.ts",
+    "scripts/precompute-tendon-manifold.ts"
+  ],
+  "frameCount": 60,
+  "lastPull": 0.014750000000000001,
+  "lastAngle": 92.29142105141231,
+  "maxResidual": 0.000019897323174456162,
+  "maxTendonPenetration": 1.8643860568551794e-8,
+  "minPathJ": 0.8437422208322509,
+  "error": "",
+  "scope": "Free-finger Q1 tendon/bore equilibria and certified straight interpolation only; contact-loaded finger remains a one-coordinate reduced model."
+}

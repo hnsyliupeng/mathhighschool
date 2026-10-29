@@ -4,6 +4,8 @@
 
 > **范围说明：本项目不是 21 个原始 MATLAB 模型的完整移植，也不是工程设计软件。** 单/多自由度振子、三个平面梁、两例轴对称线弹性壳、重力柔性网、超弹性索与膜、磁驱梁及流体阻力例共 12 项已有数值求解和限定范围的参考对照；独立参考时窗中，梁跃迁和流体阻力例未满足严格阈值。柔性网完整参考使用经前五步比对的稀疏向量化装配。球冠独立参考仅至 0.55 s，未覆盖约 4 s 的翻转；额外条件窗口在翻转附近也未通过。另有 9 项是位置/距离约束的交互教学近似。全部算例的原文定量复现、全部公式的数值验证尚未完成。
 
+**[中文使用说明书](docs/USER_MANUAL.md)**：安装启动、21 个算例、各抓手实验、参数和导出、常见问题及验证限制。
+
 ## 运行
 
 需要 Node.js 20 或更新版本及支持 WebGL 的浏览器：
@@ -19,6 +21,7 @@ npm run dev
 
 - **算例工作台**：选择算例，调整参数并点击「应用并重新运行」。可播放/暂停、单步、回看已记录时间、切换节点和初始构型、旋转缩放、下载 PNG 与 CSV。螺旋杆和两例薄板会自动适配当前与可见初始构型；手动操作后停止自动取景，点击重置视角恢复。
 - **算例库**：21 个条目按原教程分类；每个条目有边界、载荷、观察量、核心公式、局限与原始代码/官方动画链接。
+- **腱驱五指动态抓取**（`/?page=tendon3d`）：五根指面和腱线取自真实 Q1 孔壁接触参考轨迹，直接与自由运动的鸡蛋、螺丝刀、瓶盖或布片三角网格接触，物体反力反馈至每指的一个降阶形变坐标。鸡蛋、80% 尺度螺丝刀和 130% 尺度瓶盖在特定布置下达到有限时段保持条件，可直接回放[鸡蛋](docs/media/tendon-dynamic-egg.gif)、[螺丝刀](docs/media/tendon-dynamic-screwdriver.gif)和[瓶盖](docs/media/tendon-dynamic-cap.gif)的 12 帧采样 GIF；其他工况可能掉落或只有单指托起。**并非全自由度 Q1 双向联立，且时间步对照的接触力差达峰值 97.5%，没有通过收敛或完整抓取验收。** 见[模型、公式和失败记录](docs/TENDON_DYNAMIC_GRASP.md)。
 - **不同尺寸与刚度物体动态实验**（`/?page=materials3d`）：螺丝刀、鸡蛋、瓶盖和衣物布片使用不同的弹簧网络与质量，五个柔顺指垫与可自由运动的物体三角面接触，并考虑重力、摩擦、桌面与布片夹具释放；支持尺寸/刚度/摩擦调节、回看和 CSV/PNG/GIF。它是**独立降阶指垫实验，未与五腱 Q1 仿生手耦合**；材料未标定、时间步与迭代存在敏感性或失败，无法证明真实抓取、连续安全或网格收敛，**总体严格验收仍未通过**。见[推导、12 个尺寸工况和失败记录](docs/MATERIAL_GRASP_3D.md)。
 - **多物体五指接触**（`/?page=objects3d`）：可切换六个预设（三种尺寸球体、胶囊棒、圆角盒和双球哑铃），调整尺寸并重新求解真实几何接触，比较五指反力和路径指标，导出 CSV/PNG/GIF。物体固定支撑、无摩擦；这不是自由抓取或力闭合验证，**总体严格验收未通过**。模型与逐项结果见[多物体推导与审查](docs/MULTI_OBJECT_GRASP_3D.md)。
 - **三维五指仿生手**（`/?page=hand3d`）：五个独立腱驱中空实体指体，与外部固定支撑的球体进行无摩擦接触并将反力反馈给指体；可调五根腱、回看并导出 CSV/PNG/GIF。**研究原型，总体严格验收未通过；球体不自由运动，不能视为已验证抓取。** 见[模型、假设与验证边界](docs/BIONIC_HAND_3D.md)及[五指接触动画](docs/media/bionic-hand-3d.gif)。
@@ -63,8 +66,12 @@ npm run dev
 
 ## 验证和截图
 
+本轮还对整个应用的导航、按需加载、暂停渲染、桌面/手机布局、默认态无障碍、生产 Worker 与导出进行了复查；详细范围、性能数字和未完成项见[全应用审查记录](docs/APP_REVIEW.md)。自动检查通过不代表完整物理或无障碍验收通过。
+
 ```bash
 npm test                     # 数值内核、二维/三维抓手、五指模型及其他回归
+npx vite-node scripts/audit-tendon-dynamic.ts --id egg --out /tmp/tendon-egg.json  # 耗时数分钟；降阶模型，不是全自由度验收
+node scripts/compare-tendon-time-steps.mjs  # 重组已保存的前 0.6 s 时间步对照；力未收敛
 npx vite-node scripts/audit-multi-object.ts --id rounded-box --target 6.75  # 固定物体路径；不足五指接触或其他检查不通过时非零
 npx vite-node scripts/sample-rounded-object-cases.ts && python3 scripts/audit-rounded-object-independent.py  # 几何独立 QP 检查；需 NumPy
 npx vite-node scripts/audit-bionic-hand.ts  # 8 mm 五指固定球体路径；未通过则非零
@@ -236,6 +243,9 @@ src/engine/soft-robot.ts        磁力、各向异性二次阻力及原迭代回
 src/engine/gripper.ts           自定义二维超弹性指体、腱和变形导向截面接触
 src/engine/gripper3d.ts         三维挖空网格及旧采样求解器（历史对照）
 src/engine/continuous-gripper3d.ts  三维全积分实体、完整腱段—孔壁接触及安全回滚
+src/engine/tendon-dynamic-grasp.ts   五指参考流形、物体动力学与双向降阶接触
+src/engine/tendon-dynamic-certification.ts  完整历史与有限时段指标检查（非物理认证）
+src/components/TendonDynamicLab.tsx 腱驱动态抓取参数、诊断、回放与导出
 src/components/Gripper3DLab.tsx 三维参数、诊断、回放与 GIF/CSV 导出
 src/engine/spatial-rod-geometry.ts   双边标架/积分曲率和材料转角梯度（非整杆求解器）
 src/engine/net-gravity.ts       原始柔性网伸长单元、隐式求解及应变监测
@@ -247,6 +257,8 @@ core-rs/                       无第三方依赖的 Rust 数值内核
 public/ddg_core.wasm           已构建的浏览器 WASM 产物
 scripts/                       参考数据生成、比较与截图审查
 ```
+
+生产构建包含第三方运行时和字体许可，见 [`public/licenses/`](public/licenses/)；界面中文字库子集的来源、许可与可选重生成脚本见 [全应用审查记录](docs/APP_REVIEW.md)。
 
 Rust 后端只包含伸长能/导数、平面转角曲率和单自由度隐式步进，**并非整个 DDG 求解器**。浏览器尝试加载 `public/ddg_core.wasm`，失败时自动使用同契约的 JS 后备；验证中心会将 Rust/JS 交叉检查标为未验证，而不会与自身比较后宣称通过。重新构建需要安装 Rust 的 `wasm32-unknown-unknown` 目标：
 

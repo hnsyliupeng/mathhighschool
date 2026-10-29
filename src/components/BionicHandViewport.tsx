@@ -104,5 +104,5 @@ export const BionicHandViewport=forwardRef<BionicHandViewportHandle,Props>(funct
     }
     return ()=>{cancelAnimationFrame(raf);observer.disconnect();controls.dispose();scene.traverse(obj=>{if(obj instanceof THREE.Mesh||obj instanceof THREE.Line||obj instanceof THREE.LineSegments){obj.geometry.dispose();const mats=Array.isArray(obj.material)?obj.material:[obj.material];mats.forEach(m=>m.dispose())}});renderer.dispose();renderer.domElement.remove()}
   },[mesh])
-  return <div className="gripper-three" ref={mount} aria-label="可旋转的五指三维实体、五根腱和固定球体接触视图">{error&&<div className="gripper-render-error">无法初始化 WebGL。请检查浏览器硬件加速。</div>}</div>
+  return <div role="region" className="gripper-three" ref={mount} aria-label="可旋转的五指三维实体、五根腱和固定球体接触视图">{error&&<div className="gripper-render-error">无法初始化 WebGL。请检查浏览器硬件加速。</div>}</div>
 })

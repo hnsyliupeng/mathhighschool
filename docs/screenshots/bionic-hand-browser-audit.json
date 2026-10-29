@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-29T01:50:44.551Z",
-  "codeHash": "f4648daa10c1f0f3697639bd35679bc98294b9ff75102687bf27e31d5f397bd9",
+  "date": "2026-10-29T08:06:21.145Z",
+  "codeHash": "d36f25052b7aa2406a9e2b2418e0cc37de8312c793641535c1c6030481ad3845",
   "status": "已到达目标",
   "normalizedTargetMm": 6.75,
   "activeSphereFingerCount": 5,
@@ -9,10 +9,10 @@
   "csvRows": 141,
   "gif": {
     "width": 520,
-    "height": 343,
+    "height": 373,
     "frames": 28,
     "uniqueFrames": 28,
-    "bytes": 776089
+    "bytes": 828572
   },
   "errors": [],
   "scope": "UI/export and one supported-sphere path only; NOT complete grasp, continuum CCD, mesh-convergence or experimental validation."

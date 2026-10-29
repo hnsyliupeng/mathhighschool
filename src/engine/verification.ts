@@ -15,26 +15,38 @@ export interface CheckResult { name:string; pass:boolean; skipped?:boolean; deta
 export interface CaseCheck { id:string; pass:boolean; detail:string }
 export interface VerificationResult { checks:CheckResult[]; cases:CaseCheck[]; comparisons:ReferenceCheck[] }
 const delay=()=>new Promise<void>(resolve=>setTimeout(resolve,0))
-async function compareInWorker():Promise<ReferenceCheck[]> {
+const cancelled=()=>new DOMException('验证已取消','AbortError')
+const checkAbort=(signal?:AbortSignal)=>{if(signal?.aborted)throw cancelled()}
+async function compareInWorker(signal?:AbortSignal):Promise<ReferenceCheck[]> {
   // Keep large reference trajectories out of the initial app bundle. The
   // fallback is loaded only when workers are unavailable or fail.
-  const fallback=async()=>(await import('./reference')).compareReferences()
+  const fallback=async()=>{checkAbort(signal);const reference=await import('./reference');checkAbort(signal);return reference.compareReferences()}
+  checkAbort(signal)
   if(typeof Worker==='undefined')return fallback()
   try {
     const worker=new Worker(new URL('./reference.worker.ts',import.meta.url),{type:'module'})
     return await new Promise<ReferenceCheck[]>((resolve,reject)=>{
-      const timeout=setTimeout(()=>{worker.terminate();reject(new Error('Reference worker timed out'))},120000)
-      worker.onmessage=event=>{clearTimeout(timeout);worker.terminate();event.data.error?reject(new Error(event.data.error)):resolve(event.data.checks)}
-      worker.onerror=event=>{clearTimeout(timeout);worker.terminate();reject(new Error(event.message))}
-      worker.postMessage({})
+      let settled=false
+      const finish=(error?:Error,checks?:ReferenceCheck[])=>{
+        if(settled)return;settled=true;clearTimeout(timeout);signal?.removeEventListener('abort',onAbort);worker.terminate()
+        if(error)reject(error);else resolve(checks!)
+      }
+      const onAbort=()=>finish(cancelled()),timeout=setTimeout(()=>finish(new Error('Reference worker timed out')),120000)
+      worker.onmessage=event=>event.data?.error?finish(new Error(event.data.error)):Array.isArray(event.data?.checks)?finish(undefined,event.data.checks):finish(new Error('Invalid reference worker response'))
+      worker.onerror=event=>finish(new Error(event.message||'Reference worker failed'))
+      signal?.addEventListener('abort',onAbort,{once:true})
+      if(signal?.aborted){onAbort();return}
+      try{worker.postMessage({})}catch(error){finish(error instanceof Error?error:new Error(String(error)))}
     })
-  } catch {
+  } catch(error) {
+    if(signal?.aborted)throw cancelled()
     // Worker-disabled browsers still run the same checks, synchronously.
     return fallback()
   }
 }
 const fd=(f:(x:number[])=>number,x:number[],h=1e-6)=>x.map((_,i)=>{const a=[...x],b=[...x];a[i]+=h;b[i]-=h;return (f(a)-f(b))/(2*h)})
-export async function runVerification(onProgress?:(progress:number)=>void):Promise<VerificationResult> {
+export async function runVerification(onProgress?:(progress:number)=>void,signal?:AbortSignal):Promise<VerificationResult> {
+  checkAbort(signal)
   const checks:CheckResult[]=[]
   const run=(name:string,fn:()=>{error:number;limit:number;detail:string})=>{
     try{const r=fn();checks.push({name,pass:Number.isFinite(r.error)&&r.error<r.limit,detail:r.detail})}catch(e){checks.push({name,pass:false,detail:String(e)})}
@@ -142,6 +154,7 @@ export async function runVerification(onProgress?:(progress:number)=>void):Promi
   })
   const caseChecks:CaseCheck[]=[]
   for(let i=0;i<cases.length;i++){
+    checkAbort(signal)
     const item=cases[i]
     try{
       const sim=new Simulation(item,defaultsFor(item)),before=sim.frame()
@@ -151,7 +164,8 @@ export async function runVerification(onProgress?:(progress:number)=>void):Promi
     }catch(e){caseChecks.push({id:item.id,pass:false,detail:String(e)})}
     onProgress?.(Math.round((i+1)/cases.length*100));if(i%3===0)await delay()
   }
-  await delay()
-  const comparisons=await compareInWorker()
+  await delay();checkAbort(signal)
+  const comparisons=await compareInWorker(signal)
+  checkAbort(signal)
   return {checks,cases:caseChecks,comparisons}
 }

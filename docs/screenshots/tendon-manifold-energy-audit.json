@@ -1,0 +1,19 @@
+{
+  "sourceFiles": [
+    "src/data/tendon-grasp-manifold.json",
+    "scripts/audit-tendon-manifold-energy.mjs"
+  ],
+  "sourceHash": "08d732383ad793671dc09b9c35fdc9794b3620e7ce8bee89e5011ee753ade32d",
+  "referenceHash": "eb57f6abe000498f77fe12284167fd83d91cfdef1a68205f652541c92562486d",
+  "samples": 58,
+  "worst": {
+    "index": 52,
+    "pull": 0.013000000000000001,
+    "firstSegmentTension": 0.41000012176177186,
+    "centralEnergySlope": 0.40265449708938256,
+    "difference": 0.007345624672389306,
+    "relative": 0.018242996726691718
+  },
+  "maximumAbsoluteDifference_N": 0.007345624672389306,
+  "scope": "Central finite differences of stored free-finger augmented energies versus first-segment axial tension. This measures a heuristic mismatch; it does not prove an exact energy derivative."
+}
