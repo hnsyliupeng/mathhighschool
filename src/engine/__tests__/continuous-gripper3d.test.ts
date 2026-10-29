@@ -33,6 +33,19 @@ describe('3-D full-segment constrained contact and safety',()=>{
     const mesh=makeGripper3DMesh(1),hex=hexesFromStructuredTets(mesh)[0],r=mesh.reference,z=r.map(([x,y,z]):Vec3=>[-1.5*x,-.5*y,z])
     expect(sweptMinHexJ(hex,r,r)).toBeCloseTo(1,12);expect(sweptMinHexJ(hex,z,z)).toBeCloseTo(.75,12);expect(sweptMinHexJ(hex,r,z)).toBeLessThan(0)
   })
+  it('rejects non-finite geometry and invalid CCD inputs instead of reporting no interference',()=>{
+    const mesh=makeGripper3DMesh(),safety=new Gripper3DSafety(mesh,hexesFromStructuredTets(mesh)),q=mesh.reference.map(p=>[...p] as Vec3)
+    q[2][0]=NaN
+    expect(safety.motion(mesh.reference,q,[],[],0).safe).toBe(false)
+    expect(safety.motion(mesh.reference,mesh.reference,[],[],NaN).safe).toBe(false)
+    expect(safety.motion(mesh.reference,mesh.reference,[],[],-1).safe).toBe(false)
+    expect(safety.motion(mesh.reference,mesh.reference,[[0,0,0]],[[0,0,0]],0).safe).toBe(false)
+    expect(()=>safety.staticSelf(q)).toThrow('Invalid')
+    expect(()=>safety.staticSolidOverlap(q)).toThrow('Invalid')
+    const tet:[[number,number,number],[number,number,number],[number,number,number],[number,number,number]]=[[0,0,0],[1,0,0],[0,1,0],[0,0,1]]
+    expect(()=>positiveTetOverlap(tet,tet,NaN)).toThrow('Invalid')
+    const s=new ContinuousGripper3D();expect(()=>s.auditGeometry(q,[[0,0,0],[0,0,0]])).toThrow('Invalid')
+  })
   it('detects tendon vertices hidden in solid material',()=>{
     const s=new ContinuousGripper3D(),p=s.mesh.reference,tet=s.mesh.tets[0],center=tet.nodes.reduce((v,id)=>v.map((x,k)=>x+p[id][k]/4) as Vec3,[0,0,0] as Vec3)
     const r=s.auditGeometry(p,[center,center]);expect(r.interiorNodes).toBe(2)

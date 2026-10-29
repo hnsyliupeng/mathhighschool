@@ -1,0 +1,71 @@
+{
+  "codeHash": "1e54493abe07161c8db0f58729ba30f021123b076be58c29301f27bd525d1896",
+  "parameters": {
+    "youngPa": 250000,
+    "poisson": 0.35,
+    "curvaturePerM": 0.002,
+    "neutralAxisYM": 0.0035,
+    "axisZM": 0.004
+  },
+  "result": [
+    {
+      "level": 1,
+      "nodes": 288,
+      "hexes": 136,
+      "exactLinearEnergyJ": 8.505814755555559e-11,
+      "q1EnergyJ": 9.076515550306181e-11,
+      "candidateEnergyJ": 8.501677708750523e-11,
+      "q1DifferencePercent": 6.709537077301975,
+      "candidateDifferencePercent": -0.04863786625889377,
+      "betweenPads": {
+        "exactLinearEnergyJ": 3.048888888888889e-12,
+        "q1EnergyJ": 4.247562801964743e-12,
+        "candidateEnergyJ": 3.0489106359790355e-12,
+        "q1DifferencePercent": 39.31510647843546,
+        "candidateDifferencePercent": 0.0007132791957742413
+      },
+      "maxLocalIterations": 1,
+      "maxLocalResidualN": 5.126249365305729e-15
+    },
+    {
+      "level": 2,
+      "nodes": 1654,
+      "hexes": 1088,
+      "exactLinearEnergyJ": 8.5058147555556e-11,
+      "q1EnergyJ": 8.64538980110107e-11,
+      "candidateEnergyJ": 8.501677328009415e-11,
+      "q1DifferencePercent": 1.6409368127175084,
+      "candidateDifferencePercent": -0.048642342504379155,
+      "betweenPads": {
+        "exactLinearEnergyJ": 3.0488888888888877e-12,
+        "q1EnergyJ": 3.3485900659972865e-12,
+        "candidateEnergyJ": 3.048912758611926e-12,
+        "q1DifferencePercent": 9.829849103409583,
+        "candidateDifferencePercent": 0.000782899079254662
+      },
+      "maxLocalIterations": 1,
+      "maxLocalResidualN": 1.2158997526191166e-15
+    },
+    {
+      "level": 3,
+      "nodes": 4912,
+      "hexes": 3672,
+      "exactLinearEnergyJ": 8.505814755555622e-11,
+      "q1EnergyJ": 8.56554854348725e-11,
+      "candidateEnergyJ": 8.50167670439307e-11,
+      "q1DifferencePercent": 0.7022700311291485,
+      "candidateDifferencePercent": -0.0486496741520126,
+      "betweenPads": {
+        "exactLinearEnergyJ": 3.048888888888903e-12,
+        "q1EnergyJ": 3.1820971591398085e-12,
+        "candidateEnergyJ": 3.048909139672322e-12,
+        "q1DifferencePercent": 4.3690759193081075,
+        "candidateDifferencePercent": 0.0006642020800695647
+      },
+      "maxLocalIterations": 1,
+      "maxLocalResidualN": 5.974214239476411e-16
+    }
+  ],
+  "patchCheckPassed": true,
+  "scope": "experimental nonconforming local modes; prescribed nodal pure-bending patch only, not equilibrium, full-path safety, convergence, or production validation"
+}

@@ -12,7 +12,7 @@ import {mkdirSync,readFileSync,writeFileSync,existsSync} from 'node:fs'
 import {ContinuousGripper3D,type ContinuousFrame} from '../src/engine/continuous-gripper3d'
 import {defaultGripper3DParams,type Gripper3DParams} from '../src/engine/gripper3d'
 
-const inputs=['src/engine/gripper3d.ts','src/engine/continuous-gripper3d.ts','src/engine/hexahedron.ts','src/engine/segment-triangle.ts','src/engine/continuous-collision.ts','src/engine/gripper3d-safety.ts']
+const inputs=['src/engine/gripper3d.ts','src/engine/continuous-gripper3d.ts','src/engine/hexahedron.ts','src/engine/hex-jacobian-bound.ts','src/engine/segment-triangle.ts','src/engine/continuous-collision.ts','src/engine/gripper3d-safety.ts']
 const hash=createHash('sha256');for(const p of inputs)hash.update(p).update(readFileSync(p));const codeHash=hash.digest('hex')
 const baseline={pull:.003}
 const specs:Record<string,{params:Partial<Gripper3DParams>;cycle?:boolean;resume?:string}>={
@@ -22,7 +22,7 @@ const specs:Record<string,{params:Partial<Gripper3DParams>;cycle?:boolean;resume
   halfstep:{params:{...baseline,step:.000125}},cycle:{params:baseline,cycle:true},large:{params:{pull:.005}},
   penalty2:{params:{...baseline,contactPerLength:2e6}},penalty8:{params:{...baseline,contactPerLength:8e6}},thinCable:{params:{...baseline,radius:.0002}},nearZero:{params:{...baseline,radius:.000001}},
   curl:{params:{pull:.01475}},curlHalfstep:{params:{pull:.01475,step:.000125}},
-  curlCable2:{params:{pull:.01475,tendonResolution:2}},curlMesh2:{params:{pull:.01475,meshLevel:2}},curlCycle:{params:{pull:.01475},cycle:true,resume:'curl'},
+  curlCable2:{params:{pull:.01475,tendonResolution:2}},curlCable3:{params:{pull:.01475,tendonResolution:3}},curlMesh2:{params:{pull:.01475,meshLevel:2}},curlCycle:{params:{pull:.01475},cycle:true,resume:'curl'},
 }
 const dir='/tmp/gripper3d-continuous-audit';mkdirSync(dir,{recursive:true})
 const names=Object.keys(specs)
@@ -65,7 +65,7 @@ function combine(){
   }
   const all=Object.values(results),relative=(x:number,y:number)=>Math.abs(y-x)/Math.max(Math.abs(x),1e-12)*100
   const pair=(a:string,b:string)=>results[a]&&results[b]?{tipPercent:relative(results[a].loaded.tipMm,results[b].loaded.tipMm),tensionPercent:relative(results[a].loaded.tensionN,results[b].loaded.tensionN)}:null
-  const grid12=pair('mesh1','mesh2'),grid23=pair('mesh2Low','mesh3'),cable12=pair('mesh1','cable2'),cable23=pair('cable2','cable3'),steps=pair('mesh1','halfstep'),penalty=pair('penalty2','penalty8'),curlSteps=pair('curl','curlHalfstep'),curlCable=pair('curl','curlCable2'),curlGrid=pair('curl','curlMesh2')
+  const grid12=pair('mesh1','mesh2'),grid23=pair('mesh2Low','mesh3'),cable12=pair('mesh1','cable2'),cable23=pair('cable2','cable3'),steps=pair('mesh1','halfstep'),penalty=pair('penalty2','penalty8'),curlSteps=pair('curl','curlHalfstep'),curlCable=pair('curl','curlCable2'),curlCable23=pair('curlCable2','curlCable3'),curlGrid=pair('curl','curlMesh2')
   const both=(x:{tipPercent:number;tensionPercent:number}|null,tol:number)=>!!x&&x.tipPercent<tol&&x.tensionPercent<tol
   const rows=all.flatMap(x=>x.history),checks={
     allCasesPresent:missing.length===0,
@@ -79,7 +79,7 @@ function combine(){
     largeDeformation5mm:!!results.large&&!results.large.failure&&results.large.loaded.pullMm>=5-1e-9,
     realTipRotationOver90:!!results.curl&&!results.curl.failure&&results.curl.loaded.tipAngleDeg>=90,
     largeCurlLoadStepConverged:both(curlSteps,5),
-    largeCurlTendonConverged:both(curlCable,5),
+    largeCurlTendonConverged:both(curlCable,5)&&both(curlCable23,5),
     largeCurlMeshConverged:both(curlGrid,5),
     meshConverged:both(grid12,5)&&both(grid23,5),
     tendonConverged:both(cable12,5)&&both(cable23,5),
@@ -92,7 +92,7 @@ function combine(){
     // the entire continuum an interference-free certified physical model.
     continuumInteriorAndCurvedFaceCCD:false,
   }
-  const failed=Object.entries(checks).filter(([,v])=>!v).map(([k])=>k),report={date:new Date().toISOString(),codeHash,scope:'quasi-static assumed gripper; not calibrated or experimental',scopeLimitations:{experimentalCalibration:false,objectContact:false,rowChecks:'accepted frames only; rejected steps are recorded separately as failures',comparisons:'endpoints at specified loads; not full-path convergence'},criteria:{forceResidualN:2e-5,contactComplementarityUm:.02,meshAndStepDifferencePercent:5},missing,checks,comparisons:{grid12,grid23,cable12,cable23,steps,penalty,curlSteps,curlCable,curlGrid},results:all,failed,passed:failed.length===0}
+  const failed=Object.entries(checks).filter(([,v])=>!v).map(([k])=>k),report={date:new Date().toISOString(),codeHash,scope:'quasi-static assumed gripper; not calibrated or experimental',scopeLimitations:{experimentalCalibration:false,objectContact:false,rowChecks:'accepted frames only; rejected steps are recorded separately as failures',comparisons:'endpoints at specified loads; not full-path convergence'},criteria:{forceResidualN:2e-5,contactComplementarityUm:.02,meshAndStepDifferencePercent:5},missing,checks,comparisons:{grid12,grid23,cable12,cable23,steps,penalty,curlSteps,curlCable,curlCable23,curlGrid},results:all,failed,passed:failed.length===0}
   writeFileSync('docs/screenshots/gripper3d-continuous-audit.json',JSON.stringify(report,null,2)+'\n')
   console.log(JSON.stringify({checks,comparisons:report.comparisons,missing,failed},null,2))
   if(failed.length){console.error('FAIL: strict acceptance requires every item; see docs/screenshots/gripper3d-continuous-audit.json');process.exitCode=1}else console.log('PASS')

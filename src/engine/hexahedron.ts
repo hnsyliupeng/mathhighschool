@@ -7,9 +7,17 @@ export function hexesFromStructuredTets(mesh:Mesh3D):Hex3D[]{
   for(let n=0;n<mesh.tets.length;n+=6){
     const ids=[...new Set(mesh.tets.slice(n,n+6).flatMap(t=>t.nodes))]
     if(ids.length!==8)throw Error('Invalid structured hexahedron')
-    const p=ids.map(i=>mesh.reference[i]),lo=[0,1,2].map(k=>Math.min(...p.map(x=>x[k]))),hi=[0,1,2].map(k=>Math.max(...p.map(x=>x[k]))),nodes=Array<number>(8)
-    for(const id of ids){const x=mesh.reference[id],index=(x[0]>(lo[0]+hi[0])/2?1:0)+(x[1]>(lo[1]+hi[1])/2?2:0)+(x[2]>(lo[2]+hi[2])/2?4:0);nodes[index]=id}
-    const h=hi.map((v,i)=>v-lo[i]),gradients:Vec3[][]=[],z=1/Math.sqrt(3)
+    const p=ids.map(i=>mesh.reference[i])
+    if(p.some(v=>!Array.isArray(v)||v.length!==3||!v.every(Number.isFinite)))throw Error('Invalid structured hexahedron coordinates')
+    const lo=[0,1,2].map(k=>Math.min(...p.map(x=>x[k]))),hi=[0,1,2].map(k=>Math.max(...p.map(x=>x[k]))),nodes=Array<number>(8),h=hi.map((v,i)=>v-lo[i])
+    if(h.some(v=>!(v>0)||!Number.isFinite(v)))throw Error('Degenerate structured hexahedron')
+    for(const id of ids){
+      const x=mesh.reference[id],index=(x[0]>(lo[0]+hi[0])/2?1:0)+(x[1]>(lo[1]+hi[1])/2?2:0)+(x[2]>(lo[2]+hi[2])/2?4:0)
+      if(nodes[index]!==undefined||x.some((v,k)=>Math.abs(v-((index&(1<<k))?hi[k]:lo[k]))>1e-12*Math.max(1,Math.abs(v))))throw Error('Reference hexahedron must be an axis-aligned brick')
+      nodes[index]=id
+    }
+    if(nodes.filter(v=>v!==undefined).length!==8)throw Error('Missing structured hexahedron corners')
+    const gradients:Vec3[][]=[],z=1/Math.sqrt(3)
     for(const xi of [-z,z])for(const eta of [-z,z])for(const zeta of [-z,z]){
       gradients.push(Array.from({length:8},(_,i)=>{const sx=(i&1)?1:-1,sy=(i&2)?1:-1,sz=(i&4)?1:-1;return [sx*(1+sy*eta)*(1+sz*zeta)/(4*h[0]),sy*(1+sx*xi)*(1+sz*zeta)/(4*h[1]),sz*(1+sx*xi)*(1+sy*eta)/(4*h[2])] as Vec3}))
     }
@@ -18,6 +26,8 @@ export function hexesFromStructuredTets(mesh:Mesh3D):Hex3D[]{
   return hexes
 }
 export function neoHookeanHex(positions:readonly Vec3[],hex:Hex3D,E:number,nu:number,withHessian=true){
+  if(!Number.isFinite(E)||E<=0||!Number.isFinite(nu)||nu<0||nu>=.49)throw Error('Invalid hexahedral material')
+  if(hex.nodes.length!==8||hex.nodes.some(id=>!positions[id]||positions[id].length!==3||!positions[id].every(Number.isFinite)))throw Error('Invalid hexahedral positions')
   const mu=E/(2*(1+nu)),lambda=E*nu/((1+nu)*(1-2*nu)),gradient=new Float64Array(24),hessian=withHessian?new Float64Array(24*24):new Float64Array(0)
   let energy=0,minJ=Infinity,stress=0
   for(const gradients of hex.gradients){

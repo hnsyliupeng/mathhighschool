@@ -1,0 +1,14 @@
+{
+  "codeHash": "02123121aa8fc33bcda6e310c1be4ad0ac5063bd240d501b18f224795305bb54",
+  "cases": 222,
+  "samplesPerCase": 620,
+  "safeBoundsCrossChecked": 109,
+  "sampleRejectionsCrossChecked": 109,
+  "indeterminate": 4,
+  "safeCasesNeedingSubdivision": 5,
+  "exactSingularCasesRejected": 20,
+  "largestBoundMinusSample": -3.590789332541533e-10,
+  "errors": [],
+  "passed": true,
+  "scope": "Independent numerical sampling and exact checks of 20 integer affine degeneracies only; not a general exact-arithmetic proof or a contact/self-collision audit."
+}

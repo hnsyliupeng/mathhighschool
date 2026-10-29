@@ -9,6 +9,17 @@ describe('trilinear integrated three-dimensional hexahedra',()=>{
     const p=mesh.reference.map(([x,y,z]):[number,number,number]=>[-y+.1,x-.2,z+.03]),e=neoHookeanHex(p,hex,250000,.35)
     expect(Math.abs(e.energy)).toBeLessThan(1e-15);expect(e.minJ).toBeCloseTo(1,12);expect(Math.hypot(...e.gradient)).toBeLessThan(1e-10)
   })
+  it('rejects invalid materials and non-brick or non-finite reference cells',()=>{
+    expect(()=>neoHookeanHex(mesh.reference,hex,NaN,.35)).toThrow('material')
+    expect(()=>neoHookeanHex(mesh.reference,hex,250000,.5)).toThrow('material')
+    const invalid=mesh.reference.map(p=>[...p] as [number,number,number]);invalid[hex.nodes[0]][0]=NaN
+    expect(()=>neoHookeanHex(invalid,hex,250000,.35)).toThrow('positions')
+    const first=hexesFromStructuredTets(mesh)[0],warped=mesh.reference.map(p=>[...p] as [number,number,number])
+    warped[first.nodes[0]][0]+=.001
+    expect(()=>hexesFromStructuredTets({...mesh,reference:warped})).toThrow('axis-aligned brick')
+    const nonfinite=mesh.reference.map(p=>[...p] as [number,number,number]);nonfinite[first.nodes[0]][0]=NaN
+    expect(()=>hexesFromStructuredTets({...mesh,reference:nonfinite})).toThrow('coordinates')
+  })
   it('has energy gradient and consistent tangent matching central differences',()=>{
     const p=mesh.reference.map(([x,y,z]):[number,number,number]=>[1.02*x+.02*y,-.01*x+.98*y,.03*y+1.01*z]),e=neoHookeanHex(p,hex,250000,.35,true),h=1e-7
     let eg=0,eh=0

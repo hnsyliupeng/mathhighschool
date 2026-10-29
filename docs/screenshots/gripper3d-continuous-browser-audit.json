@@ -1,5 +1,6 @@
 {
-  "date": "2026-10-28T14:30:20.834Z",
+  "date": "2026-10-28T15:45:24.813Z",
+  "codeHash": "9473866c347942217c3dbec87418dbfa514aad7eb2f821124feecc53c9ade7de",
   "base": "http://127.0.0.1:5173",
   "default": {
     "angle": 92.29,
@@ -45,7 +46,7 @@
     "redMaxY": 186
   },
   "borePixels": {
-    "red": 174
+    "red": 175
   },
   "gif": {
     "width": 520,
@@ -57,6 +58,7 @@
   "checks": [
     "worker and full 14.75mm large-curl solve",
     "honest incomplete-acceptance banner",
+    "full-domain path J lower-bound label and CSV",
     "4 equations",
     "3-D rendering",
     "CSV PNG GIF",

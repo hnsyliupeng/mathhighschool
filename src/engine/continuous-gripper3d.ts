@@ -223,6 +223,8 @@ export class ContinuousGripper3D {
   /** Exact spatial segment / all-boundary clearance, plus an independent
    * point-in-tetrahedra check. This is a static check, not time CCD. */
   auditGeometry(positions:Vec3[],tendon:Vec3[]):GeometryAudit {
+    const finite=(p:Vec3)=>Array.isArray(p)&&p.length===3&&p.every(Number.isFinite)
+    if(!Array.isArray(positions)||positions.length!==this.mesh.reference.length||!positions.every(finite)||!Array.isArray(tendon)||tendon.length<2||!tendon.every(finite))throw Error('Invalid tendon or solid geometry')
     let minDistance=Infinity,surfaceIntersections=0,collisionChecks=0
     for(let i=0;i<tendon.length-1;i++)for(const face of this.mesh.surface){
       const [a,b,c]=face.nodes.map(id=>positions[id]),lower=boxDistance([tendon[i],tendon[i+1]],[a,b,c])

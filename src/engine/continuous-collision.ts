@@ -27,6 +27,8 @@ export function triangleTriangleDistance(a:Tri,b:Tri):number {
   return d
 }
 function advance(distance:(time:number)=>number,speed:number,clearance:number,maxIterations:number):CCDResult {
+  // Invalid tolerances must not turn an intersecting pair into a 'safe' one.
+  if(!Number.isFinite(speed)||speed<0||!Number.isFinite(clearance)||clearance<0||!Number.isInteger(maxIterations)||maxIterations<1)return {safe:false,reason:'indeterminate',iterations:0,time:0,distance:NaN}
   let t=0,d=distance(0)
   for(let iteration=0;iteration<maxIterations;iteration++){
     if(!Number.isFinite(d))return {safe:false,reason:'indeterminate',iterations:iteration+1,time:t,distance:d}

@@ -22,6 +22,13 @@ describe('conservative time-of-motion collision checks',()=>{
     const same=movingSegmentTriangle(start,end,tri,moved,.1);expect(same.safe).toBe(true);expect(same.iterations).toBe(1)
     const away:Seg=[[.1,.2,1],[.3,.2,1]];expect(movingSegmentTriangle(start,away,tri,tri,.1).safe).toBe(true)
   })
+  it('fails closed on invalid clearances, motion data, or iteration budgets',()=>{
+    const overlapping:Seg=[[.1,.1,0],[.2,.2,0]],separated:Seg=[[.1,.1,1],[.2,.2,1]]
+    for(const clearance of [-1,NaN,Infinity])expect(movingSegmentTriangle(overlapping,overlapping,tri,tri,clearance).safe).toBe(false)
+    expect(movingSegmentTriangle(separated,separated,tri,tri,.1,0).safe).toBe(false)
+    const invalid:Seg=[[NaN,.1,1],[.2,.2,1]]
+    expect(movingSegmentTriangle(invalid,invalid,tri,tri,.1).safe).toBe(false)
+  })
   it('never reports a barely grazing trajectory as safe',()=>{
     const start:Seg=[[-1,.2,.099],[2,.2,.099]],end:Seg=[[-1,.3,.099],[2,.3,.099]]
     expect(movingSegmentTriangle(start,end,tri,tri,.1).safe).toBe(false)

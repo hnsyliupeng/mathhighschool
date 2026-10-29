@@ -89,7 +89,16 @@ $$
 
 采用材料一致切线、接触 Gauss–Newton 近似切线、矩阵无关 PCG 和 IC(0) 预条件。IC 的枢轴保护只改变预条件器，不修改所求方程；必要时试对角移位、能量线搜索和增广乘子迭代。每个接受的构型还须通过力/力矩平衡、互补及完整段静态穿透（默认不超过 0.02 μm）、腱轴不进入四面体、表面自交和静态四面体正体积重叠检查。
 
-每段被接受的**线性数值试探路径**采用保守连续碰撞检查（CCD），包括腱—全部三角边界和相邻/非相邻表面三角形；相邻面只排除共享拓扑，其余特征仍检查。所有四面体及六面体八个高斯点的 $J(t)$ 在整个线性路径取端点及多项式驻点的最小值。CCD 允许至多 2 μm 的临时压入，最终收敛态仍须满足更严格的 0.02 μm；不可判定的 CCD 结果视作失败。失败自动细分驱动增量，仍失败则原子回滚坐标、乘子和历史。
+每段被接受的**线性数值试探路径**采用保守连续碰撞检查（CCD），包括腱—全部三角边界和相邻/非相邻表面三角形；相邻面只排除共享拓扑，其余特征仍检查。除四面体和六面体八个高斯点的路径 $J$ 外，还对每个 Q1 六面体的**整个参考域及线性插值路径**执行下述 Bernstein 下界检查。CCD 允许至多 2 μm 的临时压入，最终收敛态仍须满足更严格的 0.02 μm；不可判定的 CCD 或 $J$ 结果视作失败。失败自动细分驱动增量，仍失败则原子回滚坐标、乘子和历史。
+
+对轴对齐参考砖块，令 $(u,v,w,t)\in[0,1]^4$，$t$ 是两个数值构型间的线性插值参数。Q1 映射的三个导数列分别在另两个空间变量及 $t$ 中为多线性，因此其行列式在每个空间变量中次数不超过 2、在时间中次数不超过 3：
+
+$$
+J(u,v,w,t)=\sum_{i,j,k=0}^{2}\sum_{\ell=0}^{3}b_{ijk\ell}
+ B_i^2(u)B_j^2(v)B_k^2(w)B_\ell^3(t),\qquad \min b_{ijk\ell}\le J\le\max b_{ijk\ell}.
+$$
+
+代码将 $3\times3\times3\times4$ 个插值值转换为 Bernstein 系数，若系数下界不够正则以 de Casteljau 细分缩紧；深度或预算耗尽即拒绝。浮点安全余量除样本 $J$ 外还按相对坐标立方尺度与参考体积之比放大，以拒绝大数相消造成的不可靠符号；溢出、NaN、非法间隙或非法几何均不能被当成安全。界面「路径 J 下界」及 CSV 的 `minimum_path_J_lower_bound` 是每个接受步所检查路径的保守数值下界，`min_J` 仍是高斯点值。**该余量是浮点启发式，不是严格区间/精确算术证明；局部正 Jacobian 也不证明全局单射或无体积碰撞。**
 
 卸载按步重新求解。在零牵引、无预应力/摩擦/塑性的假设下，精确参考构型是零能平衡；仅当指向参考态的线性路径 CCD/$J$、静态干涉以及该态残差均通过时才直接恢复，否则继续普通求解。
 
@@ -112,24 +121,39 @@ $$
 
 段—三角形最近距离另以 500 组确定性随机几何同 SciPy 独立凸优化比较，最大绝对差 $2.03\times10^{-7}$（随机坐标单位，阈值 $2\times10^{-6}$），[静态几何审查](screenshots/segment-triangle-independent-audit.json)。它只验证几何例子，不覆盖动态路径或物理收敛。
 
+**本轮 Jacobian 审查：**发现一个反例：8 个高斯点最小 $J=0.78546$、6 个四面体最小 $J=0.26677$，但 Q1 角点为 $J=-0.15100$；新增全参考域检查拒绝它。另一个整数仿射单元的矩阵第三行等于前两行之和，精确行列式为零，但直接双精度计算出正数 33,554,432；相消尺度护栏将其判为不确定并拒绝。独立 NumPy 在 222 条运动各采 620 点，并用 Python 整数精确验证其中 20 个奇异仿射例，全部交叉检查通过；109 条安全下界、5 条需细分，[独立报告](screenshots/gripper3d-hex-jacobian-independent.json)。这些样例不构成一般性浮点证明。
+
 [大卷曲 GIF](media/tendon-gripper-3d-continuous.gif) · [桌面截图](screenshots/64-gripper3d-continuous-desktop.jpg) · [三维视图](screenshots/65-gripper3d-continuous-viewport.jpg) · [孔口视图](screenshots/66-gripper3d-continuous-bore.jpg) · [移动端](screenshots/67-gripper3d-continuous-mobile.jpg) · [浏览器交互审查](screenshots/gripper3d-continuous-browser-audit.json)。浏览器审查验证显示与交互，不等同于物理验收。
 
-**已完成的路径与离散对比：**14.75 mm 加载后实际逐步卸载至零，返回零位移和零张力；名义步长由 0.25 减至 0.125 mm 时，14.75 mm 末态位移和首段张力差异均小于 0.001%（两条路径仍会自适应细分）。这不等于所有载荷或所有网格的收敛。
+**审查进度：**当前源码哈希的 20 个严格案例中已有 18 个结果；14.75 mm 的 69 段腱和二级实体网格 2 案仍待完成，因此汇总明确标为缺项而不是通过。3 mm 及 14.75 mm 加载后均已实际逐步卸载至零位移、零张力；14.75 mm 工况的 0.25/0.125 mm 名义步长末态位移和首段张力差均小于 0.001%（均可能自适应细分），下表 3 mm、0.5 mm 的对比也已用当前源码重算。这些末态比较并不证明全路径收敛。
 
 | 比较 | 载荷 | 指端位移变化 | 首段腱力变化 |
 |---|---:|---:|---:|
 | 标准 → 二级实体网格 | 3 mm | +1.94% | **−20.31%** |
 | 二级 → 三级实体网格 | 0.5 mm | −0.59% | **−6.56%** |
-| 标准 → 二级实体网格 | 14.75 mm | +0.346% | **−27.13%** |
+| 标准 → 二级实体网格（旧版本，待重算） | 14.75 mm | +0.346% | **−27.13%** |
 | 23 → 46 腱段 | 3 mm | +0.063% | −0.065% |
 | 46 → 69 腱段 | 3 mm | +0.040% | −0.088% |
 | 23 → 46 腱段 | 14.75 mm | +0.164% | **−6.70%** |
 
 严格逐案例结果、失败项、源码哈希和加密对比见[数值审查 JSON](screenshots/gripper3d-continuous-audit.json)。残差、互补和干涉等逐帧检查只统计已接受帧，失败的试探步另作失败记录；表中的收敛比较仅针对所列载荷末态，不是全路径收敛。特别是极细 1 μm 腱的数值压力测试在 0.75 mm 失败并回滚；不能把此工况视为通过。直径、材料和网格在 GUI 中改变后也可能出现不收敛。源码仓库保留的旧采样求解器 `gripper3d.ts` 及旧报告仅用于历史对照，并不是当前 GUI 使用的接触算法。
 
+### 3.1 弯曲锁定诊断与未并入的候选
+
+在相同挖孔参考网格指定小应变纯弯曲制造位移，令 $Y=y-y_0$、$Z=z-z_0$：
+
+$$
+u_x=-\kappa xY,\quad u_y=\tfrac\kappa2[x^2+\nu(Y^2-Z^2)],\quad u_z=\nu\kappa YZ,\qquad
+E_{\rm exact}=\int_\Omega \tfrac12E\kappa^2Y^2\,dV.
+$$
+
+解析剪应变为零。将该位移的节点值插值到 Q1 并对线性应变能积分（$\kappa=0.02\,\mathrm m^{-1}$），标准、二级、三级网格的**整体**能量分别高出解析值 6.758%、1.690%、0.751%；仅统计两齿之间的薄背梁区域时分别高出 **39.315%、9.829%、4.368%**，其中虚假剪切能分别达到精确能量的 34.400%、8.600%、3.822%。这是固定制造位移的锁定诊断，**不是**腱驱动的受载平衡，也不能单独解释全部网格差异。[可复现数据](screenshots/gripper3d-bending-patch-audit.json)。
+
+`experiments/gripper3d/` 另保留研究性不协调模态候选：在 Q1 位移中加入 $\sum_{m=1}^3(1-\xi_m^2)\alpha_m$，对内部自由度局部求极小并用 Schur 补凝聚切线。该候选在更小曲率 $0.002\,\mathrm m^{-1}$ 的制造位移试验中，三级网格的薄梁能量与线性解析值差均小于 0.001%；20 个轻度畸变单元的独立 NumPy 重组及 SciPy 局部驻点求解也通过，局部 Hessian 最小特征值均为正。[制造解报告](screenshots/gripper3d-incompatible-patch-research.json) · [独立局部报告](screenshots/gripper3d-incompatible-independent-research.json)。有限变形能与线性解析能并非完全相同，因此这些差值只是诊断。通过测试替换实体核、其余接触及安全代码不变的研究性耦合算例，0.5 mm 时首段腱力的标准→二级变化为 **−6.015%**、二级→三级为 −3.188%；3 mm 时标准→二级为 **−6.602%**，仍不满足 5% 的网格标准。[研究性路径对比](screenshots/gripper3d-incompatible-path-research.json)仅包含所列载荷，不能推广到高载全路径。**内部模态跨单元面不协调，真实增强位移未用于接触几何或安全审查；网格、接触和大变形验证不足，候选没有进入生产 GUI，也不能声称修复。**
+
 ## 4. 明确的验证边界
 
-- 未完成独立逐对**内部体积**的路径 CCD；静态四面体重叠检查和表面 CCD 不能证明路径中整个连续体不相交。六面体双线性曲面以平面三角形表示，高斯点 $J>0$ 也不保证单元内部处处正定。
+- 未完成独立逐对**内部体积**的路径 CCD；静态四面体重叠检查和表面 CCD 不能证明路径中整个连续体不相交。六面体双线性曲面以平面三角形表示；全域 $J$ 检查使用浮点余量而非严格区间运算，且正 $J$ 不能保证全局无自交。
 - 自碰撞仅拒绝，不产生实体自接触反力；未实现被抓物接触、腱—腱/腱自碰撞、摩擦、粘弹性、惯性、破坏或物体抓取。
 - 三维几何和参数为假设，未和实验、商业 FEM 或独立全程求解进行标定。网格/腱/步长及接触尺度的收敛应逐工况检验，不能由动画外观或某一末态残差代替。
 - GIF 是按牵引排列的收敛准静态构型，**不是动力学时间序列**。腱和接触箭头透视叠加以便观察；转角和位移均由未放大的实体节点计算。
@@ -145,9 +169,17 @@ npx vite-node scripts/snapshot-gripper3d-continuous.ts curl
 python3 scripts/audit-gripper3d-continuous-independent.py  # 需 numpy、scipy
 npx vite-node scripts/generate-segment-triangle-cases.ts /tmp/segments.json
 python3 scripts/audit-segment-triangle-independent.py /tmp/segments.json
-# 各案例单独运行，名称见脚本；全部运行后：
+npx vite-node scripts/generate-hex-jacobian-cases.ts /tmp/hex-jac-cases.json
+python3 scripts/audit-hex-jacobian-independent.py /tmp/hex-jac-cases.json
+npx vite-node scripts/audit-gripper3d-bending-patch.ts
+# 仅研究：不协调模态局部与制造解复核
+npx vitest run experiments/gripper3d/incompatible-hex.test.ts
+npx vite-node experiments/gripper3d/probe-patch.ts
+npx vite-node experiments/gripper3d/generate-incompatible-cases.ts /tmp/incompatible-hex-cases.json
+python3 experiments/gripper3d/audit-incompatible-independent.py /tmp/incompatible-hex-cases.json
+# 各案例单独运行，名称见脚本（包括 curlCable3）；全部运行后：
 npx vite-node scripts/audit-gripper3d-continuous.ts --combine
 # combine 对缺失、过期源码或任一失败项返回非零；并不把限制标成通过
 ```
 
-源码：`src/engine/continuous-gripper3d.ts`、`hexahedron.ts`、`segment-triangle.ts`、`continuous-collision.ts`、`gripper3d-safety.ts`；GUI 为 `Gripper3DLab.tsx` 和 `Gripper3DViewport.tsx`，实际计算在 TypeScript Worker 中，Worker 不可用时回退主线程。该三维算例**不调用 Rust/WASM 求解器**。
+源码：`src/engine/continuous-gripper3d.ts`、`hexahedron.ts`、`hex-jacobian-bound.ts`、`segment-triangle.ts`、`continuous-collision.ts`、`gripper3d-safety.ts`；GUI 为 `Gripper3DLab.tsx` 和 `Gripper3DViewport.tsx`，实际计算在 TypeScript Worker 中，Worker 不可用时回退主线程。该三维算例**不调用 Rust/WASM 求解器**。

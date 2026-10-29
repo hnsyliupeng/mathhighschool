@@ -3,6 +3,7 @@ import type {Mesh3D,Vec3,Tet3D} from './gripper3d'
 import type {Hex3D} from './hexahedron'
 import {segmentTriangleClosest} from './segment-triangle'
 import {movingSegmentTriangle,movingTriangles,movingSegments} from './continuous-collision'
+import {certifyHexJacobian} from './hex-jacobian-bound'
 
 type Box=[number,number,number,number,number,number]
 type Tri=[Vec3,Vec3,Vec3]
@@ -11,6 +12,12 @@ const sub=(a:Vec3,b:Vec3):Vec3=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]]
 const cross=(a:Vec3,b:Vec3):Vec3=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]
 const dot=(a:Vec3,b:Vec3)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2]
 const length=(a:Vec3)=>Math.hypot(a[0],a[1],a[2])
+const finitePoint=(p:unknown):p is Vec3=>Array.isArray(p)&&p.length===3&&p.every(Number.isFinite)
+function validPositions(mesh:Mesh3D,p:Vec3[]){
+  if(!Array.isArray(p)||!p.length||!p.every(finitePoint))return false
+  for(const group of [mesh.surface,mesh.tets])for(const item of group)for(const i of item.nodes)if(!Number.isInteger(i)||i<0||i>=p.length)return false
+  return true
+}
 function bound(a:Vec3[],b:Vec3[]):Box {const r:Box=[Infinity,Infinity,Infinity,-Infinity,-Infinity,-Infinity];for(const p of [...a,...b])for(let k=0;k<3;k++){r[k]=Math.min(r[k],p[k]);r[k+3]=Math.max(r[k+3],p[k])}return r}
 function boxesNear(a:Box,b:Box,margin:number){let s=0;for(let k=0;k<3;k++){const x=Math.max(0,a[k]-b[k+3],b[k]-a[k+3]);s+=x*x}return s<=margin*margin}
 function triangles(mesh:Mesh3D,p:Vec3[]):Tri[]{return mesh.surface.map(f=>f.nodes.map(i=>p[i]) as Tri)}
@@ -50,16 +57,20 @@ function minCubicDet(u:Vec3,v:Vec3,w:Vec3,du:Vec3,dv:Vec3,dw:Vec3,den:number):nu
   return min
 }
 export function sweptMinTetJ(tet:Tet3D,from:Vec3[],to:Vec3[]):number {
-  const p=tet.nodes.map(i=>from[i]),q=tet.nodes.map(i=>to[i]),u=sub(p[1],p[0]),v=sub(p[2],p[0]),w=sub(p[3],p[0])
+  const p=tet.nodes.map(i=>from[i]),q=tet.nodes.map(i=>to[i])
+  if(!(tet.volume>0)||!Number.isFinite(tet.volume)||!p.every(finitePoint)||!q.every(finitePoint))throw Error('Invalid swept tetrahedron')
+  const u=sub(p[1],p[0]),v=sub(p[2],p[0]),w=sub(p[3],p[0])
   return minCubicDet(u,v,w,sub(sub(q[1],q[0]),u),sub(sub(q[2],q[0]),v),sub(sub(q[3],q[0]),w),6*tet.volume)
 }
 export function sweptMinHexJ(hex:Hex3D,from:Vec3[],to:Vec3[]):number {
+  if(hex.nodes.length!==8||!hex.nodes.every(i=>finitePoint(from[i])&&finitePoint(to[i]))||hex.gradients.length!==8||hex.gradients.some(g=>g.length!==8))throw Error('Invalid swept hexahedron')
   let result=Infinity
   for(const gradients of hex.gradients){
     const a:Tri=[[0,0,0],[0,0,0],[0,0,0]],b:Tri=[[0,0,0],[0,0,0],[0,0,0]]
     for(let n=0;n<8;n++){const p=from[hex.nodes[n]],q=to[hex.nodes[n]],g=gradients[n];for(let j=0;j<3;j++)for(let i=0;i<3;i++){a[j][i]+=p[i]*g[j];b[j][i]+=q[i]*g[j]}}
     result=Math.min(result,minCubicDet(a[0],a[1],a[2],sub(b[0],a[0]),sub(b[1],a[1]),sub(b[2],a[2]),1))
   }
+  if(!Number.isFinite(result))throw Error('Indeterminate swept hexahedron Jacobian')
   return result
 }
 type TetPoints=[Vec3,Vec3,Vec3,Vec3]
@@ -67,6 +78,10 @@ type TetPoints=[Vec3,Vec3,Vec3,Vec3]
  * Shared faces, edges and vertices are permitted. `epsilon` is a length
  * tolerance, so an overlap below it is not classified as positive volume. */
 export function positiveTetOverlap(a:TetPoints,b:TetPoints,epsilon=1e-12):boolean {
+  if(!Array.isArray(a)||!Array.isArray(b)||a.length!==4||b.length!==4||!a.every(finitePoint)||!b.every(finitePoint)||!Number.isFinite(epsilon)||epsilon<0)throw Error('Invalid tetrahedron overlap input')
+  return positiveTetOverlapUnchecked(a,b,epsilon)
+}
+function positiveTetOverlapUnchecked(a:TetPoints,b:TetPoints,epsilon=1e-12):boolean {
   const edges=[[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]],faces=[[0,1,2],[0,1,3],[0,2,3],[1,2,3]],axes:Vec3[]=[]
   for(const p of [a,b])for(const [i,j,k] of faces)axes.push(cross(sub(p[j],p[i]),sub(p[k],p[i])))
   for(const [i,j] of edges)for(const [k,l] of edges)axes.push(cross(sub(a[j],a[i]),sub(b[l],b[k])))
@@ -84,6 +99,7 @@ export class Gripper3DSafety {
   constructor(readonly mesh:Mesh3D,readonly hexes:readonly Hex3D[]=[]){}
   /** Counts surface intersections apart from each pair's shared topology. */
   staticSelf(p:Vec3[]):{intersections:number;checks:number}{
+    if(!validPositions(this.mesh,p))throw Error('Invalid self-intersection geometry')
     const T=triangles(this.mesh,p),boxes=T.map(t=>bound(t,t));let checks=0,intersections=0
     const order=boxes.map((_,i)=>i).sort((i,j)=>boxes[i][0]-boxes[j][0])
     for(let ii=0;ii<order.length;ii++){const i=order[ii];for(let jj=ii+1;jj<order.length;jj++){const j=order[jj];if(boxes[j][0]>boxes[i][3]+1e-12)break
@@ -94,20 +110,32 @@ export class Gripper3DSafety {
   /** Independent static test of all tetrahedron pairs, including adjacent
    * tetrahedra. This checks the piecewise-linear geometric decomposition. */
   staticSolidOverlap(p:Vec3[]):{overlaps:number;checks:number}{
+    if(!validPositions(this.mesh,p))throw Error('Invalid solid-overlap geometry')
     const T=this.mesh.tets.map(t=>t.nodes.map(i=>p[i]) as TetPoints),boxes=T.map(t=>bound(t,t));let checks=0,overlaps=0
     const order=boxes.map((_,i)=>i).sort((i,j)=>boxes[i][0]-boxes[j][0])
     for(let ii=0;ii<order.length;ii++){const i=order[ii];for(let jj=ii+1;jj<order.length;jj++){const j=order[jj];if(boxes[j][0]>boxes[i][3])break
-      if(boxesNear(boxes[i],boxes[j],0)){checks++;if(positiveTetOverlap(T[i],T[j]))overlaps++}
+      if(boxesNear(boxes[i],boxes[j],0)){checks++;if(positiveTetOverlapUnchecked(T[i],T[j]))overlaps++}
     }}
     return {overlaps,checks}
   }
   /** Check the actual line segment between two numerical configurations.
    * Allowed compression is explicitly supplied. All unknown CCD results fail
-   * closed. Adjacent surface triangles are excluded from self collision. */
+   * closed. Only shared topological features of incident triangles are excluded. */
   motion(p0:Vec3[],p1:Vec3[],t0:Vec3[],t1:Vec3[],clearance:number):SafetyReport {
+    const invalid=(reason:string):SafetyReport=>({safe:false,reason,checks:0,selfIntersections:0,minimumPathJ:NaN})
+    if(!validPositions(this.mesh,p0)||!validPositions(this.mesh,p1)||p0.length!==p1.length||!Array.isArray(t0)||!Array.isArray(t1)||t0.length!==t1.length||t0.length===1||!t0.every(finitePoint)||!t1.every(finitePoint)||!Number.isFinite(clearance)||clearance<0)return invalid('invalid motion geometry or clearance')
+    try{
     let minJ=Infinity
-    for(const tet of this.mesh.tets){minJ=Math.min(minJ,sweptMinTetJ(tet,p0,p1));if(minJ<=1e-8)return {safe:false,reason:'swept tetrahedron inversion',checks:0,selfIntersections:0,minimumPathJ:minJ}}
-    for(const hex of this.hexes){minJ=Math.min(minJ,sweptMinHexJ(hex,p0,p1));if(minJ<=1e-8)return {safe:false,reason:'swept hexahedron Gauss-point inversion',checks:0,selfIntersections:0,minimumPathJ:minJ}}
+    for(const tet of this.mesh.tets){minJ=Math.min(minJ,sweptMinTetJ(tet,p0,p1));if(!Number.isFinite(minJ)||minJ<=1e-8)return {safe:false,reason:'swept tetrahedron inversion or indeterminate',checks:0,selfIntersections:0,minimumPathJ:minJ}}
+    for(const hex of this.hexes){
+      const gauss=sweptMinHexJ(hex,p0,p1);minJ=Math.min(minJ,gauss)
+      if(!Number.isFinite(minJ)||minJ<=1e-8)return {safe:false,reason:'swept hexahedron Gauss-point inversion or indeterminate',checks:0,selfIntersections:0,minimumPathJ:minJ}
+      // Positive Gauss samples and positive piecewise-linear tets alone do
+      // not exclude an inverted corner of the actual trilinear element.
+      const bound=certifyHexJacobian(hex,p0,p1)
+      if(!bound.safe||!Number.isFinite(bound.lowerBound))return {safe:false,reason:`swept hexahedron full-domain J ${bound.reason}`,checks:0,selfIntersections:0,minimumPathJ:bound.lowerBound}
+      minJ=Math.min(minJ,bound.lowerBound)
+    }
     const A=triangles(this.mesh,p0),B=triangles(this.mesh,p1),boxes=A.map((a,i)=>bound(a,B[i]));let checks=0
     for(let i=0;i<t0.length-1;i++){
       const a:Seg=[t0[i],t0[i+1]],b:Seg=[t1[i],t1[i+1]],box=bound(a,b)
@@ -126,5 +154,6 @@ export class Gripper3DSafety {
       }
     }}
     return {safe:true,reason:'certified',checks,selfIntersections:0,minimumPathJ:minJ}
+    }catch(error){return invalid(`indeterminate motion geometry: ${error instanceof Error?error.message:String(error)}`)}
   }
 }

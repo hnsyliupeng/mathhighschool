@@ -1,0 +1,12 @@
+{
+  "codeHash": "1e54493abe07161c8db0f58729ba30f021123b076be58c29301f27bd525d1896",
+  "cases": 20,
+  "maxEnergyDifferenceJ": 1.3688052427629493e-18,
+  "maxNodalGradientDifferenceN": 7.632783294297951e-16,
+  "maxLocalResidualN": 1.8078572075879445e-10,
+  "maxOptimizerAlphaDifferenceM": 1.0429416390841245e-13,
+  "minimumLocalHessianEigenvalueNPerM": 829.504461286101,
+  "optimizerFailures": [],
+  "passed": true,
+  "scope": "experimental element-local reassembly, SciPy stationary-point solve and numerical local Hessian on 20 mildly distorted cells; no global or contact-path validation"
+}

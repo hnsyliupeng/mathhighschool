@@ -1,0 +1,76 @@
+{
+  "test": "manufactured small-strain pure bending on the actual three-dimensional hollow reference mesh",
+  "parameters": {
+    "youngPa": 250000,
+    "poisson": 0.35,
+    "curvaturePerM": 0.02,
+    "neutralAxisYM": 0.0035,
+    "axisZM": 0.004
+  },
+  "result": [
+    {
+      "level": 1,
+      "nodes": 288,
+      "hexes": 136,
+      "total": {
+        "exactEnergyJ": 8.50581475555556e-9,
+        "normalEnergyJ": 8.565676258216741e-9,
+        "spuriousShearEnergyJ": 5.149724467855516e-10,
+        "interpolatedEnergyJ": 9.080648705002293e-9,
+        "excessPercent": 6.758129185346773,
+        "spuriousShearPercentOfExact": 6.0543576551464175
+      },
+      "betweenPads": {
+        "exactEnergyJ": 3.0488888888888885e-10,
+        "normalEnergyJ": 3.198745541838129e-10,
+        "spuriousShearEnergyJ": 1.0488058966620934e-10,
+        "interpolatedEnergyJ": 4.2475514385002226e-10,
+        "excessPercent": 39.314733770051056,
+        "spuriousShearPercentOfExact": 34.399610313261086
+      }
+    },
+    {
+      "level": 2,
+      "nodes": 1654,
+      "hexes": 1088,
+      "total": {
+        "exactEnergyJ": 8.505814755555555e-9,
+        "normalEnergyJ": 8.520780131220796e-9,
+        "spuriousShearEnergyJ": 1.287431116963879e-10,
+        "interpolatedEnergyJ": 8.649523242917184e-9,
+        "excessPercent": 1.6895322963360604,
+        "spuriousShearPercentOfExact": 1.5135894137866053
+      },
+      "betweenPads": {
+        "exactEnergyJ": 3.0488888888888937e-10,
+        "normalEnergyJ": 3.0863530521261944e-10,
+        "spuriousShearEnergyJ": 2.6220147416552368e-11,
+        "interpolatedEnergyJ": 3.3485545262917183e-10,
+        "excessPercent": 9.828683442512443,
+        "spuriousShearPercentOfExact": 8.599902578315268
+      }
+    },
+    {
+      "level": 3,
+      "nodes": 4912,
+      "hexes": 3672,
+      "total": {
+        "exactEnergyJ": 8.505814755555638e-9,
+        "normalEnergyJ": 8.512466033629006e-9,
+        "spuriousShearEnergyJ": 5.7219160753950265e-11,
+        "interpolatedEnergyJ": 8.569685194382956e-9,
+        "excessPercent": 0.7509032428151707,
+        "spuriousShearPercentOfExact": 0.6727064061273746
+      },
+      "betweenPads": {
+        "exactEnergyJ": 3.0488888888888627e-10,
+        "normalEnergyJ": 3.06553962810545e-10,
+        "spuriousShearEnergyJ": 1.165339885180103e-11,
+        "interpolatedEnergyJ": 3.1820736166234606e-10,
+        "excessPercent": 4.368303752228098,
+        "spuriousShearPercentOfExact": 3.8221789236957058
+      }
+    }
+  ],
+  "scope": "fixed manufactured nodal displacement, not equilibrium under the gripper loading or an independent full-trajectory validation"
+}
