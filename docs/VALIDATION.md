@@ -4,7 +4,7 @@
 
 ## 数值检查
 
-本轮 `npm test`：17 个测试文件、169/169 项通过（含研究单元局部测试；不含单独运行的研究性长路径）；`npx tsc --noEmit` 和 `npm run build` 成功，但 Vite 仍提示部分 chunk 超过 500 kB。依赖升级至 KaTeX 0.18.10、Vitest 4.1.12 后，`npm audit` 在 2026-10-28 报告 0 个已知漏洞；此结果不代表代码或未来依赖绝对安全。以下测试和浏览器检查的通过不等同于所有算例的原文对照通过。
+本轮 `npm test`：18 个测试文件、177/177 项通过（含研究单元局部测试；不含单独运行的研究性长路径）；`npx tsc --noEmit` 和 `npm run build` 成功，但 Vite 仍提示部分 chunk 超过 500 kB。依赖升级至 KaTeX 0.18.10、Vitest 4.1.12 后，`npm audit` 在 2026-10-29 报告 0 个已知漏洞；此结果不代表代码或未来依赖绝对安全。以下测试和浏览器检查的通过不等同于所有算例的原文对照通过。
 
 - 拉伸和转角弯曲的解析梯度与中心差分比较；新的弯曲解析 Hessian 与梯度中心差分、对称性和平移零模比较；检查平面刚体平移/旋转下的能量不变性。
 - 检查单自由度隐式残差、对解析振子的步长收敛、多自由度矩阵对称性与残差。
@@ -77,6 +77,12 @@
 本轮发现**单步**遇到失败时，回滚后的重复时间会错误进入曲线及 CSV；现与连续播放一致，不记录失败步，但保留失败残差与警告。浏览器在该极端工况检查了时间与构型不前进、CSV 不变、播放/单步锁定、回看及恢复默认参数；还修复了 320/390 px 的警告与图例重叠。[桌面失败提示](screenshots/43-shell-nonconvergence.jpg) · [移动失败提示](screenshots/44-mobile-shell-nonconvergence.jpg) · [极端应变指标](screenshots/45-shell-extreme-strain.jpg) · [交互记录](screenshots/shell-failure-audit.json)。
 
 柔性网另试跑默认、零重力、两组高重力极端及一组软网/低重力高阻尼，总计五组，均完成 200 步且支点不动、数值有限。高模量/高重力/高阻尼组合的第 2 步出现 PCG 不定切线；增加 MINRES 回退后该步及整程完成，线性/非线性残差仍须达标。这些参数组合未与原脚本定量对照。默认终态最大网边工程应变幅值约 `17.45%`，软网高重力无阻尼终态约 `105.18%`；不是强度判据或材料适用性的证明。记录和重跑脚本见 [net-parameter-audit.json](screenshots/net-parameter-audit.json)、`scripts/audit-net-parameters.ts`。
+
+## 五指仿生手：固定球体原型（未验收）
+
+五根独立腱和五个真实挖孔的超弹性实体分别求解腱—孔壁接触，并以固定球体的无摩擦反力反馈到指体；球体本身受外部支撑，不是自由抓取。五指接受帧之间检测指间离散表面 CCD，失败或不确定时缩步/整体回滚。掌部仅作为固定支撑显示，不参与接触。8 mm 目标在 7.00 mm 请求时遇拇—食指 CCD 不确定并回滚，末个接受点为相似牵引 6.75 mm；该点五指有非零球接触，但拇指力仅约 49 μN。路径及失败详见 [五指路径记录](screenshots/bionic-hand-audit.json)，严格验收仍未通过。
+
+对于相似牵引 6.75 mm，独立 NumPy/SciPy 对五指指定构型重组实体、腱、孔壁与球体接触，五指的球体活动面均有覆盖。误差及独立候选检查见 [五指独立记录](screenshots/bionic-hand-independent-audit.json)；另留有 [3.5 mm 快照记录](screenshots/bionic-hand-independent-3p5mm.json)。[浏览器及导出记录](screenshots/bionic-hand-browser-audit.json) 与[6.75 mm 路径 GIF](media/bionic-hand-3d.gif)只证明该界面工况，不证明自由抓取、所有路径安全或网格收敛；详细推导、尺寸和缺项见 [五指文档](BIONIC_HAND_3D.md)。
 
 ## 逐项截图与状态
 

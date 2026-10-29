@@ -1,0 +1,151 @@
+{
+  "date": "2026-10-29T01:34:04.594Z",
+  "codeHash": "7e46c4bf53588479ac8af3dcc7512869b7b484181a552665ad601b5478f0ba3b",
+  "sourceFiles": [
+    "src/engine/bionic-hand3d.ts",
+    "src/engine/sphere-finger3d.ts",
+    "src/engine/hand-object-contact.ts",
+    "src/engine/continuous-gripper3d.ts",
+    "src/engine/gripper3d.ts",
+    "src/engine/hexahedron.ts",
+    "src/engine/hex-jacobian-bound.ts",
+    "src/engine/segment-triangle.ts",
+    "src/engine/continuous-collision.ts",
+    "src/engine/gripper3d-safety.ts"
+  ],
+  "fixture": "90 mm rigid sphere, fixed and externally supported, frictionless",
+  "normalizedTargetMm": 8,
+  "acceptedSteps": 27,
+  "failure": "拇指—食指 表面 CCD indeterminate（面 464/504，t=0.4103，距离 0.000 μm）；五指全部回滚。（同步自适应子步失败，已完整回滚）",
+  "checks": {
+    "reached8mm": false,
+    "fiveTendonContactFingers": true,
+    "fiveSphereContactFingers": true,
+    "residual": true,
+    "tendonComplementarityAndPenetration": true,
+    "sphereComplementarityAndPenetration": true,
+    "singleFingerStaticChecks": true,
+    "positivePathJacobianLowerBound": true,
+    "acceptedFrameInterFingerCCD": true
+  },
+  "limitedPathChecksPass": false,
+  "strictGraspAcceptance": false,
+  "notValidated": [
+    "free object equilibrium or force closure",
+    "friction and gravity",
+    "finger-palm contact or collision",
+    "inter-finger contact force",
+    "complete curved-face and continuum-interior CCD",
+    "five-finger mesh and tendon refinement convergence",
+    "experimental calibration",
+    "large-curl complete five-finger path and full unloading"
+  ],
+  "final": {
+    "sphereContacts": 5,
+    "sphereForceOnObject": [
+      0.001782474580690288,
+      -0.024312313402052105,
+      0.05414609796497867
+    ],
+    "maxSpherePenetrationUm": 0.0017906459162664312,
+    "maxTendonPenetrationUm": 0.008597859832183696,
+    "interFingerChecks": 75,
+    "fingers": [
+      {
+        "id": "thumb",
+        "pullMm": 5.265,
+        "tipAngleDeg": 42.77059421838203,
+        "tipDisplacementMm": 20.493370413360296,
+        "tendonTensionN": 0.12759075742207934,
+        "tendonContacts": 16,
+        "tendonPenetrationUm": 0.0012916607946568924,
+        "sphereContacts": 6,
+        "sphereForceOnFingerN": [
+          -0.00003667199737843897,
+          7.713546844028402e-7,
+          -0.00003253524886359382
+        ],
+        "spherePenetrationUm": 0.00016435534100356364,
+        "freeResidualN": 0.000004050382034609997,
+        "minJ": 0.9276307415829157,
+        "pathMinJ": 0.9266860314489859
+      },
+      {
+        "id": "index",
+        "pullMm": 6.074999999999999,
+        "tipAngleDeg": 40.8515827393067,
+        "tipDisplacementMm": 21.388353728130344,
+        "tendonTensionN": 0.18745681348015603,
+        "tendonContacts": 22,
+        "tendonPenetrationUm": 0.002692540123332013,
+        "sphereContacts": 6,
+        "sphereForceOnFingerN": [
+          -0.004584379818450773,
+          0.0017678402732552348,
+          -0.00464025840592633
+        ],
+        "spherePenetrationUm": 0,
+        "freeResidualN": 0.000013062533224912858,
+        "minJ": 0.9266857937450572,
+        "pathMinJ": 0.9258204983488029
+      },
+      {
+        "id": "middle",
+        "pullMm": 6.75,
+        "tipAngleDeg": 35.145064190283286,
+        "tipDisplacementMm": 16.057341239565726,
+        "tendonTensionN": 0.30763765947025695,
+        "tendonContacts": 22,
+        "tendonPenetrationUm": 0.00832622864378003,
+        "sphereContacts": 2,
+        "sphereForceOnFingerN": [
+          -0.010799934973079028,
+          0.014027073034502447,
+          -0.02540054828141916
+        ],
+        "spherePenetrationUm": 0.0017906459162664312,
+        "freeResidualN": 0.000011638244624326757,
+        "minJ": 0.919353042240506,
+        "pathMinJ": 0.9192229706192341
+      },
+      {
+        "id": "ring",
+        "pullMm": 6.21,
+        "tipAngleDeg": 34.616077043501285,
+        "tipDisplacementMm": 14.287037028298663,
+        "tendonTensionN": 0.26040747096646943,
+        "tendonContacts": 22,
+        "tendonPenetrationUm": 0.008597859832183696,
+        "sphereContacts": 2,
+        "sphereForceOnFingerN": [
+          0.011187968418699174,
+          0.008554446382128388,
+          -0.02110367337766129
+        ],
+        "spherePenetrationUm": 0.0011523819992698137,
+        "freeResidualN": 0.0000034673681364856837,
+        "minJ": 0.9195518612555383,
+        "pathMinJ": 0.919404519231693
+      },
+      {
+        "id": "little",
+        "pullMm": 5.265,
+        "tipAngleDeg": 41.51731589021513,
+        "tipDisplacementMm": 19.152188152166847,
+        "tendonTensionN": 0.1353124569866227,
+        "tendonContacts": 22,
+        "tendonPenetrationUm": 0.00164734877858958,
+        "sphereContacts": 4,
+        "sphereForceOnFingerN": [
+          0.0024505437895187767,
+          -0.00003781764251836601,
+          -0.0029690826511082915
+        ],
+        "spherePenetrationUm": 0.00011789883652690847,
+        "freeResidualN": 0.000007696247360561856,
+        "minJ": 0.9261844064311642,
+        "pathMinJ": 0.9253325334069811
+      }
+    ]
+  }
+}

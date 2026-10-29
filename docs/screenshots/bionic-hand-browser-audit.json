@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-29T01:50:44.551Z",
+  "codeHash": "f4648daa10c1f0f3697639bd35679bc98294b9ff75102687bf27e31d5f397bd9",
+  "status": "已到达目标",
+  "normalizedTargetMm": 6.75,
+  "activeSphereFingerCount": 5,
+  "frame": "27 / 27 帧",
+  "table": "指体\n牵引 mm\n角度\n腱孔项\n球力 N\n拇指\n5.26\n42.8°\n16\n0.000049\n食指\n6.08\n40.9°\n22\n0.006758\n中指\n6.75\n35.1°\n22\n0.030961\n无名指\n6.21\n34.6°\n22\n0.025372\n小指\n5.26\n41.5°\n22\n0.003850",
+  "csvRows": 141,
+  "gif": {
+    "width": 520,
+    "height": 343,
+    "frames": 28,
+    "uniqueFrames": 28,
+    "bytes": 776089
+  },
+  "errors": [],
+  "scope": "UI/export and one supported-sphere path only; NOT complete grasp, continuum CCD, mesh-convergence or experimental validation."
+}
