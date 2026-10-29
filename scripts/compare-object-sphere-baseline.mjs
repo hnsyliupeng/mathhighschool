@@ -1,0 +1,9 @@
+import {readFile,writeFile} from 'node:fs/promises'
+import {createHash} from 'node:crypto'
+const next=JSON.parse(await readFile('docs/screenshots/multi-object-ball90-1.00-6.75mm.json','utf8')),baseline=JSON.parse(await readFile('docs/screenshots/bionic-hand-audit.json','utf8'))
+for(const r of [next,baseline]){const h=createHash('sha256');for(const f of r.sourceFiles)h.update(f).update(await readFile(f));if(h.digest('hex')!==r.codeHash)throw Error('A sphere report is stale')}
+if(next.acceptedNormalizedMm!==6.75||baseline.acceptedSteps!==27)throw Error('Paths do not end at the same prescribed displacement')
+const max=(a)=>Math.max(...a),newf=next.final.fingers,oldf=baseline.final.fingers
+const checks={sameContactCounts:newf.every((f,i)=>f.objectContacts===oldf[i].sphereContacts),maxAngleDifferenceDeg:max(newf.map((f,i)=>Math.abs(f.tipAngleDeg-oldf[i].tipAngleDeg))),maxTensionDifferenceN:max(newf.map((f,i)=>Math.abs(f.tendonTensionN-oldf[i].tendonTensionN))),maxObjectForceComponentDifferenceN:max(newf.flatMap((f,i)=>f.objectForceOnFingerN.map((x,d)=>Math.abs(x-oldf[i].sphereForceOnFingerN[d])))),maxNetForceComponentDifferenceN:max(next.final.reactionOnObjectN.map((x,d)=>Math.abs(x-baseline.final.sphereForceOnObject[d])))}
+const result={newCodeHash:next.codeHash,baselineCodeHash:baseline.codeHash,normalizedPullMm:6.75,checks,passed:checks.sameContactCounts&&checks.maxAngleDifferenceDeg<1e-6&&checks.maxTensionDifferenceN<1e-8&&checks.maxObjectForceComponentDifferenceN<1e-8&&checks.maxNetForceComponentDifferenceN<1e-8,scope:'Regression for one fixed 90 mm sphere endpoint; not independent physics or a free-grasp validation.'}
+await writeFile('docs/screenshots/multi-object-sphere-regression.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));if(!result.passed)process.exitCode=1

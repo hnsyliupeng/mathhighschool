@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-29T02:37:05.883Z",
+  "codeHash": "8d695b114ec8bb6b2c97f5ff9d41881ef6405deb27438dac5b3a22ca864d754f",
+  "sourceFiles": [
+    "src/App.tsx",
+    "src/engine/object-hand3d.ts",
+    "src/engine/object-finger3d.ts",
+    "src/engine/rounded-object-contact.ts",
+    "src/engine/object-presets3d.ts",
+    "src/engine/object-hand3d.worker.ts",
+    "src/engine/useObjectHand3D.ts",
+    "src/components/MultiObjectViewport.tsx",
+    "src/components/MultiObjectLab.tsx",
+    "src/components/MultiObjectComparison.tsx",
+    "src/components/multi-object.css",
+    "src/data/multi-object-comparison.json"
+  ],
+  "presetSceneHashes": {
+    "ball60": "4f0fb3c740b09610befc4afb6344f3010ff9b8499d4bec574fe67b361c8710b8",
+    "ball90": "59781376d95cd8cab4bb6b968b779861d1a5f16867f2acac563a0ca9abcedd56",
+    "ball110": "e77acbfe0d404ac67fcb2f98631836ee7af4afd470496d454b8b0edf248560e2",
+    "capsule": "1a6149fa91e049f07c22f0273e15e2f9b4092be54774fcc41bb1af293b102a68",
+    "rounded-box": "ef8cb0e0aa1301d47691fc73e40ae9588dd90199c7a0042374f7d7fc6c59ee92",
+    "dumbbell": "8bc2466573fecf802c63ab6750dceecb7c64939fc9790a899877f8545961c8ec"
+  },
+  "scale75DimensionsMm": [
+    67.5,
+    67.5,
+    67.5
+  ],
+  "results": {
+    "capsule": {
+      "normalizedTargetMm": 3.25,
+      "contacts": 3,
+      "frame": "13 / 13 帧",
+      "csvRows": 71,
+      "gif": {
+        "width": 452,
+        "height": 520,
+        "frames": 14,
+        "uniqueFrames": 14,
+        "bytes": 471663
+      }
+    },
+    "rounded-box": {
+      "normalizedTargetMm": 2,
+      "contacts": 3,
+      "frame": "8 / 8 帧",
+      "csvRows": 46,
+      "gif": {
+        "width": 452,
+        "height": 520,
+        "frames": 9,
+        "uniqueFrames": 9,
+        "bytes": 306584
+      }
+    }
+  },
+  "errors": [],
+  "scope": "UI/export, six initial shapes and two supported-object paths only; NOT free grasp, continuum CCD, mesh convergence or experimental validation."
+}

@@ -1,0 +1,20 @@
+{
+  "sourceHash": "8d695b114ec8bb6b2c97f5ff9d41881ef6405deb27438dac5b3a22ca864d754f",
+  "status": "passed",
+  "productionWorker": [
+    {
+      "status": 200,
+      "contentType": "text/javascript"
+    },
+    {
+      "status": 200,
+      "contentType": "text/javascript"
+    }
+  ],
+  "backend": "后台工作线程 · TypeScript\n每指每步至多 0.25 mm（相似尺度）；五指串行，计算可能较慢。",
+  "object": "capsule",
+  "normalizedPullMm": 0,
+  "comparisonRows": 6,
+  "errors": [],
+  "scope": "Production build initial state and worker/shape switch only; not a loaded-path or free-grasp validation."
+}

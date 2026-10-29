@@ -1,0 +1,24 @@
+{
+  "codeHash": "1141511d29b86050e95e1d545bdababd5fae5d694cd5df24f22aa29536bc81e4",
+  "sourceFiles": [
+    "src/engine/rounded-object-contact.ts",
+    "src/engine/segment-triangle.ts",
+    "src/engine/continuous-collision.ts"
+  ],
+  "seed": "0x279ee1",
+  "staticCases": 360,
+  "maxDistanceErrorM": 7.722245705195178e-16,
+  "maxPointOrBaryError": 1.1102230246251565e-16,
+  "staticFailures": [],
+  "motionCases": 64,
+  "motionSafe": 32,
+  "motionRejectedCollision": 0,
+  "motionRejectedIndeterminate": 32,
+  "motionSamples": 1344,
+  "sampledMisses": [],
+  "segmentCases": 256,
+  "maxSegmentDistanceErrorM": 5.551115123125783e-17,
+  "segmentFailures": [],
+  "scope": "Independent active-set convex-QP distances and 21 samples per linear motion. Sampling cannot prove continuous separation, mesh convergence, or free grasp.",
+  "passed": true
+}

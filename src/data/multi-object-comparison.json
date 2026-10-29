@@ -1,0 +1,109 @@
+{
+  "status": "complete",
+  "sourceHash": "15896ec8847ff8ffd478b8099f11b7c8e08416e532bcaa7c88222ee716a810cd",
+  "targetNormalizedMm": 6.75,
+  "cases": [
+    {
+      "id": "ball60",
+      "name": "小球",
+      "dimensionsMm": [
+        60,
+        60,
+        60
+      ],
+      "acceptedNormalizedMm": 6.75,
+      "contactFingers": 2,
+      "netObjectForceN": 0.03877217526332817,
+      "maxObjectPenetrationUm": 0.013437847749542264,
+      "maxTendonPenetrationUm": 0.01883955494966184,
+      "maxResidualN": 0.00001254861079519911,
+      "limitedPathChecksPass": false,
+      "failure": null
+    },
+    {
+      "id": "ball90",
+      "name": "球体",
+      "dimensionsMm": [
+        90,
+        90,
+        90
+      ],
+      "acceptedNormalizedMm": 6.75,
+      "contactFingers": 5,
+      "netObjectForceN": 0.05938068460067315,
+      "maxObjectPenetrationUm": 0.004213413150599976,
+      "maxTendonPenetrationUm": 0.014157913535439456,
+      "maxResidualN": 0.000013063373639522507,
+      "limitedPathChecksPass": true,
+      "failure": null
+    },
+    {
+      "id": "ball110",
+      "name": "大球",
+      "dimensionsMm": [
+        110,
+        110,
+        110
+      ],
+      "acceptedNormalizedMm": 6.75,
+      "contactFingers": 5,
+      "netObjectForceN": 0.07630086703564903,
+      "maxObjectPenetrationUm": 0.0033216111988698675,
+      "maxTendonPenetrationUm": 0.019841109209545096,
+      "maxResidualN": 0.000013927507493969392,
+      "limitedPathChecksPass": true,
+      "failure": null
+    },
+    {
+      "id": "capsule",
+      "name": "胶囊棒",
+      "dimensionsMm": [
+        90,
+        60,
+        60
+      ],
+      "acceptedNormalizedMm": 3.25,
+      "contactFingers": 3,
+      "netObjectForceN": 0.003923979322228474,
+      "maxObjectPenetrationUm": 0.01006425372346298,
+      "maxTendonPenetrationUm": 0.0007802173019526119,
+      "maxResidualN": 0.0000036700717540074027,
+      "limitedPathChecksPass": false,
+      "failure": "无名指：接触线搜索失败，已回滚。（自适应子步也失败，已完整回滚）；五指全部回滚。（同步自适应子步失败，已完整回滚）"
+    },
+    {
+      "id": "rounded-box",
+      "name": "圆角盒",
+      "dimensionsMm": [
+        90,
+        80,
+        50
+      ],
+      "acceptedNormalizedMm": 2,
+      "contactFingers": 3,
+      "netObjectForceN": 0.006381614817700923,
+      "maxObjectPenetrationUm": 0.013235547293571903,
+      "maxTendonPenetrationUm": 0.0007802173019526119,
+      "maxResidualN": 0.00001101526172355869,
+      "limitedPathChecksPass": false,
+      "failure": "中指：接触线搜索失败，已回滚。（自适应子步也失败，已完整回滚）；五指全部回滚。（同步自适应子步失败，已完整回滚）"
+    },
+    {
+      "id": "dumbbell",
+      "name": "双球哑铃",
+      "dimensionsMm": [
+        98,
+        52,
+        52
+      ],
+      "acceptedNormalizedMm": 5.75,
+      "contactFingers": 5,
+      "netObjectForceN": 0.04905708883769313,
+      "maxObjectPenetrationUm": 0.006931123074788159,
+      "maxTendonPenetrationUm": 0.014494991649294893,
+      "maxResidualN": 0.000012350557769883632,
+      "limitedPathChecksPass": false,
+      "failure": "中指—无名指 表面 CCD indeterminate（面 402/452，t=0.4570，距离 0.000 μm）；五指全部回滚。（同步自适应子步失败，已完整回滚）"
+    }
+  ]
+}

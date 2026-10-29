@@ -1,0 +1,110 @@
+{
+  "codeHash": "a5b4c5d07daddb60b072771946d2367bbd76278b5529d3a7e4fda16b6fe89132",
+  "sourceFiles": [
+    "experiments/multi-object/multifeature-finger.ts",
+    "scripts/experiment-multi-object-box-features.ts",
+    "src/engine/object-finger3d.ts",
+    "src/engine/rounded-object-contact.ts",
+    "src/engine/gripper3d.ts",
+    "src/engine/segment-triangle.ts",
+    "src/engine/continuous-collision.ts",
+    "src/engine/gripper3d-safety.ts",
+    "src/engine/hexahedron.ts",
+    "src/engine/hex-jacobian-bound.ts"
+  ],
+  "sourceSnapshotCodeHash": "15896ec8847ff8ffd478b8099f11b7c8e08416e532bcaa7c88222ee716a810cd",
+  "history": [
+    {
+      "step": 1,
+      "targetMm": 0.25,
+      "acceptedMm": 0.25,
+      "converged": true,
+      "contacts": 0,
+      "residualN": 0.000002047636045028155,
+      "seconds": 1.907,
+      "message": null
+    },
+    {
+      "step": 2,
+      "targetMm": 0.5,
+      "acceptedMm": 0.5,
+      "converged": true,
+      "contacts": 0,
+      "residualN": 2.4426214680449256e-7,
+      "seconds": 2.554,
+      "message": null
+    },
+    {
+      "step": 3,
+      "targetMm": 0.75,
+      "acceptedMm": 0.75,
+      "converged": true,
+      "contacts": 0,
+      "residualN": 6.843162858505326e-7,
+      "seconds": 1.532,
+      "message": null
+    },
+    {
+      "step": 4,
+      "targetMm": 1,
+      "acceptedMm": 1,
+      "converged": true,
+      "contacts": 0,
+      "residualN": 9.159663432230797e-7,
+      "seconds": 1.547,
+      "message": null
+    },
+    {
+      "step": 5,
+      "targetMm": 1.25,
+      "acceptedMm": 1.25,
+      "converged": true,
+      "contacts": 0,
+      "residualN": 8.172215146411709e-7,
+      "seconds": 1.093,
+      "message": null
+    },
+    {
+      "step": 6,
+      "targetMm": 1.5,
+      "acceptedMm": 1.5,
+      "converged": true,
+      "contacts": 0,
+      "residualN": 9.97460455855411e-7,
+      "seconds": 1.312,
+      "message": null
+    },
+    {
+      "step": 7,
+      "targetMm": 1.75,
+      "acceptedMm": 1.75,
+      "converged": true,
+      "contacts": 8,
+      "residualN": 6.601080411506614e-7,
+      "seconds": 1.998,
+      "message": null
+    },
+    {
+      "step": 8,
+      "targetMm": 2,
+      "acceptedMm": 2,
+      "converged": true,
+      "contacts": 17,
+      "residualN": 0.000013075154240356311,
+      "seconds": 5.717,
+      "message": null
+    },
+    {
+      "step": 9,
+      "targetMm": 2.25,
+      "acceptedMm": 2,
+      "converged": false,
+      "contacts": 17,
+      "residualN": 0.00005957468909642935,
+      "seconds": 67.987,
+      "message": "接触线搜索失败，已回滚。（自适应子步也失败，已完整回滚）"
+    }
+  ],
+  "integratedIntoGui": false,
+  "scope": "Experimental 12-feature rectangular-core contact; one middle finger only, not a verified replacement or free grasp."
+}

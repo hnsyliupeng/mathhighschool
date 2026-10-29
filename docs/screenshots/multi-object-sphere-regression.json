@@ -1,0 +1,14 @@
+{
+  "newCodeHash": "15896ec8847ff8ffd478b8099f11b7c8e08416e532bcaa7c88222ee716a810cd",
+  "baselineCodeHash": "7e46c4bf53588479ac8af3dcc7512869b7b484181a552665ad601b5478f0ba3b",
+  "normalizedPullMm": 6.75,
+  "checks": {
+    "sameContactCounts": true,
+    "maxAngleDifferenceDeg": 3.682722393705262e-8,
+    "maxTensionDifferenceN": 4.903011330270601e-10,
+    "maxObjectForceComponentDifferenceN": 3.72597168396549e-10,
+    "maxNetForceComponentDifferenceN": 4.3846628758337225e-10
+  },
+  "passed": true,
+  "scope": "Regression for one fixed 90 mm sphere endpoint; not independent physics or a free-grasp validation."
+}

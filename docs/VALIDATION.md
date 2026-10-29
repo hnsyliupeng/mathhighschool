@@ -84,6 +84,14 @@
 
 对于相似牵引 6.75 mm，独立 NumPy/SciPy 对五指指定构型重组实体、腱、孔壁与球体接触，五指的球体活动面均有覆盖。误差及独立候选检查见 [五指独立记录](screenshots/bionic-hand-independent-audit.json)；另留有 [3.5 mm 快照记录](screenshots/bionic-hand-independent-3p5mm.json)。[浏览器及导出记录](screenshots/bionic-hand-browser-audit.json) 与[6.75 mm 路径 GIF](media/bionic-hand-3d.gif)只证明该界面工况，不证明自由抓取、所有路径安全或网格收敛；详细推导、尺寸和缺项见 [五指文档](BIONIC_HAND_3D.md)。
 
+## 多物体五指固定接触：总体未验收
+
+新增 `/?page=objects3d`，球（直径 60/90/110 mm）、胶囊棒、圆角盒和双球哑铃使用不同的实际核心—三角面距离、增广接触及 CCD，而不只是更换渲染。六个 100% 尺寸工况统一请求 6.75 mm 相似牵引：90/110 mm 球达到目标且五指接触，60 mm 球到目标但只有 2 指接触；胶囊棒停在 3.25 mm、圆角盒停在 2.00 mm；哑铃停在 5.75 mm，6.00 mm 时指间 CCD 不确定并回滚。这些**不是**自由抓取或力闭合通过。[完整数值表、推导和失败原因](MULTI_OBJECT_GRASP_3D.md)。
+
+对 90 mm 球、胶囊、圆角盒及哑铃的最后接受构型，分别独立重组五指实体、腱孔及物体接触，四组指定快照各 5/5 通过；其余尺寸没有额外五指快照重组。另有 360 组核心—三角面与 256 组线段距离的独立凸规划对比，最大差分别 `7.72e-16 m` 和 `5.55e-17 m`；64 条线性路径共 1344 点抽样未发现安全判定的漏检，但这不是连续安全证明。[几何记录](screenshots/rounded-object-geometry-independent.json)。圆角盒增加迭代和试验性 12 特征接触都未修复其非收敛，研究代码未进入 GUI。
+
+浏览器复核六个形状和 75% 尺度切换、胶囊 3.25 mm 和圆角盒 2 mm 的有限路径、回看、PNG/CSV/GIF、移动端及溢出；[浏览器记录](screenshots/multi-object-browser-audit.json)、[胶囊动画](media/multi-object-capsule.gif)、[圆角盒动画](media/multi-object-rounded-box.gif)。均只验证上述固定支撑工况。自由物体平衡、摩擦、力闭合、掌部接触、指间反力、全路径和多网格收敛、实验标定均缺失，单指网格收敛已有未通过项，**总体仍未通过**。
+
 ## 逐项截图与状态
 
 下面的截图在 Chromium、1440×1000 视口下捕获；浏览器检查非空 WebGL、无求解警告和无水平溢出。**过程截图**通常捕获在约 0.5–1.0 s；**终态截图**逐例播放到声明结束时刻，额外检查终点控制及位移读数。21 幅过程图和 21 幅终态图均通过各自的总览图目视检查；移动端在 390×844 下另行检查。日志见 [过程审查](screenshots/audit.json) 和 [终态审查](screenshots/end-cases/audit.json)。

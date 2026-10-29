@@ -19,6 +19,7 @@ npm run dev
 
 - **算例工作台**：选择算例，调整参数并点击「应用并重新运行」。可播放/暂停、单步、回看已记录时间、切换节点和初始构型、旋转缩放、下载 PNG 与 CSV。螺旋杆和两例薄板会自动适配当前与可见初始构型；手动操作后停止自动取景，点击重置视角恢复。
 - **算例库**：21 个条目按原教程分类；每个条目有边界、载荷、观察量、核心公式、局限与原始代码/官方动画链接。
+- **多物体五指接触**（`/?page=objects3d`）：可切换六个预设（三种尺寸球体、胶囊棒、圆角盒和双球哑铃），调整尺寸并重新求解真实几何接触，比较五指反力和路径指标，导出 CSV/PNG/GIF。物体固定支撑、无摩擦；这不是自由抓取或力闭合验证，**总体严格验收未通过**。模型与逐项结果见[多物体推导与审查](docs/MULTI_OBJECT_GRASP_3D.md)。
 - **三维五指仿生手**（`/?page=hand3d`）：五个独立腱驱中空实体指体，与外部固定支撑的球体进行无摩擦接触并将反力反馈给指体；可调五根腱、回看并导出 CSV/PNG/GIF。**研究原型，总体严格验收未通过；球体不自由运动，不能视为已验证抓取。** 见[模型、假设与验证边界](docs/BIONIC_HAND_3D.md)及[五指接触动画](docs/media/bionic-hand-3d.gif)。
 - **三维实体孔抓手**（`/?page=gripper3d`）：三维全积分六面体指体、真实挖空的矩形孔和有限半径可滑动腱；完整腱段—三角形多特征接触、离散路径 CCD、安全回滚及 CSV/PNG/GIF。默认 14.75 mm 牵引下，标准网格末段背梁实际转角约 **92.29°**，并非视觉放大；计算较慢。**严格验收尚未通过，不可用于工程设计**；见[推导与限制](docs/TENDON_GRIPPER_3D.md)和[大卷曲 GIF](docs/media/tendon-gripper-3d-continuous.gif)。
 - **二维等效抓手**（`/?page=gripper`）：平面应变超弹性指体、只受拉腱和四处变形导向截面的双向罚接触。它没有在网格中挖出真实孔洞，与三维实体孔模型是不同的降阶实验；详见[二维模型与验证](docs/TENDON_GRIPPER.md)。
@@ -63,6 +64,8 @@ npm run dev
 
 ```bash
 npm test                     # 数值内核、二维/三维抓手、五指模型及其他回归
+npx vite-node scripts/audit-multi-object.ts --id rounded-box --target 6.75  # 固定物体路径；不足五指接触或其他检查不通过时非零
+npx vite-node scripts/sample-rounded-object-cases.ts && python3 scripts/audit-rounded-object-independent.py  # 几何独立 QP 检查；需 NumPy
 npx vite-node scripts/audit-bionic-hand.ts  # 8 mm 五指固定球体路径；未通过则非零
 npx vite-node scripts/snapshot-bionic-hand.ts 27  # 保存 6.75 mm 的五个指定末态
 python3 scripts/audit-bionic-hand-independent.py  # 需 numpy/scipy

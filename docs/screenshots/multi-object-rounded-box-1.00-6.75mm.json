@@ -1,0 +1,434 @@
+{
+  "date": "2026-10-29T02:21:18.347Z",
+  "codeHash": "15896ec8847ff8ffd478b8099f11b7c8e08416e532bcaa7c88222ee716a810cd",
+  "sourceFiles": [
+    "src/engine/object-hand3d.ts",
+    "src/engine/object-finger3d.ts",
+    "src/engine/rounded-object-contact.ts",
+    "src/engine/object-presets3d.ts",
+    "src/engine/bionic-hand3d.ts",
+    "src/engine/hand-object-contact.ts",
+    "src/engine/continuous-gripper3d.ts",
+    "src/engine/gripper3d.ts",
+    "src/engine/hexahedron.ts",
+    "src/engine/hex-jacobian-bound.ts",
+    "src/engine/segment-triangle.ts",
+    "src/engine/continuous-collision.ts",
+    "src/engine/gripper3d-safety.ts"
+  ],
+  "fixture": "fixed externally supported rigid object, frictionless; no gravity, no dynamics",
+  "object": {
+    "id": "rounded-box",
+    "name": "圆角盒",
+    "english": "ROUNDED BOX",
+    "scale": 1,
+    "dimensionsMm": [
+      90,
+      80,
+      50
+    ],
+    "supportHeight": 0.018,
+    "primitives": [
+      {
+        "kind": "rectangle",
+        "corners": [
+          [
+            -0.02,
+            0.03,
+            0.043
+          ],
+          [
+            0.02,
+            0.03,
+            0.043
+          ],
+          [
+            0.02,
+            0.06,
+            0.043
+          ],
+          [
+            -0.02,
+            0.06,
+            0.043
+          ]
+        ],
+        "radius": 0.025
+      }
+    ],
+    "stiffnessPerArea": 200000000
+  },
+  "normalizedTargetMm": 6.75,
+  "acceptedSteps": 8,
+  "acceptedNormalizedMm": 2,
+  "failure": "中指：接触线搜索失败，已回滚。（自适应子步也失败，已完整回滚）；五指全部回滚。（同步自适应子步失败，已完整回滚）",
+  "checks": {
+    "reachedRequestedPull": false,
+    "atLeastOneObjectContact": true,
+    "fiveTendonContactFingers": true,
+    "fiveObjectContactFingers": false,
+    "residualAndBalance": true,
+    "tendonKktAndPenetration": true,
+    "objectKktAndPenetration": true,
+    "staticFingerChecks": true,
+    "positivePathJacobianLowerBound": true,
+    "acceptedFrameInterFingerCCD": true
+  },
+  "limitedPathChecksPass": false,
+  "strictGraspAcceptance": false,
+  "notValidated": [
+    "free object equilibrium and force closure",
+    "friction and gravity",
+    "finger-palm contact",
+    "inter-finger contact reactions",
+    "complete curved-face and continuum-interior CCD",
+    "mesh and tendon refinement for each shape",
+    "experimental calibration",
+    "full loading/unloading paths"
+  ],
+  "path": [
+    {
+      "pullNormalizedMm": 0,
+      "objectContactFingers": 0,
+      "objectPenetrationUm": 0,
+      "tendonPenetrationUm": 0,
+      "reactionOnObjectN": [
+        0,
+        0,
+        0
+      ],
+      "anglesDeg": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "contacts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "pullNormalizedMm": 0.25,
+      "objectContactFingers": 0,
+      "objectPenetrationUm": 0,
+      "tendonPenetrationUm": 0.0007802173019526119,
+      "reactionOnObjectN": [
+        0,
+        0,
+        0
+      ],
+      "anglesDeg": [
+        1.6190166081695634,
+        1.6190166081695634,
+        1.6190166081695634,
+        1.6190166081695634,
+        1.6190166081695634
+      ],
+      "contacts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "pullNormalizedMm": 0.5,
+      "objectContactFingers": 0,
+      "objectPenetrationUm": 0,
+      "tendonPenetrationUm": 0.000018307612695799003,
+      "reactionOnObjectN": [
+        0,
+        0,
+        0
+      ],
+      "anglesDeg": [
+        3.211199338268064,
+        3.211199338268064,
+        3.211199338268064,
+        3.211199338268064,
+        3.211199338268064
+      ],
+      "contacts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "pullNormalizedMm": 0.75,
+      "objectContactFingers": 0,
+      "objectPenetrationUm": 0,
+      "tendonPenetrationUm": 0.00036240466720236994,
+      "reactionOnObjectN": [
+        0,
+        0,
+        0
+      ],
+      "anglesDeg": [
+        4.798930696219366,
+        4.798930696219366,
+        4.798930696219366,
+        4.798930696219366,
+        4.798930696219366
+      ],
+      "contacts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "pullNormalizedMm": 1,
+      "objectContactFingers": 0,
+      "objectPenetrationUm": 0,
+      "tendonPenetrationUm": 0.0002812376362609087,
+      "reactionOnObjectN": [
+        0,
+        0,
+        0
+      ],
+      "anglesDeg": [
+        6.386654874686272,
+        6.386654874686272,
+        6.386654874686272,
+        6.386654874686272,
+        6.386654874686272
+      ],
+      "contacts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "pullNormalizedMm": 1.25,
+      "objectContactFingers": 0,
+      "objectPenetrationUm": 0,
+      "tendonPenetrationUm": 0.000012462010644340854,
+      "reactionOnObjectN": [
+        0,
+        0,
+        0
+      ],
+      "anglesDeg": [
+        7.974150495123925,
+        7.974150495123925,
+        7.974150495123925,
+        7.974150495123925,
+        7.974150495123925
+      ],
+      "contacts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "pullNormalizedMm": 1.5,
+      "objectContactFingers": 0,
+      "objectPenetrationUm": 0,
+      "tendonPenetrationUm": 0.00015223778444470315,
+      "reactionOnObjectN": [
+        0,
+        0,
+        0
+      ],
+      "anglesDeg": [
+        9.55936955740403,
+        9.55936955740403,
+        9.55936955740403,
+        9.55936955740403,
+        9.55936955740403
+      ],
+      "contacts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "pullNormalizedMm": 1.75,
+      "objectContactFingers": 2,
+      "objectPenetrationUm": 0.0014538948435449674,
+      "tendonPenetrationUm": 0.00011582622883271436,
+      "reactionOnObjectN": [
+        4.6644195291940813e-20,
+        -0.00008060181026556026,
+        0.0004141362218636876
+      ],
+      "anglesDeg": [
+        11.145090243436465,
+        11.145090243436465,
+        11.070610856939767,
+        11.123865951596313,
+        11.145090243436465
+      ],
+      "contacts": [
+        0,
+        0,
+        4,
+        4,
+        0
+      ]
+    },
+    {
+      "pullNormalizedMm": 2,
+      "objectContactFingers": 3,
+      "objectPenetrationUm": 0.013235547293571903,
+      "tendonPenetrationUm": 0.00017181693838519418,
+      "reactionOnObjectN": [
+        0.00023672063046937663,
+        -0.0013220360998404254,
+        0.0062386850838400945
+      ],
+      "anglesDeg": [
+        12.731208248103954,
+        12.167460498975764,
+        12.1503446996666,
+        12.013200221927509,
+        12.731208248103954
+      ],
+      "contacts": [
+        0,
+        2,
+        7,
+        4,
+        0
+      ]
+    }
+  ],
+  "final": {
+    "objectContacts": 3,
+    "reactionOnObjectN": [
+      0.00023672063046937663,
+      -0.0013220360998404254,
+      0.0062386850838400945
+    ],
+    "torqueOnObjectNm": [
+      0.00009358027625760141,
+      0.00003368046376375107,
+      0.0000036172859004687275
+    ],
+    "torqueReferenceM": [
+      0,
+      0.045,
+      0.043
+    ],
+    "maxObjectPenetrationUm": 0.013235547293571903,
+    "maxTendonPenetrationUm": 0.00017181693838519418,
+    "minPathJ": 0.977299157651552,
+    "fingers": [
+      {
+        "id": "thumb",
+        "pullMm": 1.5600000000000003,
+        "tipAngleDeg": 12.731208248103954,
+        "tipDisplacementMm": 6.413127445159469,
+        "tendonTensionN": 0.03663086217899159,
+        "tendonContacts": 8,
+        "tendonPenetrationUm": 0.00011074022943113361,
+        "objectContacts": 0,
+        "objectForceOnFingerN": [
+          0,
+          0,
+          0
+        ],
+        "objectPenetrationUm": 0,
+        "freeResidualN": 7.027988675439529e-7,
+        "minJ": 0.9785242293652695,
+        "pathMinJ": 0.9773253039238464
+      },
+      {
+        "id": "index",
+        "pullMm": 1.8000000000000003,
+        "tipAngleDeg": 12.167460498975764,
+        "tipDisplacementMm": 6.723907468568241,
+        "tendonTensionN": 0.054656535927359085,
+        "tendonContacts": 8,
+        "tendonPenetrationUm": 0.00013358380802886392,
+        "objectContacts": 2,
+        "objectForceOnFingerN": [
+          -0.00023672063046937652,
+          0.0003076793634472301,
+          -0.0014676411044966533
+        ],
+        "objectPenetrationUm": 0.0005722799453072858,
+        "freeResidualN": 0.000002145750523528724,
+        "minJ": 0.97781871141321,
+        "pathMinJ": 0.9777774242358457
+      },
+      {
+        "id": "middle",
+        "pullMm": 2,
+        "tipAngleDeg": 12.1503446996666,
+        "tipDisplacementMm": 7.298976768905907,
+        "tendonTensionN": 0.06769898297294624,
+        "tendonContacts": 8,
+        "tendonPenetrationUm": 0.00014290165654528425,
+        "objectContacts": 7,
+        "objectForceOnFingerN": [
+          -1.7216780611272248e-19,
+          0.0005645138081102211,
+          -0.0026309211979672668
+        ],
+        "objectPenetrationUm": 0.013235547293571903,
+        "freeResidualN": 0.000010356318859632915,
+        "minJ": 0.9773243212594307,
+        "pathMinJ": 0.977299157651552
+      },
+      {
+        "id": "ring",
+        "pullMm": 1.84,
+        "tipAngleDeg": 12.013200221927509,
+        "tipDisplacementMm": 6.64580457611189,
+        "tendonTensionN": 0.05891940802624722,
+        "tendonContacts": 8,
+        "tendonPenetrationUm": 0.00017181693838519418,
+        "objectContacts": 4,
+        "objectForceOnFingerN": [
+          5.195106600253573e-20,
+          0.0004498429282829741,
+          -0.002140122781376174
+        ],
+        "objectPenetrationUm": 0.0003347602436920561,
+        "freeResidualN": 0.00001101526172355869,
+        "minJ": 0.9774904481935491,
+        "pathMinJ": 0.977490448193549
+      },
+      {
+        "id": "little",
+        "pullMm": 1.5600000000000003,
+        "tipAngleDeg": 12.731208248103954,
+        "tipDisplacementMm": 6.413127445159469,
+        "tendonTensionN": 0.03663086217899159,
+        "tendonContacts": 8,
+        "tendonPenetrationUm": 0.00011074022943113361,
+        "objectContacts": 0,
+        "objectForceOnFingerN": [
+          0,
+          0,
+          0
+        ],
+        "objectPenetrationUm": 0,
+        "freeResidualN": 7.027988675439529e-7,
+        "minJ": 0.9785242293652695,
+        "pathMinJ": 0.9773253039238464
+      }
+    ]
+  }
+}
