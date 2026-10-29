@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-29T04:34:13.174Z",
+  "sourceHash": "e944dd9050c85694d2e05b1802cf8a64e724991faa8775724d55df8c93b02bfb",
+  "sourceFiles": [
+    "src/App.tsx",
+    "src/engine/material-grasp3d.ts",
+    "src/engine/material-grasp-analysis.ts",
+    "src/engine/material-grasp3d.worker.ts",
+    "src/components/MaterialGraspViewport.tsx",
+    "src/components/MaterialGraspLab.tsx",
+    "src/components/material-grasp.css",
+    "src/data/material-grasp-validation.json",
+    "src/data/material-grasp-convergence.json",
+    "scripts/audit-material-grasp-browser.mjs"
+  ],
+  "presetSceneHashes": {
+    "screwdriver": "3227dcb9008ff04f7492eb429660e8c78e8e18aded84e248a46d5a130cb087ec",
+    "egg": "3b01ce77870d2548697b8674c0c5879b5e2e24874e4c3bcba59840c236139ee9",
+    "bottle-cap": "442b60c629aced09beb2a002519ea41e0183d4a473e1e0e54bb06ad500d25534",
+    "cloth": "645a223ec972acb5b133c220caaa1ca6fa55328fbee0c56030449e7f559e5938"
+  },
+  "results": {
+    "egg": {
+      "scale": 100,
+      "status": "短时数值保持",
+      "csvRows": 386,
+      "finalRiseMm": 52.41998177073368,
+      "gif": {
+        "width": 520,
+        "height": 404,
+        "frames": 25,
+        "uniqueFrames": 25,
+        "bytes": 449167
+      }
+    },
+    "screwdriver": {
+      "scale": 100,
+      "status": "短时数值保持",
+      "csvRows": 386,
+      "finalRiseMm": 52.86393289303851,
+      "gif": null
+    },
+    "bottle-cap": {
+      "scale": 70,
+      "status": "短时数值保持",
+      "csvRows": 386,
+      "finalRiseMm": 52.13900742511712,
+      "gif": null
+    },
+    "cloth": {
+      "scale": 130,
+      "status": "短时数值保持",
+      "csvRows": 386,
+      "finalRiseMm": 39.18308077467041,
+      "gif": {
+        "width": 520,
+        "height": 404,
+        "frames": 25,
+        "uniqueFrames": 25,
+        "bytes": 509275
+      }
+    }
+  },
+  "zeroFrictionStatus": "未满足保持条件",
+  "rollbackStatus": "子步失败 · 已回滚",
+  "errors": [],
+  "scope": "Browser worker, export and four sampled reduced-model trajectories only; not physical material or tendon-hand certification."
+}

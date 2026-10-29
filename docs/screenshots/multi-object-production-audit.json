@@ -1,12 +1,14 @@
 {
-  "sourceHash": "8d695b114ec8bb6b2c97f5ff9d41881ef6405deb27438dac5b3a22ca864d754f",
+  "sourceHash": "2cadd34a66bbbe2fe5c00dde50da3a7f9a54d02a7f5bbb9d040eb15063cf3892",
   "status": "passed",
   "productionWorker": [
     {
+      "url": "http://127.0.0.1:4174/assets/object-hand3d.worker-xZ_naygq.js",
       "status": 200,
       "contentType": "text/javascript"
     },
     {
+      "url": "http://127.0.0.1:4174/assets/object-hand3d.worker-xZ_naygq.js",
       "status": 200,
       "contentType": "text/javascript"
     }

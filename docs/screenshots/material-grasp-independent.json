@@ -1,0 +1,52 @@
+{
+  "sourceHash": "d9e2b31051bb0c632d0522b05059724193abc9857ced63940c6f2e7d9035c284",
+  "auditorSha256": "f09c14118959fce651ea60dc28cd1c48c2b6239d9ba3c48a9c1b39d27f755480",
+  "scope": "Independent recomputation on saved discrete frames only; no CCD or physical validation.",
+  "cases": 12,
+  "frames": 84,
+  "pad_triangle_checks": 69300,
+  "active_pairs": 795,
+  "metrics": {
+    "penetration_error_m": 1.3877787807814457e-17,
+    "centre_error_m": 1.5265566588595902e-16,
+    "ground_gap_error_m": 0.0,
+    "energy_error_J": 1.249000902703301e-16,
+    "link_strain_error": 4.2296767143773477e-16,
+    "structural_strain_error": 4.2296767143773477e-16,
+    "area_ratio_error": 2.220446049250313e-16,
+    "bary_sum_error": 2.220446049250313e-16,
+    "point_reconstruction_error_m": 0.0,
+    "normal_length_error": 3.3306690738754696e-16,
+    "friction_excess_N": 2.7755575615628914e-17,
+    "normal_force_sum_error_N": 0.0
+  },
+  "limits": {
+    "penetration_error_m": 2e-10,
+    "centre_error_m": 2e-14,
+    "ground_gap_error_m": 1e-14,
+    "energy_error_J": 1e-10,
+    "link_strain_error": 1e-10,
+    "structural_strain_error": 1e-10,
+    "area_ratio_error": 1e-10,
+    "bary_sum_error": 1e-12,
+    "point_reconstruction_error_m": 2e-14,
+    "normal_length_error": 1e-12,
+    "friction_excess_N": 1e-09,
+    "normal_force_sum_error_N": 1e-10
+  },
+  "checks": {
+    "penetration_error_m": true,
+    "centre_error_m": true,
+    "ground_gap_error_m": true,
+    "energy_error_J": true,
+    "link_strain_error": true,
+    "structural_strain_error": true,
+    "area_ratio_error": true,
+    "bary_sum_error": true,
+    "point_reconstruction_error_m": true,
+    "normal_length_error": true,
+    "friction_excess_N": true,
+    "normal_force_sum_error_N": true
+  },
+  "passed": true
+}

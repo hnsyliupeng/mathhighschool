@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "sourceHash": "e944dd9050c85694d2e05b1802cf8a64e724991faa8775724d55df8c93b02bfb",
+  "productionWorker": [
+    {
+      "url": "http://127.0.0.1:4174/assets/material-grasp3d.worker-B1znh2B6.js",
+      "status": 200,
+      "contentType": "text/javascript"
+    }
+  ],
+  "trajectory": "egg, 100%, 1/240 s, 40 iterations",
+  "riseMm": 52.4,
+  "errors": [],
+  "scope": "Production build worker and one reduced-model trajectory only; no physical or tendon-hand certification."
+}

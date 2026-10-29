@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-29T02:37:05.883Z",
-  "codeHash": "8d695b114ec8bb6b2c97f5ff9d41881ef6405deb27438dac5b3a22ca864d754f",
+  "date": "2026-10-29T04:25:43.125Z",
+  "codeHash": "2cadd34a66bbbe2fe5c00dde50da3a7f9a54d02a7f5bbb9d040eb15063cf3892",
   "sourceFiles": [
     "src/App.tsx",
     "src/engine/object-hand3d.ts",
@@ -16,12 +16,12 @@
     "src/data/multi-object-comparison.json"
   ],
   "presetSceneHashes": {
-    "ball60": "4f0fb3c740b09610befc4afb6344f3010ff9b8499d4bec574fe67b361c8710b8",
-    "ball90": "59781376d95cd8cab4bb6b968b779861d1a5f16867f2acac563a0ca9abcedd56",
-    "ball110": "e77acbfe0d404ac67fcb2f98631836ee7af4afd470496d454b8b0edf248560e2",
-    "capsule": "1a6149fa91e049f07c22f0273e15e2f9b4092be54774fcc41bb1af293b102a68",
-    "rounded-box": "ef8cb0e0aa1301d47691fc73e40ae9588dd90199c7a0042374f7d7fc6c59ee92",
-    "dumbbell": "8bc2466573fecf802c63ab6750dceecb7c64939fc9790a899877f8545961c8ec"
+    "ball60": "0aaacb61c57cd19529f026c16697b0c30fc0470da6d658cab22b7c1e944c8e7b",
+    "ball90": "61c929db45b594272ef9539826388dda0253219b668c169773d838f55bb8ea52",
+    "ball110": "15a7dc548ac294fc7200ad97e99f85bbc63c4d631f41bc224ee12b50253affdb",
+    "capsule": "121fed95ab98ab405ffd520d1da7bcd50b8f42cfea9d40442460241e9e352a68",
+    "rounded-box": "449acca9a2c10b7d38f9497bfd64b281789b88b168197eeda5e3c6a8edbfa48f",
+    "dumbbell": "716df583bf0a96fb095c18e38c462f447d336b9fd6998611ff3490a3a6eb9058"
   },
   "scale75DimensionsMm": [
     67.5,
@@ -39,7 +39,7 @@
         "height": 520,
         "frames": 14,
         "uniqueFrames": 14,
-        "bytes": 471663
+        "bytes": 471009
       }
     },
     "rounded-box": {
@@ -52,7 +52,7 @@
         "height": 520,
         "frames": 9,
         "uniqueFrames": 9,
-        "bytes": 306584
+        "bytes": 306241
       }
     }
   },
